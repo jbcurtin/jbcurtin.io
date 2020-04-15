@@ -113,6 +113,8 @@ def find_notebooks() -> types.GeneratorType:
 
 
 def build_index_page(notebooks: typing.List[Notebook]) -> None:
+    for item in os.listdir(TEMPLATE_DIR):
+        print(item)
     environment: Environment = jinja2.Environment(loader=jinja2.FileSystemLoader(TEMPLATE_DIR), undefined=jinja2.StrictUndefined)
     _add_jinja2_filters(environment)
 
