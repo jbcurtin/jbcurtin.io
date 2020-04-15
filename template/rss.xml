@@ -2,7 +2,7 @@
 <rss version="2.0">
   <channel>
     <language> en-US </language>
-    <generator> data-scripts.com </generator>
+    <generator> {{ environment.url }} </generator>
     <title> {{ environment.title }} </title>
     <link> {{ environment.url }} </link>
     <description> {{ environment.description }} </description>
