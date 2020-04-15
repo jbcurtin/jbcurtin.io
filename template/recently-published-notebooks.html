@@ -1,0 +1,29 @@
+<html>
+  <head>
+    {% include "header.html" %}
+  </head>
+  <body>
+    {% include "body-header.html" %}
+
+
+  <section class="hero">
+    <div class="hero-body">
+  <h1 class="title page-title"> recently published notebooks </h1>
+      <div class="container">
+        <section class="section">
+          <div class="columns">
+{% for notebook in notebooks %}
+            <div class="column is-10 is-offset-1">
+              <div class="content is-medium">
+                {{ notebook }}
+              </div>
+            </div>
+{% endfor %}
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+    {% include "body-footer.html" %}
+  </body>
+</html>
