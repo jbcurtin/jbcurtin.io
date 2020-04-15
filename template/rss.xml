@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <language> en-US </language>
+    <generator> data-scripts.com </generator>
+    <title> {{ environment.title }} </title>
+    <link> {{ environment.url }} </link>
+    <description> {{ environment.description }} </description>
+    <lastBuildDate> {{ environment.today }} </lastBuildDate>
+    <docs> {{ environment.url }}/rss.xml </docs>
+    <managingEditor> {{ environment.email }} ( {{ environment.author }} ) </managingEditor>
+    <webMaster> {{ environment.email }} ( {{ environment.author }} ) </webMaster>
+{% for notebook in notebooks %}
+    <item>
+      <description>
+        {{ notebook.metadata['title-cell-html'] }}
+      </description>
+      <guid>
+        {{ environment.url }}/{{ notebook.relative_path }}
+      </guid>
+      <pubDate> {{ notebook.metadata.publish_date |machine_date }} </pubDate>
+    </item>
+{% endfor %}
+  </channel>
+</rss>

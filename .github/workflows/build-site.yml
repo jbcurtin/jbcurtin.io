@@ -1,0 +1,64 @@
+name: "build 'data-scripts'.com"
+
+on:
+  push:
+    branches:
+      - master
+
+# PYTHONPATH='build-tools' python build-tools/builder/create_artifacts.py
+jobs:
+  create-artifacts:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        python-version: [ '3.7.6' ]
+    name: "Create Artifacts - Python: ${{ matrix.python-version }}"
+    env:
+      PYTHONPATH: 'build-tools'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: x64
+      - name: Install Environment
+        run: |
+          pip install -r build-tools/builder-requirements.txt
+      - name: Validate Notebooks and Generate Build Scripts for each Notebook
+        run: |
+          python build-tools/builder/create-artifacts.py
+      - name: Execute notebook build scripts
+        run: |
+          python build-tools/builder/build-artifacts.py
+      - name: Consolidate HTML Files
+        run: |
+          python build-tools/builder/consolidate-artifacts.py
+      - name: Build Website
+        run: |
+          python build-tools/builder/build-website.py
+      - name: Publish Website
+        run: |
+          git config --local user.name data-scritps.com Builder
+          git config --local user.email data-scripts@jbcurtin.io
+          mkdir -p ~/.ssh
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          git checkout -b gh-pages
+          rm -rf notebooks
+          rm -rf build-tools
+          rm -rf assets
+          rm -rf template
+          rm -rf README.md
+          mv artifact/* .
+          ls -la artifact
+          rmdir artifact
+          git add *.html -f
+          git add *.xml -f
+          git add robots
+          git add *.txt -f
+          git add static -f
+          git add notebooks -f
+          git commit -m 'Website Published' -a
+          git status
+          git push origin gh-pages -f
+
