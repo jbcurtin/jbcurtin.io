@@ -1,4 +1,4 @@
-name: "build 'data-scripts'.com"
+name: "build jbcurtin.io"
 
 on:
   push:
@@ -39,7 +39,7 @@ jobs:
           python build-tools/builder/build-website.py
       - name: Publish Website
         run: |
-          git config --local user.name data-scritps.com Builder
+          git config --local user.name jbcurtin.io Builder
           git config --local user.email data-scripts@jbcurtin.io
           mkdir -p ~/.ssh
           ssh-keyscan github.com >> ~/.ssh/known_hosts
