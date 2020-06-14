@@ -133,3 +133,4 @@ build.sh
 *.html
 artifact
 *.metadata.json
+yelp-fake-data.json
