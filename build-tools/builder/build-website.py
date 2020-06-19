@@ -27,6 +27,7 @@ GIT_REPO_ROOT: str = os.getcwd()
 NOTEBOOK_DIR: str = os.path.join(os.getcwd(), 'notebooks')
 RENDERED_NOTEBOOKS_DIR: str = os.path.join(os.getcwd(), 'artifact/notebooks')
 TEMPLATE_DIR: str = os.path.join(os.getcwd(), 'template')
+ASSETS_DIR: str = os.path.join(os.getcwd(), 'assets')
 ENVIRONMENT_PATH: str = os.path.join(f'{TEMPLATE_DIR}/environment.toml')
 
 # Output
@@ -119,7 +120,8 @@ def build_index_page(notebooks: typing.List[Notebook]) -> None:
     index: Template = environment.get_template('index.html')
     template_context: typing.Dict[str, typing.Any] = {
         'environment': load_environment(),
-        'static_url': 'static/'
+        'static_url': 'static/',
+        'notebook': notebooks[-1]
     }
     if not os.path.exists(WEBSITE_ARTIFACT_DIR):
         os.makedirs(WEBSITE_ARTIFACT_DIR)
@@ -201,7 +203,7 @@ def build_recently_published_notebooks(notebooks: typing.List[Notebook]) -> None
     template_context: typing.Dict[str, typing.Any] = {
         'environment': load_environment(),
         'static_url': 'static/',
-        'notebooks': [_parse_markdown_title_cell_to_html(notebook) for notebook in notebooks],
+        'notebooks': [_parse_markdown_title_cell_to_html(notebook) for notebook in reversed(notebooks)],
     }
     if not os.path.exists(WEBSITE_ARTIFACT_DIR):
         os.makedirs(WEBSITE_ARTIFACT_DIR)
@@ -215,11 +217,38 @@ def build_recently_published_notebooks(notebooks: typing.List[Notebook]) -> None
         raise builder_exceptions.EnvironmentVarName(f'Environment missing VarName[{varname}]')
 
 
+def build_asset_dir(initial_directory: str, target_directory: str) -> None:
+    for root, dirnames, filenames in os.walk(initial_directory):
+        for dirname in dirnames:
+            build_asset_dir(f'{initial_directory}/{dirname}', f'{target_directory}/{dirname}')
+
+        for filename in filenames:
+            target_filepath = os.path.join(target_directory, filename)
+            source_filepath = os.path.join(initial_directory, filename)
+            if any([
+                filename.endswith('.png'),
+                filename.endswith('.jpg'),
+                filename.endswith('.jpeg'),
+                filename.endswith('.svg'),
+                filename.endswith('.gif')]):
+                logger.info(f'Moving File[{filename}] to Asset Dir[{initial_directory}]')
+                with open(target_filepath, 'wb') as target_stream:
+                    with open(source_filepath, 'rb') as source_stream:
+                        target_stream.write(source_stream.read())
+            else:
+                raise NotImplementedError(filename)
+        break
+
 def build_static_pages(initial_directory: str, target_directory:str) -> None:
     if os.path.exists(target_directory):
         shutil.rmtree(target_directory)
 
     os.makedirs(target_directory)
+    environment: Environment = jinja2.Environment(loader=jinja2.FileSystemLoader(TEMPLATE_DIR), undefined=jinja2.StrictUndefined)
+    template_context: typing.Dict[str, typing.Any] = {
+        'environment': load_environment(),
+        'static_url': '/static/',
+    }
     for root, dirnames, filenames in os.walk(initial_directory):
         for dirname in dirnames:
             if dirname in ['css', 'images', 'js']:
@@ -231,9 +260,10 @@ def build_static_pages(initial_directory: str, target_directory:str) -> None:
             if filename.endswith('css'):
                 logger.info(f'Building File[{filename}]')
                 # Compress CSS
-                with open(target_filepath, 'w') as target_stream:
-                    with open(source_filepath, 'r') as source_stream:
-                        target_stream.write(source_stream.read())
+                with open(target_filepath, 'wb') as target_stream:
+                    with open(source_filepath, 'rb') as source_stream:
+                        css_template: Template = environment.from_string(source_stream.read().decode(ENCODING))
+                        target_stream.write(css_template.render(**template_context).encode(ENCODING))
 
             elif filename.endswith('.js'):
                 logger.info(f'Building File[{filename}]')
@@ -242,16 +272,6 @@ def build_static_pages(initial_directory: str, target_directory:str) -> None:
                     with open(source_filepath, 'r') as source_stream:
                         target_stream.write(source_stream.read())
 
-            elif any([
-                filename.endswith('.png'),
-                filename.endswith('.jpg'),
-                filename.endswith('.jpeg'),
-                filename.endswith('.svg'),
-                filename.endswith('.gif')]):
-                logger.info(f'Building File[{filename}]')
-                with open(target_filepath, 'w') as target_stream:
-                    with open(source_filepath, 'r') as source_stream:
-                        target_stream.write(source_stream.read())
 
             elif any([
                 filename.endswith('.html'),
@@ -430,8 +450,8 @@ def rebuild_rendered_notebooks(notebooks: typing.List[Notebook]) -> None:
             'static_url': '../static/',
             'notebook': notebook,
         }
-        with open(notebook.filepath, 'w') as notebook:
-            notebook.write(notebook_template.render(**template_context))
+        with open(notebook.filepath, 'w') as stream:
+            stream.write(notebook_template.render(**template_context))
 
 def build_sitemap(notebooks: typing.List[Notebook]) -> None:
     environment: Environment = jinja2.Environment(loader=jinja2.FileSystemLoader(TEMPLATE_DIR), undefined=jinja2.StrictUndefined)
@@ -497,11 +517,12 @@ notebooks: typing.List[typing.Dict[str, str]] = []
 for notebook in find_notebooks():
     notebooks.append(notebook)
 
-build_index_page(notebooks)
 build_recently_published_notebooks(notebooks)
 rebuild_rendered_notebooks(notebooks)
+build_index_page(notebooks)
 build_sitemap(notebooks)
 build_rss_feed(notebooks)
 build_atom_feed(notebooks)
 build_robots(notebooks)
 build_static_pages(TEMPLATE_DIR, WEBSITE_ARTIFACT_STATIC_DIR)
+build_asset_dir(ASSETS_DIR, WEBSITE_ARTIFACT_STATIC_DIR)

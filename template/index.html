@@ -6,24 +6,24 @@
     {% include "body-header.html" %}
 
   <section class="hero is-info is-medium is-bold">
-    <div class="hero-body">
+    <div class="hero-body hero-image">
       <div class="container has-text-centered">
-        <!-- <h1 class="title"> Joe Curtin </h1> -->
-        <h1 class="subtitle">
-            This website of is auto-generated from Github Actions to render Jupyter Notebooks.
-            Use the search above to find a Notebook already published
-        </h1>
       </div>
     </div>
   </section>
-  <div class="box cta">
-    <p class="has-text-centered">
-      <span> Joe Curtin builds software for scientists to access large data files, efficiently </span>
-    </p>
-  </div>
 
   <div class="intro column is-8 is-offset-2">
-    <h2 class="subtitle"> under development </h2>
+    <div class="is-medium has-text-left">
+      <h1 class="title">
+        {{ notebook.metadata.title }}
+      </h1>
+      <h2 class="subtitle">
+        {{ notebook.metadata.publish_date | human_date }}
+      </h2>
+    </div>
+    <div class="jupyter-notebook-styles content is-medium has-text-left">
+      {{ notebook.metadata.jupyter_html.document | safe }}
+    </div>
   </div>
 <!-- 
   <div class="intro column is-8 is-offset-2">
