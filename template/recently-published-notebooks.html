@@ -16,17 +16,17 @@
     <div class="hero-body">
   <h1 class="title page-title"> recently published notebooks </h1>
       <div class="container">
+{% for notebook in notebooks %}
         <section class="section">
           <div class="columns">
-{% for notebook in notebooks %}
             <div class="column is-10 is-offset-1">
               <div class="content is-medium">
                 {{ notebook }}
               </div>
             </div>
-{% endfor %}
           </div>
         </section>
+{% endfor %}
       </div>
     </div>
   </section>
