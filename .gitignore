@@ -134,3 +134,7 @@ build.sh
 artifact
 *.metadata.json
 yelp-fake-data.json
+bin
+pyvenv.cfg
+etc
+share
