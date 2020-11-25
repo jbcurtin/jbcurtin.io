@@ -3,7 +3,7 @@ name: "build jbcurtin.io"
 on:
   push:
     branches:
-      - master
+      - main
 
 # PYTHONPATH='build-tools' python build-tools/builder/create_artifacts.py
 jobs:
