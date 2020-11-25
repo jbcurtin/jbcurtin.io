@@ -517,6 +517,9 @@ notebooks: typing.List[typing.Dict[str, str]] = []
 for notebook in find_notebooks():
     notebooks.append(notebook)
 
+# Sort Notebooks, most recent being first
+notebooks = sorted(notebooks, key=lambda x: x.metadata['publish_date'], reverse=False)
+
 build_recently_published_notebooks(notebooks)
 rebuild_rendered_notebooks(notebooks)
 build_index_page(notebooks)
