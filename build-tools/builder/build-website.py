@@ -134,6 +134,24 @@ def build_index_page(notebooks: typing.List[Notebook]) -> None:
         varname: str = err.args[0].rsplit("'", 2)[1]
         raise builder_exceptions.EnvironmentVarName(f'Environment missing VarName[{varname}]')
 
+def build_about_page(notebooks: typing.List[Notebook]) -> None:
+    environment = jinja2.Environment(loader=jinja2.FileSystemLoader(TEMPLATE_DIR), undefined=jinja2.StrictUndefined)
+    _add_jinja2_filters(environment)
+
+    about: Template = environment.get_template('about.html')
+    template_context = {
+        'environment': load_environment(),
+        'static_url': 'static/',
+    }
+
+    try:
+        with open(f'{WEBSITE_ARTIFACT_DIR}/about.html', 'w') as stream:
+            stream.write(about.render(**template_context))
+
+    except jinja2.exceptions.UndefinedError as err:
+        varname: str = err.args[0].rsplit("'", 2)[1]
+        raise builder_exceptions.EnvironmentVarName(f'Environment missing VarName[{varname}]')
+
 def _parse_markdown_html_to_bulma_html(html_lines: typing.List[str], notebook: Notebook) -> str:
     rendered: typing.List[str] = []
     for html_line in html_lines:
@@ -523,6 +541,7 @@ notebooks = sorted(notebooks, key=lambda x: x.metadata['publish_date'], reverse=
 build_recently_published_notebooks(notebooks)
 rebuild_rendered_notebooks(notebooks)
 build_index_page(notebooks)
+build_about_page(notebooks)
 build_sitemap(notebooks)
 build_rss_feed(notebooks)
 build_atom_feed(notebooks)
