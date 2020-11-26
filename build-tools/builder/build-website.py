@@ -86,6 +86,7 @@ def _enhance_notebook_metadata(notebook: Notebook) -> None:
         notebook.metadata['publish_date'] = first_commit.authored_datetime
         notebook.metadata['updated_date'] = last_commit.authored_datetime
 
+    print(GIT_REPO_ROOT)
     for comm in commits:
         print(comm.hexsha)
     print(notebook.metadata['publish_date'])
