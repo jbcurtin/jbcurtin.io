@@ -1,6 +1,9 @@
 class BuilderException(Exception):
     pass
 
+class NotebookFileIssue(BuilderException):
+    pass
+
 class MissingRequirementsFile(BuilderException):
     pass
 
