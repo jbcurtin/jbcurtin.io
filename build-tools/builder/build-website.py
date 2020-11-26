@@ -83,7 +83,6 @@ def _enhance_notebook_metadata(notebook: Notebook) -> None:
     else:
         notebook.metadata['publish_date'] = first_commit.authored_datetime
         notebook.metadata['updated_date'] = last_commit.authored_datetime
-        notebook.metadata['publish_date'] = last_commit.authored_datetime
 
     # Render jupyter HTML
     with open(notebook.jupyter_filepath, 'r') as jupyter_html:
@@ -108,6 +107,7 @@ def find_notebooks() -> types.GeneratorType:
                         json.loads(stream.read()))
 
                     _enhance_notebook_metadata(notebook)
+                    import pdb; pdb.set_trace()
                     yield notebook
 
         # only check the current directory
