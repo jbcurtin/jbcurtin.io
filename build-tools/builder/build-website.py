@@ -175,6 +175,12 @@ def _parse_markdown_html_to_bulma_html(html_lines: typing.List[str], notebook: N
         elif html_line.startswith('<ul>'):
             rendered.append(html_line)
 
+        elif html_line.startswith('<pre>'):
+            rendered.append(html_line)
+
+        elif html_line.startswith('<code>'):
+            rendered.append(html_line)
+
         else:
             raise NotImplementedError(html_line)
 
