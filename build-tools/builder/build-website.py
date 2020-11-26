@@ -325,6 +325,7 @@ def _parse_jupyter_html_to_bulma_document(html: str) -> str:
         GRID: typing.List[str] = ['column', 'is-11']#'is-offset-1']
         # print(tag.name, tag.attrs)
         if tag.name in ['div']:
+            print(tag.attrs.get('data-mime-type', None))
             if tag.attrs.get('id', None) == 'notebook':
                 continue
 
@@ -334,6 +335,9 @@ def _parse_jupyter_html_to_bulma_document(html: str) -> str:
             elif tag.attrs.get('class', [None])[0] == 'cell':
                 tag.attrs['class'] = GRID
                 continue
+
+            elif tag.attrs.get('data-mime-type', '') == 'text/markdown':
+                tag.attrs['class'].append('markdown-spacer')
 
             # Markdown Cell
             elif all([
