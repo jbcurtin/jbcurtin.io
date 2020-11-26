@@ -112,7 +112,6 @@ def find_notebooks() -> types.GeneratorType:
                         json.loads(stream.read()))
 
                     _enhance_notebook_metadata(notebook)
-                    import pdb; pdb.set_trace()
                     yield notebook
 
         # only check the current directory
