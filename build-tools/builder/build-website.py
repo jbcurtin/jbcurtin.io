@@ -536,7 +536,11 @@ for notebook in find_notebooks():
     notebooks.append(notebook)
 
 # Sort Notebooks, most recent being first
-notebooks = sorted(notebooks, key=lambda x: x.metadata['publish_date'], reverse=False)
+if os.environ.get('BUILDER_RUNNING', '').lower() in ['t', 'true']:
+    notebooks = sorted(notebooks, key=lambda x: x.metadata['publish_date'], reverse=True)
+
+else:
+    notebooks = sorted(notebooks, key=lambda x: x.metadata['publish_date'], reverse=False)
 
 build_recently_published_notebooks(notebooks)
 rebuild_rendered_notebooks(notebooks)

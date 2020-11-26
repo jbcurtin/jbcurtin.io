@@ -37,6 +37,8 @@ jobs:
       - name: Build Website
         run: |
           python build-tools/builder/build-website.py
+        env:
+          BUILDER_RUNNER: true
       - name: Publish Website
         run: |
           git config --local user.name jbcurtin.io Builder
