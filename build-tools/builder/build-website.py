@@ -76,21 +76,13 @@ def _enhance_notebook_metadata(notebook: Notebook) -> None:
         last_commit: git.Commit = commits[-1]
 
     except IndexError:
-        print('indexRrr')
         first_commit = None
         notebook.metadata['publish_date'] = None
         notebook.metadata['updated_date'] = None
 
     else:
-        print('else')
         notebook.metadata['publish_date'] = first_commit.authored_datetime
         notebook.metadata['updated_date'] = last_commit.authored_datetime
-
-    print(GIT_REPO_ROOT)
-    for comm in commits:
-        print(comm.hexsha)
-    print(notebook.metadata['publish_date'])
-    print(notebook.metadata['updated_date'])
 
     # Render jupyter HTML
     with open(notebook.jupyter_filepath, 'r') as jupyter_html:
