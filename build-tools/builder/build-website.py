@@ -131,9 +131,9 @@ def build_index_page(notebooks: typing.List[Notebook]) -> None:
         'notebook': notebooks[-1],
         'page': {
             'title': load_environment().index_title,
-            'url': 'https://jbcurtin.io/',
+            'url': load_environment().url,
             'description': load_environment().description,
-            'locale': 'en',
+            'locale': load_environment().locale,
         },
     }
     if not os.path.exists(WEBSITE_ARTIFACT_DIR):
@@ -157,9 +157,9 @@ def build_about_page(notebooks: typing.List[Notebook]) -> None:
         'static_url': 'static/',
         'page': {
             'title': 'about',
-            'url': 'https://jbcurtin.io/',
+            'url': f'{load_environment().url}about.html',
             'description': load_environment().description,
-            'locale': 'en',
+            'locale': load_environment().locale,
         }
     }
 
@@ -249,9 +249,9 @@ def build_recently_published_notebooks(notebooks: typing.List[Notebook]) -> None
         'notebooks': [_parse_markdown_title_cell_to_html(notebook) for notebook in reversed(notebooks)],
         'page': {
             'title': load_environment().recently_published_title,
-            'url': 'https://jbcurtin.io/',
+            'url': f'{load_environment().url}recently-published-notebooks.html',
             'description': load_environment().description,
-            'locale': 'en',
+            'locale': load_environment().locale,
         },
     }
     if not os.path.exists(WEBSITE_ARTIFACT_DIR):
@@ -503,9 +503,9 @@ def rebuild_rendered_notebooks(notebooks: typing.List[Notebook]) -> None:
             'notebook': notebook,
             'page': {
                 'title': notebook.metadata['title'],
-                'url': 'https://jbcurtin.io/',
-                'description': load_environment().description,
-                'locale': 'en',
+                'url': f'{load_environment().url}{notebook.relative_path}',
+                'description': ''.join(notebook.metadata['title-cell']),
+                'locale': load_environment().locale,
             },
         }
         with open(notebook.filepath, 'w') as stream:
@@ -540,9 +540,9 @@ def build_rss_feed(notebooks: typing.List[Notebook]) -> None:
         'notebooks': notebooks,
         'page': {
             'title': load_environment().rss_title,
-            'url': 'https://jbcurtin.io/',
+            'url': load_environment().url,
             'description': load_environment().description,
-            'locale': 'en',
+            'locale': load_environment().locale,
         }
     }
     with open(rss_filepath, 'w') as rss_stream:
@@ -560,6 +560,9 @@ def build_atom_feed(notebooks: typing.List[Notebook]) -> None:
         'notebooks': notebooks,
         'page': {
             'title': load_environment().atom_title,
+            'url': load_environment().url,
+            'description': load_environment().description,
+            'locale': load_environment().locale,
         }
     }
     with open(atom_filepath, 'w') as atom_stream:
@@ -578,6 +581,9 @@ def build_robots(notebooks: typing.List[str]) -> None:
         'notebooks': notebooks,
         'page': {
             'title': load_environment().robots_title,
+            'url': load_environment().url,
+            'description': load_environment().description,
+            'locale': load_environment().locale,
         }
     }
     with open(robots_filepath, 'w') as robots_stream:
