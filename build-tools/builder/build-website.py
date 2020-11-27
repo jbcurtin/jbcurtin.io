@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import argparse
 import bs4
 import collections
 import logging
@@ -29,6 +30,7 @@ RENDERED_NOTEBOOKS_DIR: str = os.path.join(os.getcwd(), 'artifact/notebooks')
 TEMPLATE_DIR: str = os.path.join(os.getcwd(), 'template')
 ASSETS_DIR: str = os.path.join(os.getcwd(), 'assets')
 ENVIRONMENT_PATH: str = os.path.join(f'{TEMPLATE_DIR}/environment.toml')
+ENVIRONMENT = None
 
 # Output
 WEBSITE_ARTIFACT_DIR: str = os.path.join(os.getcwd(), 'artifact')
@@ -53,12 +55,17 @@ def _add_jinja2_filters(environment: Environment) -> None:
     environment.filters['machine_date_with_time'] = _render_machine_datetime_with_time
 
 def load_environment() -> typing.Dict[str, typing.Any]:
+    global ENVIRONMENT
+    if ENVIRONMENT:
+        return ENVIRONMENT
+
     environment: typing.Dict[str, typing.Any]
     with open(ENVIRONMENT_PATH, 'r') as stream:
         environment = toml.loads(stream.read())
 
     environment['today'] = datetime.utcnow()
-    return environment
+    ENVIRONMENT = argparse.Namespace(**environment)
+    return ENVIRONMENT
 
 def _enhance_notebook_metadata(notebook: Notebook) -> None:
     notebook.metadata['title-cell-html'] = _parse_markdown_title_cell_to_html(notebook)
@@ -121,7 +128,13 @@ def build_index_page(notebooks: typing.List[Notebook]) -> None:
     template_context: typing.Dict[str, typing.Any] = {
         'environment': load_environment(),
         'static_url': 'static/',
-        'notebook': notebooks[-1]
+        'notebook': notebooks[-1],
+        'page': {
+            'title': load_environment().index_title,
+            'url': 'https://jbcurtin.io/',
+            'description': load_environment().description,
+            'locale': 'en',
+        },
     }
     if not os.path.exists(WEBSITE_ARTIFACT_DIR):
         os.makedirs(WEBSITE_ARTIFACT_DIR)
@@ -142,6 +155,12 @@ def build_about_page(notebooks: typing.List[Notebook]) -> None:
     template_context = {
         'environment': load_environment(),
         'static_url': 'static/',
+        'page': {
+            'title': 'about',
+            'url': 'https://jbcurtin.io/',
+            'description': load_environment().description,
+            'locale': 'en',
+        }
     }
 
     try:
@@ -228,6 +247,12 @@ def build_recently_published_notebooks(notebooks: typing.List[Notebook]) -> None
         'environment': load_environment(),
         'static_url': 'static/',
         'notebooks': [_parse_markdown_title_cell_to_html(notebook) for notebook in reversed(notebooks)],
+        'page': {
+            'title': load_environment().recently_published_title,
+            'url': 'https://jbcurtin.io/',
+            'description': load_environment().description,
+            'locale': 'en',
+        },
     }
     if not os.path.exists(WEBSITE_ARTIFACT_DIR):
         os.makedirs(WEBSITE_ARTIFACT_DIR)
@@ -476,6 +501,12 @@ def rebuild_rendered_notebooks(notebooks: typing.List[Notebook]) -> None:
             'environment': load_environment(),
             'static_url': '../static/',
             'notebook': notebook,
+            'page': {
+                'title': notebook.metadata['title'],
+                'url': 'https://jbcurtin.io/',
+                'description': load_environment().description,
+                'locale': 'en',
+            },
         }
         with open(notebook.filepath, 'w') as stream:
             stream.write(notebook_template.render(**template_context))
@@ -490,6 +521,9 @@ def build_sitemap(notebooks: typing.List[Notebook]) -> None:
         'environment': load_environment(),
         'static_url': 'static/',
         'notebooks': notebooks,
+        'page': {
+            'title': load_environment().sitemap_title,
+        }
     }
     with open(sitemap_filepath, 'w') as sitemap_stream:
         sitemap_stream.write(sitemap_template.render(**template_context))
@@ -504,6 +538,12 @@ def build_rss_feed(notebooks: typing.List[Notebook]) -> None:
         'environment': load_environment(),
         'static_url': 'static/',
         'notebooks': notebooks,
+        'page': {
+            'title': load_environment().rss_title,
+            'url': 'https://jbcurtin.io/',
+            'description': load_environment().description,
+            'locale': 'en',
+        }
     }
     with open(rss_filepath, 'w') as rss_stream:
         rss_stream.write(rss_template.render(**template_context))
@@ -517,7 +557,10 @@ def build_atom_feed(notebooks: typing.List[Notebook]) -> None:
     template_context: typing.Dict[str, typing.Any] = {
         'environment': load_environment(),
         'static_url': 'static/',
-        'notebooks': notebooks
+        'notebooks': notebooks,
+        'page': {
+            'title': load_environment().atom_title,
+        }
     }
     with open(atom_filepath, 'w') as atom_stream:
         atom_stream.write(atom_template.render(**template_context))
@@ -532,7 +575,10 @@ def build_robots(notebooks: typing.List[str]) -> None:
     template_context: typing.Dict[str, typing.Any] = {
         'environment': load_environment(),
         'static_url': 'static/',
-        'notebooks': notebooks
+        'notebooks': notebooks,
+        'page': {
+            'title': load_environment().robots_title,
+        }
     }
     with open(robots_filepath, 'w') as robots_stream:
         robots_stream.write(robots_template.render(**template_context))
