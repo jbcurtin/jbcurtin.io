@@ -7,7 +7,7 @@
     <link> {{ environment.url }} </link>
     <description> {{ environment.description }} </description>
     <lastBuildDate> {{ environment.today }} </lastBuildDate>
-    <docs> {{ environment.url }}/rss.xml </docs>
+    <docs> {{ environment.url }}rss.xml </docs>
     <managingEditor> {{ environment.email }} ( {{ environment.author }} ) </managingEditor>
     <webMaster> {{ environment.email }} ( {{ environment.author }} ) </webMaster>
 {% for notebook in notebooks %}
@@ -16,7 +16,7 @@
         {{ notebook.metadata['title-cell-html'] }}
       </description>
       <guid>
-        {{ environment.url }}/{{ notebook.relative_path }}
+        {{ environment.url }}{{ notebook.relative_path }}
       </guid>
       <pubDate> {{ notebook.metadata.publish_date |machine_date }} </pubDate>
     </item>

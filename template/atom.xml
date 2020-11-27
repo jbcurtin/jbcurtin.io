@@ -10,8 +10,8 @@
 {% for notebook in notebooks %}
   <entry>
     <title> {{ notebook.metadata.title }} </title>
-    <link href="{{ environment.url }}/{{ notebook.relative_path }}" />
-    <id> {{ environment.url }}/{{ notebook.relative_path }}" </id>
+    <link href="{{ environment.url }}{{ notebook.relative_path }}" />
+    <id> {{ environment.url }}{{ notebook.relative_path }}" </id>
     <updated> {{ notebook.metadata.updated_date | machine_date_with_time }} </updated>
     <summary> {{ notebook.metadata['title-cell-atom'] }} </summary>
   </entry>
