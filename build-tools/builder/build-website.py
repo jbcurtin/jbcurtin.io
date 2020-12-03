@@ -156,7 +156,7 @@ def build_about_page(notebooks: typing.List[Notebook]) -> None:
         'environment': load_environment(),
         'static_url': 'static/',
         'page': {
-            'title': 'about',
+            'title': load_environment().about_title,
             'url': f'{load_environment().url}about.html',
             'description': load_environment().description,
             'locale': load_environment().locale,
