@@ -1,0 +1,8 @@
+{
+  "title": "How to use 'data-scripts' to setup a local Dask Scheduler and Dask Worker",
+  "title-cell": [
+    "# How to use 'data-scripts' to setup a local Dask Scheduler and Dask Worker\n",
+    "\n",
+    "Depending on the science background you're coming from, there is a good chance you'll need to process a large amount of data. `data-scripts` aims to turn AWS S3, Digital Ocean Spaces, Google Cloud Storage, and Microsoft Blog storage into a massive Data Lake. All four major storage provides implement industry best stardards which allows us to store and pull data from across the world assuming we already have an index of the files being stored. `data-scripts` will focus on how to quickly insert data into your algorithms while keeping a mindful awareness of how much it might cost to do that"
+  ]
+}

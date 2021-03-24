@@ -1,0 +1,8 @@
+{
+  "title": "Importing JSON-Data into PostgreSQL",
+  "title-cell": [
+    "# Importing JSON-Data into PostgreSQL\n",
+    "\n",
+    "Parsing JSON files can be quick and efficient, importing them into PostgreSQL may take some time. In this article, we'll examine how to save compute resource time by pre-processing the JSON format into a CSV format with PSQL datatypes to be imported into PostgreSQL. This method seems to be the quickest way to import data into PostgreSQL"
+  ]
+}

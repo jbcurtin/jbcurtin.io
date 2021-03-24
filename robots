@@ -3,4 +3,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: {{ environment.url }}sitemap.xml
+Sitemap: https://jbcurtin.io/sitemap.xml

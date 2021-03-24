@@ -50,7 +50,7 @@
     color: #209cee;
 }
 .hero-image {
-    background: url('{{static_url}}heian-shrine-kyoto.jpg') center center;
+    background: url('/static/heian-shrine-kyoto.jpg') center center;
     background-size: cover;
     padding-bottom: 20rem !important;
 }
