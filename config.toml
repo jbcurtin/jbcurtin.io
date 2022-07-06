@@ -34,7 +34,6 @@ weibo = ""
 linkedin = "jbcurtin/"
 flickr = ""
 
-
 ## Translations
 [languages.en.translations]
 about = "About"
@@ -44,6 +43,7 @@ archive = "Archive"
 links = "Links"
 next_page = "Next Page"
 last_page = "Last Page"
+date_format = "%m-%d-%Y"
 
 # [languages.zh.translations]
 # home = "首页"
