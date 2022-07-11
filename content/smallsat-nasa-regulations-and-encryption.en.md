@@ -73,10 +73,62 @@ A magnetometer will be mounted in the top-section of the Cubsat, taking up the t
 
 ###### Light Sensing Diodes
 
-#### Command and Data Handling ( C&DH )
 
-The remaining 1/3U of the midsection of CubeSat 3U will be reselved for onboard data processing. Software Checks and Data Checks to make sure the image payload is ready to be transmitted to ground stations when CubeSat 3U flys over our Ground Station.
+#### Command, Data Handling, Security & Verification ( CDHSV )
 
+The remaining 1 and 1/3U of the CubeSat 3U will be reserved for onboard Processing for Command, Data Handling, and Security & Verification hardware. Command accepts uplink commands sent from an authenticated ground station. Data Handling prepares data for download to a ground station. Security & Verification provides a security framework onboard the satellite to make sure agents and actors are properly authenticated and authorized.
+
+##### Command
+
+Command Software Module ( CSM ) controls the actions of CubeSat 3U. Having direct interaction between all functioning components within the vehicle. Capable of receiving uplink commands from a ground station. When a command is recieved, it is first verified to make sure the command came from an authorized ground station. When accepted, CSM then proceeds to decide what kind of command was sent.
+
+If the command sent was a flight related command, it'll be sent to Satellite Attitude Determination and Control System ( ADCS ).
+
+If the command sent was for an alteration to capture a different section of Earth Observation
+
+If the command sent was for a data download request or data stop request, the command is sent to Instrument Data Processor Unit ( IDPU ).
+
+All commands sent, are routed through the Security & Verification Hardware Module for command verification and ground station authorization. Ensuring only authorized commands can alter the state of the space vehicle.
+
+###### Satellite Attitude & Articulation Determination and Control System ( AADCS )
+
+Comand provides the interface to alter the dynamics of the space vehicle. Capable of changing the orbit and orienting the satellite towards the correct spot on Earth. Command Flight Control provides the capability to change the mission design while in flights as well.
+
+The controls for CubeSat 3U are divided into algorithms.
+
+* Momentum Dumping
+* Orbit Raising Maneuver - increases the semi-major axis. Examples include drag makeup (DMU) maneuvers, which counteract the effects of atmospheric drag and re-initialize the circulation orbit for a satellite; some types of risk mitigation maneuvers (RMMs) are executed to avoid orbital debris; and ascent maneuvers for putting new satellites into the mission's orbital location.
+* Orbit Lowering Maneuver - decreases the semi-major axis. Examples include braking maneuvers used to avoid exiting theconstellation control box; some types of risk mitigation maneuvers (RMMs) are executed to avoid orbital debris; and exit maneuvers for satellites leaving their nominal orbital location.
+* De-Spin
+* Inclination adjust maneuve - performed periodically to maintain the mission's Mean Local Time (MLT) in a pre-specified range
+
+
+##### Data Handling
+##### Security & Verification
+
+Security & Verification module will provide a high-level API available to other components of the satellite. Complete messages will be sent to the Hardware Security Module ( HSM ) and resigned for uplink data transmission and data onboard the device will be signed for downlink transmission.
+
+#### Command
+
+Commands recieved from a ground station will be validated using Security & Validation Subsystem. 
+
+When a command is accepted, the command module takes the command and interprets the command into an action. For example, the attitude of the satellight might be off by 25km, making an adjustment using Reaction Wheels to dump forward momentum and than desaturate the momentum wheels by dumping the stored momentum would take two commands. Controlls for the Satelight will be tightly bound to the ground station, each command will be ran through a simulation prior transmission in order to make sure model and unit stay in sync.
+
+
+Commands recieved from a ground station will first be validated using Security & Verification 
+Commands recieved and transmitted from CubeSat3U will contain cryptograhic signatures, signed using onboard hardware and subsequently hashed.
+
+Data Handling -> Verification
+
+Security Hardware 
+
+Software checks will be designed, providing a verification through a Hardware Security Module ( HSM ) desgined by industry leaders. Data-Payloads will be sent into the HSM and a Secure Hash Digest ( SHD ) will be provided to the consumer of the API. Data will than be transmitted in clear view of anyone observing. The only objective we're looking to maintain is that the data we recieve is correct and un-altered in any way. Insecure data, or altered data will be immediatly disposed of.
+
+Onboard C&DH will also run simular tests for command validation and uplink transmission, using isolated hardware processer & memory. Offloading responsibility from the primary Data Processing and Handling module. Security & Verification module will remain isolated, it is safer and more secure not to share hardware or software resources with other subsystems. Reducing the protential for actors to gan access to hardware secured secrets.
+
+#### Command
+#### Data Handling
+#### Security & Verification
 ### Ground Station
 ## CubeSat Regulations & License Requirements
 ## Unencrypted Command & Integrity Verification
