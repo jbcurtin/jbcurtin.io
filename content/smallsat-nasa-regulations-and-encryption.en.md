@@ -23,6 +23,8 @@ This post is parsed into sections,
 * Space Vehicle
 * Ground Station
 * CubeSat Regulations & License Requirements
+* Onboard Database
+* Transmitting - Uplink/Downlink
 * Security & Verification
 * Unencrypted Command Verification
 * Unencrypted Data Transmission Verification
@@ -122,17 +124,56 @@ If such hostile events are to happen; events will be reported to the approiate a
 
 ### Policies and Licensing
 
-FCC requires all amature satellites with a transmitter to be licensed. For the sake of this simulation, we'll assume that all licensing is complete. [ARRL](http://arrl.org/) provides a PDF of [Amateur FCC Part 97](http://www.arrl.org/files/file/Regulatory/March%208,%202018.pdf). Refer to [ecfr.gov](https://ecfr.gov/) for [Experimental FCC Part 5](https://www.ecfr.gov/current/title-47/chapter-I/subchapter-A/part-5). NOAA must also be contact in the event any remote sensing is taking place within the space vehicle. NOAA might have licensing specific to the "type of sensor activity" being done.
+For an Ameture License, FCC requires all transmissions must be in plain text. Transmission of data cannot be encrytped in any way, all transmissions must be sent in plain form, meaning nothing is kept secret. NASA requires all satellites with propulsive capabilities encrypt transmissions to and from ground stations. We'll have to apply for an Experimental License because CubeSat 3U has actuators; we're preforming Earth Observation; we don't classify as Commercial or as a Government unit.
 
-Special thanks to the creaters of [State of the Art of Small Spacecraft Technology](https://www.nasa.gov/smallsat-institute/sst-soa/communications#9.5.5) for providing this information. In order to operate a Ground Station, someone at the facility needs to be an Amateur Radio Licensed Operator.
+FCC requires all satellites with a transmitter to be licensed. For the sake of this simulation, we'll assume that all licensing is complete/approved. [ARRL](http://arrl.org/) provides a PDF of [Amateur FCC Part 97](http://www.arrl.org/files/file/Regulatory/March%208,%202018.pdf). Refer to [ecfr.gov](https://ecfr.gov/) for [Experimental FCC Part 5](https://www.ecfr.gov/current/title-47/chapter-I/subchapter-A/part-5). NOAA must also be contacted in the event any remote sensing is taking place within the space vehicle. NOAA might have licensing specific to the "type of sensor activity" being done.
+
+Special thanks to the creaters of [State of the Art of Small Spacecraft Technology](https://www.nasa.gov/smallsat-institute/sst-soa/communications#9.5.5) for providing this information. In order to operate a Ground Station, someone at the facility needs to be an Amateur Radio Licensed Operator. There is also [CubeSat 101](https://www.nasa.gov/sites/default/files/atoms/files/nasa_csli_cubesat_101_508.pdf), providing a fantastic guide on how to plan your first CubeSat build.
 
 ### Encryption
 
-Encryption for command codes is required by NASA Regulation. This is where the Security & Verification module comes into use. In order to prevent CubeSat 3U from being taken over by a maliciosu actor, we'll encrypt all command communication to and from CubeSat 3U.
+We want to maximize the data download link, and we don't really care much about protecitng the data while in transmission. However, we must maintain strict encryption for both command codes and data verification processing. Meaning, we'll need to install a Hardware Security Module ( HSM ) which will manage secure communication between the space vehicle and ground station.
+
+## Database and Instrument Processing Unit
+
+The Database and Instrument Processing Unit ( DIPU ) will be made up of multiple subsystems. The Database subsystem will use [rocksDB](http://rocksdb.org/) at the core since it can be stored on flash storage and is optimized for performance using modern OTC SSD technology. We'll enhance and provide an API using [Rust](https://docs.rs/rocksdb/latest/rocksdb/). The new API will be simular in design to most other [document databases](https://en.wikipedia.org/wiki/Document-oriented_database). A key-value pair will be passed as a string-object. [Rust Structs](https://doc.rust-lang.org/rust-by-example/custom_types/structs.html) will be able to inherit traits and perform operations on the embedded database.
+
+For stabliziation and flight, we'll also need to collect metrics for all subsystems and store them. Each database record will have a prefix relative to which subsystem the data is being stored for. That way, we'll be able to iterate over all subsystems and transmite telemetry data with ease.
+
+### Earth Observation
+
+The optical camera used to take photos of Earth has device storage upwards of 128gb, which is more than enough for 4 minutes of image capture. We'll leave the photos taken as is, on that device and use DIPU to track, tag, and transmit a compressed data stream over the downlink without using any additional long-term storage device. Once the DIPU determines a photo has been recieved in full by CubeSat 3U Ground Station, it will be removed from device storage. Data backups will be managed on Earth.
+
+### Actuators
+We'll collect operational statistics for both Magnetorquer & Reaction Wheels. Making sure our commands return indicated results within a given variance.
+
+TODO: What kind of metrics should be returned from Magnetoquer and Reaction Wheels?
+#### Magnetorquer
+#### Reaction Wheels
+
+### Communication
+#### RF Transmitter
+##### Status
+#### RF Reciever
+##### Status
+
+### Command
+#### Ignored Command
+#### Redundent Command
+#### Applied Command
+
+### Security Hardware Module
+#### Signatures
+#### Encryptions
+#### Attacks Detected
+
+## Transmitting - Uplink/Downlink
 
 ## Security & Verification
 
-In this module, we'll design Security & Verfication hardware and software
+### Command
+
+### Data Verification
 
 ## Encrypted Command Verification
 
