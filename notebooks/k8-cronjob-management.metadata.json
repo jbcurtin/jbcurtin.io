@@ -1,8 +1,0 @@
-{
-  "title": "CronJob management in kubenetes",
-  "title-cell": [
-    "# CronJob management in kubenetes\n",
-    "\n",
-    "CronJobs were first released by Bell labs in 1975. Used to invoke periodic jobs on a given day, week, or month at a specific hour & specific minute. CronJob kind has made its way into the kubenetes API and are packed full of capabilities not immediately noticeable by one's imagination. Here is a workflow I developed that functions well and also provides a quick way to debug by creating Jobs from CronJobs."
-  ]
-}

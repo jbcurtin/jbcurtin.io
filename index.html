@@ -1,279 +1,104 @@
-<html>
-  <head>
-    <title> Joe Curtin's Index </title>
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"/>
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bulma-divider@0.2.0/dist/css/bulma-divider.min.css"/>
-<link rel="stylesheet" type="text/css" href="static/css/main.css" />
-<link rel="stylesheet" type="text/css" href="static/css/jupyter.css" />
-<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<!DOCTYPE html>
+<html lang="en" 
+   
+    class="theme--light" 
+  
+>
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://jbcurtin.io/images/apple-touch-icon-144x144.png"/>
+  <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://jbcurtin.io/images/apple-touch-icon-120x120.png"/>
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://jbcurtin.io/images/apple-touch-icon-72x72.png"/>
+  <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://jbcurtin.io/images/apple-touch-icon-57x57.png"/>
+  <link rel="short icon" href="https://jbcurtin.io/images/favicon.png" type="image/x-icon"/>
+  <link rel="stylesheet" href="https://jbcurtin.io/style.css">
+  <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+  <title></title>
+  
 
-<!-- Summary Content -->
-<meta name="description" content="jbcurtin.io has scripts for managing massive amounts of data to help you or your organization focus more on science" />
-<meta name="keywords" content="k8,kubenetes,gcp,aws,sklearn,mlops,machine learning operations,machine learning,ml,modelops,numpy,devops,etl,astronomy,science,dask" />
-<meta name="author" content="Joe Curtin" />
-
-<!-- mobile tags -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- Google SEO -->
-<!-- Details: https://support.google.com/webmasters/answer/79812?hl=en -->
-<meta name="googlebot" content="index" />
-
-<!-- Open Graph -->
-<!-- https://ogp.me/ -->
-<meta property="og:title" content="Joe Curtin's Index" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://jbcurtin.io/" />
-<meta property="og:description" content="jbcurtin.io has scripts for managing massive amounts of data to help you or your organization focus more on science" />
-<meta property="og:locale" content="en_US" />
-  </head>
-  <body>
-    <nav class="navbar" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
-    <a class="navbar-item navbar-icon" href="/">
-<svg height='100px' width='100px'  fill="#000000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve"><title>data_16</title><path d="M50.8400002,59.5200005h-1.4599991v10.3100014H42v16.0999985h16.0999985V69.8300018h-7.2599983V59.5200005z   M56.6399994,71.3000031v13.1699982H43.4700012V71.3000031H56.6399994z"></path><path d="M86.3300018,57.8600006V41.75H70.2300034v7.3699989h-8.4000015v-8.7799988H59v-7.5400009h5.7099991v7.3199997h16.0999985V24  H64.7099991v7.3199997h-7.1299973v0.7299995l0,0v8.2700005h-6.7400017V29.5200005h7.2700005V13.4200001H42v16.1000004h7.3699989  v10.8199997h-6.6299973v-8.2700005l0,0v-0.7299995h-7.1300011V24H19.5100002v16.0999985h16.1000004v-7.2999992h5.6699982v7.5400009  h-2.8799973v8.7900009h-8.5200024V41.75H13.7700005v16.0999985h16.1099987v-7.2599983h8.5200024v8.7900009h2.8800011v7.5399971  h-5.670002v-7.329998H19.5100002v16.1099968h16.1000004v-7.3199997h7.1300011v-0.7300034l0,0v-8.2699928h14.7899971v8.2700005l0,0  v0.7300034h7.1299973v7.3199921h16.1500015V59.5900002H64.7099991v7.3200035H59v-7.5300026h2.8300018v-8.7900009h8.4000015  v7.2700005H86.3300018z M71.6900024,43.2200012h13.1800003v13.1699982H71.6900024V43.2200012z M66.1699982,25.4799995h13.1800003  v13.1800003H66.1699982V25.4799995z M43.4699974,28.0599995V14.8800001h13.170002v13.1799994H43.4699974z M34.1499977,38.6599998H21  V25.4799995h13.1500015L34.1499977,38.6599998z M28.4200001,56.3899994H15.2399998V43.2200012h13.1800003V56.3899994z   M34.1500015,74.2299957H21V61.0600014h13.1500015V74.2299957z M66.1500015,61.0499954h13.1999969v13.1800079H66.1699982  L66.1500015,61.0499954z M60.3400002,57.909996H39.8699989V41.7999992h20.4900017L60.3400002,57.909996z"></path><rect x="53.7599983" y="49.1300011" width="1.4599991" height="1.4599991"></rect><rect x="49.3800011" y="49.1300011" width="1.4599991" height="1.4599991"></rect><rect x="45" y="49.1300011" width="1.4599991" height="1.4599991"></rect></svg>
-    </a>
-
-    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </a>
-  </div>
-
-  <div id="navbarBasicExample" class="navbar-menu">
-    <div class="navbar-start">
-      <div class="navbar-item has-dropdown is-hoverable">
-        <a href="/recently-published-notebooks.html" class="navbar-link">
-          Notebooks
-        </a>
-
-        <div class="navbar-dropdown">
-          <a href="/recently-published-notebooks.html" class="navbar-item">
-            Recently Published
-          </a>
-          <a target="_blank" href="https://forms.gle/9QBGGfPEVPBEMj1BA" class="navbar-item">
-            Contact
-          </a>
-          <hr class="navbar-divider">
-          <a target="_blank" href="https://github.com/jbcurtin/jbcurtin.io/blob/master/notebooks/README.md" class="navbar-item">
-            Create Notebook
-          </a>
-        </div>
+  
+  
+</head>
+<body>
+<div id="sidebar" class="animated fadeInDown">
+  <div class="logo-title">
+    <div class="title">   
+      <!-- <img src=https://jbcurtin.io/images/logo@2x.png style="width:127px;" alt="logo"/> -->
+      <img src=https://jbcurtin.io/images/data-1200.png style="width:220px;" alt="logo"/>
+      <h3><a href="https://jbcurtin.io/"></a></h3>
+      <div class="description">
+        <p></p>
       </div>
     </div>
-<div class="navbar-item field navbar-search">
-  <p class="control has-icons-right">
-    <input disabled="disabled" class="input" type="search" placeholder="Search by Notebok Name...">
-    <span class="icon is-small is-right">
-      <icon class="fas fa-search"/>
-    </span>
-  </p>
-</div>
-      <a href="/about.html" class="navbar-item disabled">
-        Who is Joe Curtin?
+  </div>
+  <ul class="social-links"><li><a href="mailto:42@jbcurtin.io"><i class="fa fa-envelope"></i></a></li><li><a href="https://github.com/jbcurtin"><i class="fab fa-github"></i></a></li><li>
+      <a href="https://stackoverflow.com/users/432309&#x2F;jbcurtin">
+        <i class="fab fa-stack-overflow"></i>
       </a>
-
-     <a class="navbar-item" href="https://github.com/jbcurtin/jbcurtin.io/issues" target="_blank">
-Report Issue
-     </a>
-
-    <div class="navbar-end">
-<!--
-      <div class="navbar-item">
-        <div class="buttons">
-          <a class="button is-primary">
-            <strong>Sign up</strong>
-          </a>
-          <a class="button is-light">
-            Log in
-          </a>
+    </li><li><a href="https://twitter.com/jbcurtin"><i class="fab fa-twitter"></i></a></li><li><a href="https://linkedin.com/in/jbcurtin&#x2F;"><i class="fab fa-linkedin"></i></a></li>
+    
+  </ul>
+  <div class="footer">
+    
+    <!-- <span>Designed by </span><a href="https://www.caicai.me">CaiCai</a> -->
+    <!-- <div class="by_zola"><a href="https://www.getzola.org/" target="_blank">Proudly published with Zola!</a></div> -->
+    
+  </div>
+</div>
+<div id="main">
+  <div class="page-top animated fadeInDown">
+    <div class="nav">
+      <li><a class="current" href="https://jbcurtin.io/">Home</a></li><li><a  href="https://jbcurtin.io/about/">About</a></li><!-- <li><a  href="https://jbcurtin.io/archive/">Archive</a></li> --></div>
+    <div class="information">
+      <div class="back_btn">
+        <li><a onclick="window.history.go(-1)" style="display:none;"><i class="fas fa-chevron-left"></i></a></li>
+      </div>
+      <!-- <div class="avatar"><img src="https://jbcurtin.io/images/avatar.jpg"></div> -->
+    </div>
+  </div>
+  <div class="autopagerize_page_element">
+    <div class="content">
+    
+    
+      <section class="post animated fadeInDown">
+        <div class="post-title">
+                <h3><a href="https:&#x2F;&#x2F;jbcurtin.io&#x2F;smallsat-design-one-en&#x2F;">SmallSat Design - One</a></h3>
         </div>
-      </div>
+        <div class="post-content">
+              <p>
+                
+                    In my research on SmallSat deployment using CubeSat Platforms, I&#x27;ve started to find myself gravitaing towards the Command and Data Handling subsystem design. What peaked my interest was a thought experiment around implemening secure command reception and actknowledgement for satellite communication during unencypted transmission.
+                
+              </p>
+        </div>
+        <div class="post-footer">
+              <div class="meta">
+                <div class="info">
+                  
+                    <i class="far fa-sun"></i>
+                    <span class="date">
+                      07-15-2020
+                    </span>
+                  
+                  
+                  
+                </div>
+              </div>
+        </div>
+      </section>
+    
+    <div class="pagination">
+		  <ul class="clearfix">
+        
+        
+      </ul>
     </div>
--->
-  </div>
-</nav>
-
-  <section class="hero is-info is-medium is-bold">
-    <div class="hero-body hero-image">
-      <div class="container has-text-centered">
-      </div>
-    </div>
-  </section>
-<div class="main-content">
-  <div class="intro column is-8 is-offset-2">
-    <div class="is-medium has-text-left">
-      <h2 class="subtitle">
-        Saturday, 05. December 2020 10:13AM
-      </h2>
-      <h1 class="title">
-        CronJob management in kubenetes
-      </h1>
-    </div>
-    <div class="jupyter-notebook-styles content is-medium has-text-left">
-      
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput markdown-spacer" data-mime-type="text/markdown">
-<p>CronJobs were first released by Bell labs in 1975. Used to invoke periodic jobs on a given day, week, or month at a specific hour &amp; specific minute. CronJob kind has made its way into the kubenetes API and are packed full of capabilities not immediately noticeable by one's imagination. Here is a workflow I developed that functions well and also provides a quick way to debug by creating Jobs from CronJobs.</p>
-</div>
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput markdown-spacer" data-mime-type="text/markdown">
-<p>Lets begin defining a new CronJob. Design, write, push, and schedule an image to be ran in your k8 cluster using Docker Hub, Docker, and Python. We'll follow up design of the newly scheduled job, by checking logs and cleaning up our cluster. Removing unwanted Jobs, Pods, or other objects we've already checked.</p>
-<p><code>./sleeping-beetle.py</code></p>
-<pre><code>#!/usr/bin/env python
-
-import sys
-import time
-
-for idx in range(1, 5):
-    print(f'{idx} beetle')
-    time.sleep(.5)
-
-sys.exit(0)</code></pre>
-<p><code>./Dockerfile</code></p>
-<pre><code>FROM debian:latest
-RUN apt-get update &amp;&amp; apt-get install python3-dev python3 -y
-COPY ./sleeping-beetle.py ./sleeping-beetle.py
-ENTRYPOINT ["python3", "sleeping-beetle.py"]</code></pre>
-<p>With <code>sleeping-beetle.py</code> and <code>Dockerfile</code> written, lets build a Docker Image and push it to Docker Hub.</p>
-<pre><code>$ docker build . -t sleeping-beetle
-$ docker tag sleeping-beetle jbcurtin/sleeping-beetle
-$ docker push jbcurtin/sleeping-beetle
-The push refers to repository [docker.io/jbcurtin/sleeping-beetle]
-94f1b0a94f4e: Layer already exists
-519a13e31af7: Pushing [========================&gt;                          ]  86.27MB/177MB
-114ca5b7280f: Layer already exists</code></pre>
-<p>Kubernetes <code>kind: CronJob</code> controller implementations are somewhat unusual in the way scheduling is performed. The inputs we use are most certainly <code>cron</code> specific, but the behaviour of <code>kind: CronJob</code> can be excessive. Without properly setting <code>startingDeadlineSeconds</code> and <code>concurrencyPolicy</code>, the controllor may end up scheduling more than one job at a time. <a href="https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#cron-job-limitations" target="_blank">Kubernetes CronJob</a> has more details as to why this is. I'm often more pragmatic when implementing and documenting architecture solutions, I'll embed some default values that have worked well for me.</p>
-<p>With Sleeping Beetle now ready. Load it into a k8-cluster by creating a <code>kind: CronJob</code> and then <code>kubectl apply</code>.</p>
-<p><code>./sleeping-beetle.yaml</code></p>
-<pre><code>apiVersion: batch/v1beta1
-kind: CronJob
-metadata:
-  name: sleeping-beetle-cronjob
-spec:
-  schedule: '* */1 * * *'
-  startingDeadlineSeconds: 30
-  concurrencyPolicy: Forbid
-  jobTemplate:
-    spec:
-      backoffLimit: 0
-      template:
-        spec:
-          containers:
-          - name: sleeping-beetle
-            image: docker.io/jbcurtin/sleeping-beetle:latest
-            imagePullPolicy: IfNotPresent
-          restartPolicy: Never</code></pre>
-<p>Apply <code>sleeping-beetle.yaml</code> to the cluster</p>
-<pre><code>$ kubectl apply -f sleeping-beetle.yaml 
-cronjob.batch/sleeping-beetle-cronjob created</code></pre>
-<p>Setup is complete, we can start creating objects with <code>kubectl</code>. Its about 14:44 in the afternoon and we don't want to wait for there oclock to come around. Rather than fidgeting with <code>schedule:</code> attribute, we can create a <code>Job</code> from <code>cronjob.batch/sleeping-beetle-cronjob</code></p>
-<pre><code>$ kubectl create job --from=cronjob/sleeping-beetle-cronjob sleeping-beetle-1
-job.batch/sleeping-beetle-1 created</code></pre>
-<p>Check the logs</p>
-<pre><code>$ kubectl logs job/sleeping-beetle-1
-1 beetle
-2 beetle
-3 beetle
-4 beetle</code></pre>
-<p>Looks good. <em>Job</em> complete. Clean up our cluster and logout.</p>
-<pre><code>$ kubectl delete jobs/sleeping-beetle-1
-$ kubectl delete pod --field-selector=status.phase==Succeeded
-$ exit</code></pre>
-</div>
-</div>
 
     </div>
   </div>
 </div>
-<!-- 
-  <div class="intro column is-8 is-offset-2">
-    <h2 class="title"> lets get started with an example </h2>
-    <pre>
-from distributed import Client, progress
-from data_scripts import local
 
-local.setup_dask()
-
-( fix up to use notebook rendering colors in python )
-    </pre>
-  </div>
--->
-<!--
-  <div class="container">
-    <div class="columns features">
-      <div class="column is-4">
-          <div class="card is-shady">
-              <div class="card-image has-text-centered">
-                  <i class="fa fa-paw"></i>
-              </div>
-              <div class="card-content">
-                  <div class="content">
-                      <h4>
-                        Static Based Low Cost Data Lake
-                      </h4>
-                      <p>
-                        provide AWS S3, Google Object Storage, Digital Ocean Spaces, and Azure Blob Storage pythonic scripts as massive Data Lakes to be utilized in your jupyter notebooks
-                      </p>
-                      <p>
-                        <a href="#"> Utilize AWS as a Data Lake </a>
-                      </p>
-                  </div>
-              </div>
-          </div>
-      </div>
-      <div class="column is-4">
-          <div class="card is-shady">
-              <div class="card-image has-text-centered">
-                  <i class="fa fa-cog"></i>
-              </div>
-              <div class="card-content">
-                  <div class="content">
-                      <h4> create you're own notebook website quickly </h4>
-                      <p>
-                          We're here to help the scientific community thrive. Everything you see here is opensource and provided under MIT. We're engaged in building a framework the scientific community can utilize to help improve collaboration while minimizing cost
-                      </p>
-                      <p>
-                        <a href="#"> Generate static website from this one </a>
-                      </p>
-                  </div>
-              </div>
-          </div>
-      </div>
-      <div class="column is-4">
-          <div class="card is-shady">
-              <div class="card-image has-text-centered">
-                  <i class="fa fa-search"></i>
-              </div>
-              <div class="card-content">
-                  <div class="content">
-                      <h4> Cloud Cost Analysis </h4>
-                      <p>
-                        aims to provide scipts that can help with cost analysis of launching a cluster of servers so you may measure how much those t2.xlarge servers will cost you while run your notebook for the next ten days
-                      </p>
-                      <p>
-                        <a href="#"> Explore Cloud Cost Analysis API </a>
-                      </p>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-</div>
--->
-    <footer></footer> 
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
-<script defer src="static/js/bulma.js"></script>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-89589148-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-89589148-1');
-</script>
-  </body>
+</body>
 </html>
