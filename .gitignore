@@ -12,3 +12,5 @@ Cargo.lock
 # Zola Build
 public
 *.swp
+
+publish.sh
