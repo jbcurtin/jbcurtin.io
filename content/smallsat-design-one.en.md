@@ -60,7 +60,7 @@ Guidance will include numerious varibles in the code written. Taking in sensor d
 
 Command accepts uplink commands sent from an authenticated ground station. Data Handling prepares data for download to a ground station. Security & Verification provides a security framework onboard the satellite to make sure agents and actors are properly authenticated and authorized.
 
-CS controls the actions of CubeSat 3U. Having direct interaction between all functioning components within the vehicle. Capable of receiving uplink commands from a ground station. When a command is recieved, it is first verified to make sure the command came from an authorized ground station. When accepted, CSM then proceeds to decide what kind of command was sent.
+CS controls the actions of CubeSat 3U. Having direct interaction between all functioning components within the space craft. Capable of receiving uplink commands from a ground station. When a command is recieved, it is first verified to make sure the command came from an authorized ground station. When accepted, CSM then proceeds to decide what kind of command was sent.
 
 * Security & Verification
 * Attitude & Articulation Determination and Control SubSystem ( ADCS )
@@ -78,7 +78,7 @@ CS controls the actions of CubeSat 3U. Having direct interaction between all fun
 
 In order for CubeSat 3U to take images of Earth while passing over Japan, we'll need to stablize the optical camera in a single direction for long periods of time. In order to do this, we'll also need to know which direction Earth is, which section of the Earth we're pointing at. Tagging the data appriatly while we're doing this. It'll require design of a custom tagging database along with figuring out when images are taken and at which time. We'll then corrate the images with the GN&C subsystem to determine which section of the sky was imaged at that percise moment in time.
 
-Comand Subsystem provides the interface to alter the dynamics of the space vehicle. Capable of changing the orbit and orienting the satellite towards a specific Earth coordinate. It is up to AADCS to carry out those alterations to the flight path of CubeSate 3U.
+Comand Subsystem provides the interface to alter the dynamics of the space craft. Capable of changing the orbit and orienting the satellite towards a specific Earth coordinate. It is up to AADCS to carry out those alterations to the flight path of CubeSate 3U.
 
 The controls for AADCS are divided into algorithms which produce outputs for select actuator input. 
 
@@ -91,7 +91,7 @@ Maneuvers:
 
 ### Security & Verification SubSystem ( SVS )
 
-All commands sent, are routed through the Security & Verification Hardware Module for command verification and ground station authorization. Ensuring only authorized ground stations can alter the dynamics of the space vehicle.
+All commands sent, are routed through the Security & Verification Hardware Module for command verification and ground station authorization. Ensuring only authorized ground stations can alter the dynamics of the space craft.
 
 Software checks will be designed, providing a verification through a Hardware Security Module ( HSM ). Data-Payloads will be sent to the HSM and a Secure Hash Digest ( SHD ) will be provided to the consumer of the API. Data will than be transmitted in clear view of anyone observing. The only concern while transmitting telemetry, we're looking to mitigate is making sure data we recieve is correct and un-altered. Insecure data, or altered data will be immediatly disposed of.
 
@@ -119,13 +119,13 @@ There isn't much we can do about radio jamming. If an actor decides to flood Cub
 
 For an Ameture License, FCC requires all transmissions must be in plain text. Transmission of data cannot be encrytped in any way, all transmissions must be sent in plain form, meaning nothing is kept secret. NASA requires all satellites with propulsive capabilities encrypt transmissions to and from ground stations. We'll have to apply for an Experimental License because CubeSat 3U has actuators; we're preforming Earth Observation; we don't classify as Commercial or as a Government unit.
 
-FCC requires all satellites with a transmitter to be licensed. For the sake of this simulation, we'll assume that all licensing is complete/approved. [ARRL](http://arrl.org/) provides a PDF of [Amateur FCC Part 97](http://www.arrl.org/files/file/Regulatory/March%208,%202018.pdf). Refer to [ecfr.gov](https://ecfr.gov/) for [Experimental FCC Part 5](https://www.ecfr.gov/current/title-47/chapter-I/subchapter-A/part-5). NOAA must also be contacted in the event any remote sensing is taking place within the space vehicle. NOAA might have licensing specific to the "type of sensor activity" being done.
+FCC requires all satellites with a transmitter to be licensed. For the sake of this simulation, we'll assume that all licensing is complete/approved. [ARRL](http://arrl.org/) provides a PDF of [Amateur FCC Part 97](http://www.arrl.org/files/file/Regulatory/March%208,%202018.pdf). Refer to [ecfr.gov](https://ecfr.gov/) for [Experimental FCC Part 5](https://www.ecfr.gov/current/title-47/chapter-I/subchapter-A/part-5). NOAA must also be contacted in the event any remote sensing is taking place within the space craft. NOAA might have licensing specific to the "type of sensor activity" being done.
 
 Special thanks to the creaters of [State of the Art of Small Spacecraft Technology](https://www.nasa.gov/smallsat-institute/sst-soa/communications#9.5.5) for providing this information. In order to operate a Ground Station, someone at the facility needs to be an Amateur Radio Licensed Operator. There is also [CubeSat 101](https://www.nasa.gov/sites/default/files/atoms/files/nasa_csli_cubesat_101_508.pdf), providing a fantastic guide on how to plan your first CubeSat build.
 
 ### Encryption
 
-We want to maximize the data download link, and we don't really care much about protecitng the data while in transmission. However, we must maintain strict encryption for both command messages and data verification processing. Meaning, we'll need to install a Hardware Security Module ( HSM ) which will manage secure communication between the space vehicle and ground station.
+We want to maximize the data download link, and we don't really care much about protecitng the data while in transmission. However, we must maintain strict encryption for both command messages and data verification processing. Meaning, we'll need to install a Hardware Security Module ( HSM ) which will manage secure communication between the space craft and ground station.
 
 ## Database and Instrument Processing Unit
 
@@ -142,7 +142,7 @@ Collect operational statistics for Actuators, Sensors, RF Communication, Command
 
 ## Security & Verification Module
 
-Per NASA Regulations, and space vehicle with propuslive ability must encrypt all sensative communication. We're also interested in keeping CubeSat 3U safe from take over or accident. 
+Per NASA Regulations, and space craft with propuslive ability must encrypt all sensative communication. We're also interested in keeping CubeSat 3U safe from take over or accident. 
 
 Security & Verification Module (SVM) will be a 10cm x 10cm x 3cm ( 0.3U ) board equiped with a state of the art Integrated Security Circuit (ISC) providing authentication and authorization requests via I2C data channel. The SVM will a operate a minimul operating system with the ability to listen for and respond to requests for autherization and authentication. The ISC will retain all memory, entropy-generation, and processing within the ISC. ISC will also provide secure methods of swaping out access keys while remaining resistant to physical and virtual tampering.
 
