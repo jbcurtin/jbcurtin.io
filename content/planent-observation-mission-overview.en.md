@@ -7,7 +7,7 @@ draft = false
 [taxonomies]
 categories = ["astronomy", "remote sensing", "mercury", "landsat"]
 [extra]
-summary = ""
+summary = "Determining and building the correct array of instruments for your satellite is a fairly involved process. For each instrument, you'll need to teach hardware engineers enough about your realm of science in order to have an instrument built. In the case of remote sensing, there is already a large array of instruments from past missions we can pull from."
 mathjax = "tex-mml"
 author = 'Joseph Curtin'
 +++
