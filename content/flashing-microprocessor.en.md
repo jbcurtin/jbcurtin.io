@@ -2,7 +2,7 @@
 title = "Building a Circuit around a Cortex M0+ microprocessor and programming it"
 template = "page.html"
 date = 2020-07-16T11:00:00Z
-draft = false
+draft = true
 [taxonomies]
 categories = ["CubeSat", "smallsat"]
 [extra]
