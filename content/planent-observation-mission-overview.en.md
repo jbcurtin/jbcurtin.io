@@ -66,16 +66,16 @@ When sensors perform well and enough science is known to create map. We send tha
 
 On the BepiColombo Transfer Module, are two Orbitors. Mercury Planet Orbitor(MPO) and Mercury Magnetospheric Orbitor(MMO). MPO is focused on measuring and mapping the terrain of Mercury while the MMO is focused on measuring and mapping properties of the magnetosphere around Mercury.
 
-* https://www.esa.int/Science_Exploration/Space_Science/BepiColombo/Mercury_Transfer_Module
-* https://www.esa.int/Science_Exploration/Space_Science/BepiColombo/Journey_to_Mercury
+* [https://www.esa.int/Science_Exploration/Space_Science/BepiColombo/Mercury_Transfer_Module](https://www.esa.int/Science_Exploration/Space_Science/BepiColombo/Mercury_Transfer_Module)
+* [https://www.esa.int/Science_Exploration/Space_Science/BepiColombo/Journey_to_Mercury](https://www.esa.int/Science_Exploration/Space_Science/BepiColombo/Journey_to_Mercury)
 
 
 ### Mercury Planetary Orbitor
 BepiColombo Laser Altimeter (BELA) is used to map the surface of the planet. The output of this product is a point-cloud from a laser focused at mapping the elevation of the surface directly under the probe. This information along with the acceleration and position in the magnetic field can be cross-correlated to develop data product with enough detail to find rover landing sites on the surface of Mercury.
 
-* https://www.esa.int/Science_Exploration/Space_Science/BepiColombo/Mercury_Planetary_Orbiter
+* [https://www.esa.int/Science_Exploration/Space_Science/BepiColombo/Mercury_Planetary_Orbiter](https://www.esa.int/Science_Exploration/Space_Science/BepiColombo/Mercury_Planetary_Orbiter)
 
 ### Mercury Magnetospheric Orbitor
 Understanding the protections Mercury provides while on the surface is important, as it may influance how probes might be created for the planent. The Mercury Magnetospheric Orbitor measures properties of the magnetosphere in orbit around the planent and its interaction with the magnetic field. From understanding how solar wind affects the magnetosphere to understanding how the magnetic field reinforces the magneticsphere, the orbitor is equiped to measure the intensity of solar wind and dynamo producing electric fields from the core of the planent.
 
-* https://www.esa.int/Science_Exploration/Space_Science/BepiColombo/Mercury_Magnetospheric_Orbiter
+* [https://www.esa.int/Science_Exploration/Space_Science/BepiColombo/Mercury_Magnetospheric_Orbiter](https://www.esa.int/Science_Exploration/Space_Science/BepiColombo/Mercury_Magnetospheric_Orbiter)
