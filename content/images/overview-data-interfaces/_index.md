@@ -1,5 +1,5 @@
 +++
-title = "flashing microprocessor images index"
+title = "overview data interface image index"
 template = "404.html"
 transparent = true
 sort_by = "date"

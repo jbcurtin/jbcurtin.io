@@ -123,7 +123,9 @@ Cortex M0+ uses an SSOP interface, which is really only compatable with PCB. We'
 
 ![breadboard prototype with soldered pins](/images/microprocessor-circuit/breadboard-prototype.jpg)
 
-With the PCB adapter soldered to the pins. Its now time to place a Cortex M0+ microprocessor on the PCB. Make sure the slots aling, orienting the microprocessor with the PCB board. Without adding solder, heat the PCB board through the microprocessor pins and gently let the pins settle into the PCB.
+With the PCB adapter soldered to the pins. Its now time to place a Cortex M0+ microprocessor on the PCB. Make sure the slots aling, orienting the microprocessor with the PCB board. Change the tip of your soldering iron to have a very narrow touch point, with that point add just enough solder to attach a pin to the PCP board. It'll take a try or two to figure out the right amount. If you mess up, it'll be okay because its relativly straight forward to remove the solder using soldering flex. As long as there is flux on the Cortex M0+ pins, the solder will jump from the soldering iron to the pin and PCB.
+
+All in all, it took me about two or three attempts before I discovered a method which worked for me, and allowed me to add just enough solder without bridging any pins.
 
 ![breadboard prototype with soldered Cortex M0+](/images/microprocessor-circuit/breadboard-prototype.jpg)
 
@@ -181,7 +183,12 @@ Dowload and install Flash Magic.
 
 * https://www.flashmagictool.com/download.html
 
-Time to load `LPC810_CodeBase.hex` into Flash Magic. 
+#### Flashing Cortex M0+
+With all the previous steps completed, its straight forward to test the circuit for a signature and upload the hex file to the microprocessor. In the Flash Magic program, browse for the `LPC810_CodeBase.hex` file. Before uploading it to the board, make sure you have the correct baud rate and comm channel selected. The comm channel will change relative to how many USB interfaces you have running at the moment. Baud rate should be set to ... With everything configured and the signature verification coming back with an "okay prompt", hit the "go" button no the bottom right and upload the program.
+
+![Flash Magic Signature Verification](/images/microprocessor-circuit/Flash-Magic-Signature-Verification.png)
+
+![Flash Magic Upload Program](/images/microprocessor-circuit/Flash-Magic-Upload-Program.png)
 
 ## Designing a Cortex M0+ development board
 
