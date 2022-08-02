@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" 
+   
+    class="theme--light" 
+  
+>
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://jbcurtin.io/images/apple-touch-icon-144x144.png"/>
+  <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://jbcurtin.io/images/apple-touch-icon-120x120.png"/>
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://jbcurtin.io/images/apple-touch-icon-72x72.png"/>
+  <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://jbcurtin.io/images/apple-touch-icon-57x57.png"/>
+  <link rel="short icon" href="https://jbcurtin.io/images/favicon.png" type="image/x-icon"/>
+  <link rel="stylesheet" href="https://jbcurtin.io/style.css">
+  <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+  <title> • An overview of UART and SPI</title>
+  
+
+  
+  
+</head>
+<body>
+<div id="sidebar" class="animated fadeInDown">
+  <div class="logo-title">
+    <div class="title">   
+      <!-- <img src=https://jbcurtin.io/images/logo@2x.png style="width:127px;" alt="logo"/> -->
+      <img src=https://jbcurtin.io/images/data-1200.png style="width:220px;" alt="logo"/>
+      <h3><a href="https://jbcurtin.io/"></a></h3>
+      <div class="description">
+        <p></p>
+      </div>
+    </div>
+  </div>
+  <ul class="social-links"><li><a href="mailto:42@jbcurtin.io"><i class="fa fa-envelope"></i></a></li><li><a href="https://github.com/jbcurtin"><i class="fab fa-github"></i></a></li><li>
+      <a href="https://stackoverflow.com/users/432309&#x2F;jbcurtin">
+        <i class="fab fa-stack-overflow"></i>
+      </a>
+    </li><li><a href="https://twitter.com/jbcurtin"><i class="fab fa-twitter"></i></a></li><li><a href="https://linkedin.com/in/jbcurtin&#x2F;"><i class="fab fa-linkedin"></i></a></li>
+    
+  </ul>
+  <div class="footer">
+    
+    <!-- <span>Designed by </span><a href="https://www.caicai.me">CaiCai</a> -->
+    <!-- <div class="by_zola"><a href="https://www.getzola.org/" target="_blank">Proudly published with Zola!</a></div> -->
+    
+  </div>
+</div>
+<div id="main">
+  <div class="page-top animated fadeInDown">
+    <div class="nav">
+      <li><a  href="https://jbcurtin.io/">Home</a></li><li><a  href="https://jbcurtin.io/about/">About</a></li><!-- <li><a  href="https://jbcurtin.io/archive/">Archive</a></li> --></div>
+    <div class="information">
+      <div class="back_btn">
+        <li><a onclick="window.history.go(-1)" ><i class="fas fa-chevron-left"></i></a></li>
+      </div>
+      <!-- <div class="avatar"><img src="https://jbcurtin.io/images/avatar.jpg"></div> -->
+    </div>
+  </div>
+  <div class="autopagerize_page_element">
+    <div class="content">
+    
+<article class="post animated fadeInDown">
+  <h1><a href="https:&#x2F;&#x2F;jbcurtin.io&#x2F;overview-uart-spi-en&#x2F;">An overview of UART and SPI</a></h1>
+  
+  <div class="info">By Joseph Curtin.</div>
+  
+  
+    <i class="far fa-calendar"></i>&nbsp;<span class="date">08-02-2020</span>
+  
+  <div class="post-content"><h2 id="introduction">Introduction</h2>
+<p>As a software engineer learning hardware development, I found myself first gravitating towards understanding how information is transmitted between devices. This article is part of an ongoing series meant to teach myself satellite design and eventurally develop functioning prototypes which can be launched into space. From the group up, I'll explore what is required to transition from software development into hardward development, learning from the internet as questions come to mind.</p>
+<h2 id="uart">UART</h2>
+<p>UART stands for Universal Asynchronous Receiver Transmitter. There are TX and RX ports on chips indicating information can be sent and recieved. When connecting two chips together, its important to understand which way data is being transfered. In example, when flashing a microprocessor. Connecting a FT232RL chip TX to a Cortex M0+ microprocessor allows for data serialization from USB -&gt; MicroProcessor. Due to the transmission being async, its important to note that the baud-rate must be set and transmitted prior to data transmission.</p>
+<p><img src="/images/overview-data-interfaces/uart0-uart1-connection-block-diagram.png" alt="uart0-uart1-connection-block-diagram.png" /></p>
+<p>Data transmission takes on the form of an envolop, a start bit indicates a binary payload is about to be transmitted, the following 5-&gt;9 bits are data, followed by a parity bit, and 1-&gt;2 ending bits.</p>
+<h3 id="data-transmission-envolope">Data Transmission Envolope</h3>
+<p><strong>Start Bit</strong> is normally held in &quot;high&quot; position while idle. When the connected recieving device detects the Start Bit flipping from high -&gt; low, it'll start reading bytes being sent.</p>
+<p><strong>Data Bits</strong> are transmitted with the Least Significant bit first, followed by up-to 8 or 9 bits.</p>
+<p><strong>Parity Bit</strong> adds the ability to validate data being sent. When Parity Bit is set to &quot;high&quot;, the chip is supposed to check the bits sent and make sure that all &quot;high&quot; bits in Data Bits are odd. While, if the Parity Bit is set to &quot;low&quot;, the chip should validate that all &quot;high&quot; Data Bits are even.</p>
+<p><strong>Ending Bits</strong> returns the voltage to &quot;high&quot;, using either one or two clock cycles. Recieving chip will understand that another transmission packet might be coming, but it won't read the data until a <strong>Start Bit</strong> is sent with a &quot;low&quot;.</p>
+<p><img src="/images/overview-data-interfaces/data-transmission-envolope.png" alt="data-transmission-envolope.png" /></p>
+<p>If you're interested in a more in-depth overview of UART, but with some dated language. <a href="https://www.analog.com/en/analog-dialogue/articles/uart-a-hardware-communication-protocol.html">More details can be found here.</a></p>
+<h2 id="spi">SPI</h2>
+<p>Serial Peripheral Interface(SPI) is capable of synchronously transmitting and recieving 4.5MB/s. The protocol creates a data-loop between controller and peripheral's involved in communication between the two chips. Allowing for fast, syncroinous transmission of communication between the two chips. SPI requires a minimun of three pins to communicate.</p>
+<p>SCK controls when data is meant to be read. It provides a change from high to low or low to high, of which each change in voltage signifies a bit should be read by SDI of the peripheral device. The output of the signal comes from SDO of the controlling device.</p>
+<ul>
+<li>SCK for Serial ClocK</li>
+<li>SDO/COPI/MOSI for Serial Data Output</li>
+<li>SDI/CIPO/MISO for Serial Data Input</li>
+</ul>
+<p><img src="/images/overview-data-interfaces/spi-data-transmission-block-diagram.png" alt="sck-sdo-sdi-interaction.png" /></p>
+<p>Transmission between controller and a single peripheral device connects the Controllor:SDO -&gt; Peripheral:SDI and the Peripheral:SDO -&gt; Controllor: SDI. Which allows for syncronious communication between the two devices. The user can access the data-transmission interface using SSPBUF, by adding data to and reading data from the buffer along the information connection. When a complete set of data bits are transmitted, the bits are transfered from SSPSR -&gt; SSPBUF for user software to access.</p>
+<p><img src="/images/overview-data-interfaces/spi-data-transfer-block-diagram.png" alt="spi-data-transfer.png" /></p>
+<aside class="aside-note">
+  <figure class="aside-note-left">
+    <p class="image is-64x64">
+      <img src="https://jbcurtin.io/images/note-icons/round-circuit-512.png" \>
+    </p>
+  </figure>
+  <div class="aside-note-content">
+    <div class="">
+      <p>
+        <strong>Depricated MISO, MOSI, SS </strong>
+        Earlier in the millennium, a new resolution was raised for naming of MISO, MOSI, and SS to be depricated. Most, if not all terms using Master&#x2F;Slave termonology should be recycled for more modern language. In the case of SPI, MOSI -&gt; COPI, MISO -&gt; CIPO.
+      </p>
+    </div>
+  </div>
+</aside>
+<ul>
+<li><a href="https://www.oshwa.org/a-resolution-to-redefine-spi-signal-names/">https://www.oshwa.org/a-resolution-to-redefine-spi-signal-names/</a></li>
+</ul>
+</div>
+  <div class="post-footer">
+    <div class="meta">
+      <div class="info">
+        
+      </div>
+    </div>
+  </div>
+</article>
+<div class="share">
+  <div class="twitter">
+    <a class="fab fa-twitter" href="http://twitter.com/share?text=An overview of UART and SPI&url=https:&#x2F;&#x2F;jbcurtin.io&#x2F;overview-uart-spi-en"></a>
+  </div>
+</div>
+<div id="disqus_thread"></div>
+<script>
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = 'https://jbcurtin-io.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script>
+  MathJax = {
+    tex: {
+      displayMath: [['$$', '$$'], ["\\[", "\\]"]],
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    }
+  };
+</script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+
+
+    </div>
+  </div>
+</div>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VZP9H4GE0Y"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-VZP9H4GE0Y');
+</script>
+</body>
+</html>
