@@ -11,3 +11,4 @@ Cargo.lock
 
 # Zola Build
 public
+.DS_Store

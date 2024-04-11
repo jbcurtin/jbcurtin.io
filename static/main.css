@@ -1,0 +1,86 @@
+.has-text-primary {
+  color: rgba(0,0,0,0.681) !important;
+}
+html, body, .columns {
+  padding: 0;
+  margin: 0;
+}
+html, body, .columns, .column {
+  min-height: 100vh;
+  /* padding: 0px; */
+  /* margin: 0; */
+}
+body {
+  /* font-family: 'Inconsolata', monospace; */
+  font-family: "Cabin", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+.vert-spacing {
+  margin-bottom: 2.75rem !important;
+}
+.primary-color {
+  color: #b4e2f4;
+}
+.page-title-column {
+  padding: 4rem 0 2rem;
+  background-color: #fff;
+}
+.page-title-column h1, .page-title-column p {
+  margin-right: 1.5rem;
+}
+hr {
+  align-items: center;
+  border: 0;
+  display: flex;
+  justify-content: var(--flex-alignment);
+  min-height: 1rem;
+  padding: 0;
+  position: relative;
+  width: 100%;
+}
+hr:before {
+  content: '';
+}
+hr.title-divider:not(:first-child) {
+  margin-top: 2rem !important;
+}
+hr.title-divider:not(:last-child) {
+  margin-bottom: 2rem !important;
+}
+hr.title-divider:before {
+  width: 100%;
+  height: 1.5rem;
+  background-size: auto 62.6%;
+  background-image: url('/static/images/divider.svg');
+  background-position: center center;
+  background-repeat: repeat-x;
+}
+.buttons li {
+  max-width: auto;
+  display: block;
+}
+.buttons li, .buttons li a {
+  width: 100%;
+}
+.buttons li a {
+  width: 100%;
+  transition: transform 0.375s ease, color 0.375s ease, background-color 0.375s ease, border-color 0.375s ease;
+}
+.peava-icon {
+  display: inline-block;
+  width: 16.3px;
+  height: 14.45px;
+  overflow: hidden;
+}
+.peava-icon > img {
+  position: relative;
+}
+.darkStar > img {
+  top: 0;
+}
+.lightStar > img {
+  top: -13.45px;
+}
