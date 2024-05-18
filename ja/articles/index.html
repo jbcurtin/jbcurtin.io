@@ -288,7 +288,7 @@ if (document.readyState === "complete" || (document.readyState !== "loading" && 
         setConfirmState(email);
       }
       const handleSubmissionError = function($event) {
-        if ($event.statusText == "OK") {
+        if ($event.responseText == "Success") {
           handleSubmission($event);
           return;
         }
