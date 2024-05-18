@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://jbcurtin.io/</loc>
+    </url>
+    <url>
+        <loc>https://jbcurtin.io/articles/</loc>
+    </url>
+    <url>
+        <loc>https://jbcurtin.io/articles/flamegraphs-and-rust/</loc>
+    </url>
+    <url>
+        <loc>https://jbcurtin.io/ja/</loc>
+    </url>
+    <url>
+        <loc>https://jbcurtin.io/ja/articles/</loc>
+    </url>
+    <url>
+        <loc>https://jbcurtin.io/ja/search/</loc>
+    </url>
+    <url>
+        <loc>https://jbcurtin.io/search/</loc>
+    </url>
+</urlset>

@@ -1,0 +1,328 @@
+<!DOCTYPE HTML>
+<html>
+  
+<head>
+  <!-- Encoding -->
+  <meta charset="UTF-8">
+  <link rel="icon" href="/favicon.ico">
+  <!-- Meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Joseph Curtin - Machine Learning, Infrastructure, & Cloud" />
+  <meta name="keywords" content="Machine Learning, Infrastructure, & Cloud" />
+  <meta name="author" content="Joseph Curtin's Website" />
+  <title>
+    Performance Analysis
+    </title>
+  <!-- Imports -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css"
+    integrity="sha256-nQ6wLtrBdTlYGKygEWcUZItTqIGXhUmg2m34X4ZPXaQ="
+    crossorigin="anonymous"/>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer" />
+  <!-- <link rel="stylesheet" href="/main.css" crossorigin="anonymous" /> -->
+  <link rel="stylesheet" href="https://jbcurtin.io/main.css">
+</head>
+
+  <body>
+    <section class="columns">
+      <div class="column is-3">
+        <aside>
+          
+<div class="has-text-right page-title-column">
+  <h1 class="page-title title is-2 has-text-primary">
+    <address style="font-style: normal;"> Joseph Curtin </address>
+  </h1>
+  <p class="subtitle is-6 vert-spacing"> Machine Learning, Infrastructure, & Cloud </p>
+  <!-- <hr class="title-divider" /> -->
+  <section class="vert-spacing">
+    <div class="equal-height">
+      <div class="card-content is-flex" style="justify-content: center;">
+        <figure class="image is-64x64 is-center">
+          <img src="/images/profile.png" alt="Brain" />
+        </figure>
+      </div>
+    </div>
+  </section>
+  <section class="section" style="padding: 0;">
+    <ul class="buttons">
+      <li>
+  <div id="subscribe-field" class="field has-addons">
+    <div class="control has-icons-left has-icons-right">
+      <input class="input" name="subscribe-email" type="email" placeholder="your@email.here to subscribe" />
+      <span class="icon is-small is-left">
+        <i class="fa-regular fa-newspaper"></i>
+      </span>
+      <span class="icon is-small is-right">
+        <i class="fas fa-check"></i>
+      </span>
+    </div>
+    <div id="subscribe-button" class="control">
+      <button class="button">
+        Subscribe
+      </button>
+    </div>
+    <p class="note help is-danger" style="text-align: left;"> Invalid Email </p>
+  </div>
+</li>
+
+      <li>
+        <a href="mailto:42@jbcurtin.io" target="_blank" class="button">
+          <span> Connect over Email </span>
+          <span class="icon is-medium">
+            <i class="fa-regular fa-envelope"></i>
+          </span>
+        </a>
+      </li>
+      <li>
+        <a href="/ja&#x2F;articles&#x2F;" class="button">
+        <span>
+            English&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <i class="fa-solid fa-language"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            日本語
+          </span>
+        </a>
+      </li>
+    </ul>
+  </section>
+</div>
+
+          <div class="menu">
+            
+<p class="menu-label">Search</p>
+<ul class="menu-list">
+  <li>
+    <div class="field">
+      <div class="control has-icons-left has-icons-right">
+        <input id="aside-search-input" class="input" type="text" placeholder="Search Articles" value="">
+        <span class="icon is-small is-left">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </span>
+        <span class="icon is-small is-right">
+          <i class="fas fa-close"></i>
+        </span>
+      </div>
+    </div>
+  </li>
+</ul>
+
+            
+<p class="menu-label">Article Filters</p>
+<ul class="menu-list">
+
+
+  <li>
+    <a href="&#x2F;articles&#x2F;">Performance Analysis</a>
+  </li>
+
+</ul>
+
+          </div>
+        </aside>
+      </div>
+      <div class="column is-9 content">
+        <ul class="menu-list" style="margin-left: 0px; margin-top: 0px;">
+        
+        <div style="margin-top: 4.15rem;">
+        
+          <div>
+            <article style="margin-bottom: 3.25rem;">
+              <header>
+                <h1 class="page-title title is-2 has-text-primary">
+                  <a href="https://jbcurtin.io/articles/flamegraphs-and-rust/">Flamegraphs and Rust </a>
+                </h1>
+                <p class="subtitle is-6">
+                  <time datetime="2021-12-20">December 20th, 2021</time> at
+                  <time datetime="18:00">6:00pm</time>.
+                </p>
+              </header>
+              <section class="content">
+                <p></p>
+                <p>
+                  Figuring out where a performance issue is occuring using eBPF tools & scripts.
+                </p>
+              </section>
+            </article>
+            </div>
+        </div>
+        </ul>
+      </div>
+    </section>
+    
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VZP9H4GE0Y"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-VZP9H4GE0Y');
+</script>
+<script type="text/javascript" src="https://jbcurtin.io/elasticlunr.min.js" defer></script>
+<script type="text/javascript" src="https://jbcurtin.io/search_index.en.js" defer></script>
+<script type="text/javascript" src="https://jbcurtin.io/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://jbcurtin.io/js.cookie-3.0.5.min.js" integrity="sha256-WCzAhd2P6gRJF9Hv3oOOd+hFJi/QJbv+Azn4CGB8gfY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://jbcurtin.io/main.js" defer></script>
+
+    <script type="text/javascript">
+/// Debounce
+function debounce(func, wait) {
+  var timeout;
+  return function () {
+    var context = this;
+    var args = arguments;
+    clearTimeout(timeout);
+    timeout = setTimeout(function () {
+      timeout = null;
+      func.apply(context, args);
+    }, wait);
+  };
+}
+function initAsideSearch() {
+  const $aside_search_input = document.getElementById('aside-search-input');
+  if($aside_search_input === null) {
+    return;
+  }
+  $aside_search_input.addEventListener("keyup", debounce(async function($event) {
+    if ($event.keyCode === 13 || $event.keyCode === 32) {
+      var term = $aside_search_input.value.trim();
+      if ($event.keyCode === 32) {
+        term = term + " ";
+      }
+      const url_parts = [window.location.protocol, '//', window.location.host];
+      if ("en" != "en") {
+        url_parts.push('/en');
+      }
+      url_parts.push('/search/')
+      const search_url = new URL(url_parts.join(''));
+      search_url.searchParams.set('q', term);
+      window.location.href = search_url;
+    }
+  }, 150));
+}
+if (document.readyState === "complete" || (document.readyState !== "loading" && !document.documentElement.doScroll)) {
+  initAsideSearch();
+} else {
+  document.addEventListener("DOMContentLoaded", initAsideSearch);
+} 
+</script>
+
+    <script type="text/javascript">
+  $.fn.SubscribeField = function() {
+    const COOKIE_NAME = 'subscribe-email';
+    const elm = $(this);
+    const regBttnElm = $("#subscribe-button");
+    const noteElm = elm.find(".note");
+    noteElm.hide();
+    const setInvalid = function() {
+      const newspaper_container = elm.find('.fa-newspaper').parent();
+      newspaper_container.addClass('has-text-danger');
+      // Right Icon
+      const right_icon_container = elm.find('.icon.is-right');
+      right_icon_container.addClass('has-text-danger');
+      const right_icon = right_icon_container.find('i.fa-check');
+      right_icon.removeClass('fa-check');
+      right_icon.addClass('fa-close');
+    }
+    const setValid = function() {
+      const newspaper_container = elm.find('.fa-newspaper').parent();
+      newspaper_container.removeClass('has-text-danger');
+      // Right Icon
+      const right_icon_container = elm.find('.icon.is-right');
+      right_icon_container.removeClass('has-text-danger');
+      const right_icon = right_icon_container.find('i.fa-close');
+      right_icon.removeClass('fa-close');
+      right_icon.addClass('fa-check');
+    }
+    const setConfirmState = function(email) {
+      const msg = `is been subscribed`;
+      regBttnElm.find('button').text('Subscribed');
+      regBttnElm.find('button').attr('disabled', 'disabled');
+      elm.find('input[name=subscribe-email]').attr('disabled', 'disabled');
+      elm.find('input[name=subscribe-email]').val(email);
+      elm.find('.fa-newspaper').addClass('has-text-info');
+      elm.find('.fa-check').parent().hide();
+      // elm.find('.fa-check').parent().html('<span> Saved </span>');
+      Cookies.set(COOKIE_NAME, email, { expires: 365, domain: window.location.hostname, SameSite: 'Strict', Secure: true });
+    }
+    const validateEmail = (email) => {
+      return email.match(
+        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+    }
+    const handleKeyEvent = function($event) {
+      const email = elm.find('input[name=subscribe-email]').val();
+      if (validateEmail(email) == null) {
+        setInvalid();
+      } else {
+        setValid();
+        if ($event.originalEvent.keyCode == 13) {
+          submitEmail();
+        }
+      }
+    }
+    // Handle Submission to Backend - ajax
+    const submitEmail = function() {
+      const email = elm.find('input[name=subscribe-email]').val();
+      if (validateEmail(email) == null) {
+        setInvalid();
+        return;
+      }
+      const buildUrl = function (path) {
+        if (window.location.hostname == 'localhost') {
+          return `http://localhost:8200${path}`;
+        } else if (window.location.hostname == 'jbcurtin.io') {
+          return `https://newsletter.mlops-and-cloud-db.com${path}`;
+        } else {
+          console.error("Unable to build path");
+        }
+      }
+      const handleSubmission = function(data) {
+        setConfirmState(email);
+      }
+      const handleSubmissionError = function($event) {
+        if ($event.statusText == "OK") {
+          handleSubmission($event);
+          return;
+        }
+        setInvalid();
+      }
+      $.ajax({
+        type: 'POST',
+        url: buildUrl('/nl/register'),
+        data: `{ "email": "${email}" }`,
+        success: handleSubmission,
+        error: handleSubmissionError,
+        contentType: "application/json",
+        dataType: "json"
+      });
+    }
+    // Attach Events
+    setValid();
+    // Detect Cookies
+    if (Cookies.get(COOKIE_NAME) != undefined) {
+      const email = Cookies.get(COOKIE_NAME);
+      setConfirmState(email);
+    } else {
+      elm.find('input[name=subscribe-email]').on('keyup', handleKeyEvent);
+      regBttnElm.on('click', function($event) {
+        submitEmail();
+        $event.preventDefault();
+      });
+    }
+  }
+  $(document).ready(() => {
+    console.log('activate')
+    $("#subscribe-field").SubscribeField();
+  })
+</script>
+
+  </body>
+</html>
