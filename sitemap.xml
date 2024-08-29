@@ -7,13 +7,26 @@
         <loc>https://jbcurtin.io/articles/</loc>
     </url>
     <url>
-        <loc>https://jbcurtin.io/articles/flamegraphs-and-rust/</loc>
+        <loc>https://jbcurtin.io/articles/postgresql-compression-benchmark/</loc>
+        <lastmod>2024-08-27</lastmod>
+    </url>
+    <url>
+        <loc>https://jbcurtin.io/categories/</loc>
+    </url>
+    <url>
+        <loc>https://jbcurtin.io/categories/benchmark/</loc>
     </url>
     <url>
         <loc>https://jbcurtin.io/ja/</loc>
     </url>
     <url>
         <loc>https://jbcurtin.io/ja/articles/</loc>
+    </url>
+    <url>
+        <loc>https://jbcurtin.io/ja/benchmark/</loc>
+    </url>
+    <url>
+        <loc>https://jbcurtin.io/ja/categories/</loc>
     </url>
     <url>
         <loc>https://jbcurtin.io/ja/search/</loc>
