@@ -4,12 +4,12 @@
     <link rel="self" type="application/atom+xml" href="https://jbcurtin.io/categories/benchmark/atom.xml"/>
     <link rel="alternate" type="text/html" href="https://jbcurtin.io"/>
     <generator uri="https://www.getzola.org/">Zola</generator>
-    <updated>2024-08-27T00:00:00+00:00</updated>
+    <updated>2024-08-29T00:00:00+00:00</updated>
     <id>https://jbcurtin.io/categories/benchmark/atom.xml</id>
     <entry xml:lang="en">
         <title>Compression Benchmarks for PostgreSQL Archives</title>
-        <published>2024-08-27T00:00:00+00:00</published>
-        <updated>2024-08-27T00:00:00+00:00</updated>
+        <published>2024-08-29T00:00:00+00:00</published>
+        <updated>2024-08-29T00:00:00+00:00</updated>
         
         <author>
           <name>

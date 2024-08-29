@@ -8,7 +8,7 @@
     </url>
     <url>
         <loc>https://jbcurtin.io/articles/postgresql-compression-benchmark/</loc>
-        <lastmod>2024-08-27</lastmod>
+        <lastmod>2024-08-29</lastmod>
     </url>
     <url>
         <loc>https://jbcurtin.io/categories/</loc>
@@ -23,10 +23,17 @@
         <loc>https://jbcurtin.io/ja/articles/</loc>
     </url>
     <url>
+        <loc>https://jbcurtin.io/ja/articles/postgresql-compression-benchmark/</loc>
+        <lastmod>2024-08-29</lastmod>
+    </url>
+    <url>
         <loc>https://jbcurtin.io/ja/benchmark/</loc>
     </url>
     <url>
         <loc>https://jbcurtin.io/ja/categories/</loc>
+    </url>
+    <url>
+        <loc>https://jbcurtin.io/ja/categories/benchmark/</loc>
     </url>
     <url>
         <loc>https://jbcurtin.io/ja/search/</loc>
