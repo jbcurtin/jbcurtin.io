@@ -156,7 +156,7 @@
 &lt;tr&gt;&lt;td&gt;zstd&lt;&#x2F;td&gt;&lt;td&gt;$$ 88 \times 105.0 \over {1600} $$&lt;&#x2F;td&gt;&lt;td&gt;5.775&lt;&#x2F;td&gt;&lt;td&gt;1 minute 28 seconds&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
 &lt;tr&gt;&lt;td&gt;gzip&lt;&#x2F;td&gt;&lt;td&gt;$$ 200 \times 41.3 \over {1700} $$&lt;&#x2F;td&gt;&lt;td&gt;4.8588&lt;&#x2F;td&gt;&lt;td&gt;3 minutes 20 seconds&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
 &lt;tr&gt;&lt;td&gt;bzip2&lt;&#x2F;td&gt;&lt;td&gt;$$ 1144 \times 6.6 \over {1300} $$&lt;&#x2F;td&gt;&lt;td&gt;5.808&lt;&#x2F;td&gt;&lt;td&gt;19 minutes 4 seconds&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
-&lt;tr&gt;&lt;td&gt;lz4&lt;&#x2F;td&gt;&lt;td&gt;$$ 88 \times 101 \over {2500} $$&lt;&#x2F;td&gt;&lt;td&gt;3.5552&lt;&#x2F;td&gt;&lt;td&gt;1 minute 28 seconds&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;lz4&lt;&#x2F;td&gt;&lt;td&gt;$$ 88 \times 101.0 \over {2500} $$&lt;&#x2F;td&gt;&lt;td&gt;3.5552&lt;&#x2F;td&gt;&lt;td&gt;1 minute 28 seconds&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
 &lt;tr&gt;&lt;td&gt;xz&lt;&#x2F;td&gt;&lt;td&gt;$$ 2262 \times 3.0 \over {1300} $$&lt;&#x2F;td&gt;&lt;td&gt;5.22&lt;&#x2F;td&gt;&lt;td&gt;44 minutes 22 seconds&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
 &lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
 &lt;p&gt;Compression Ratios can vary based on a multitude of factors, most notably is the amount of repeated information in the file being archived. For instance, text data often repeats while random data does not. Therefore we&#x27;ll be able to achieve higher compression ratios on archives with text data (such as a PostgreSQL dump).&lt;&#x2F;p&gt;
