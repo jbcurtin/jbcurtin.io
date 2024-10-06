@@ -7,7 +7,7 @@
     <updated>2024-10-06T00:00:00+00:00</updated>
     <id>https://jbcurtin.io/categories/optimization/atom.xml</id>
     <entry xml:lang="en">
-        <title>Timetravel using Python, Numpy, Chrono, and Time</title>
+        <title> DateTime (de)Serialization Benchmarks from Python, Numpy, Chrono, and Time</title>
         <published>2024-10-06T00:00:00+00:00</published>
         <updated>2024-10-06T00:00:00+00:00</updated>
         
@@ -19,10 +19,10 @@
           </name>
         </author>
         
-        <link rel="alternate" type="text/html" href="https://jbcurtin.io/articles/timetravel/"/>
-        <id>https://jbcurtin.io/articles/timetravel/</id>
+        <link rel="alternate" type="text/html" href="https://jbcurtin.io/articles/datetime-benchmarks/"/>
+        <id>https://jbcurtin.io/articles/datetime-benchmarks/</id>
         
-        <content type="html" xml:base="https://jbcurtin.io/articles/timetravel/">&lt;p&gt;Datetime parsing and rendering sometimes require optimization when iterating over a large dataset. Say you have about a couple million rows of timestamps you&#x27;d like to parse into a datatype. It could take some time if you use the wrong &lt;code&gt;import&lt;&#x2F;code&gt; or &lt;code&gt;crate&lt;&#x2F;code&gt;. In this article, I&#x27;ll benchmark what it takes to load a couple million datetime stamps with Python&#x27;s &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;docs.python.org&#x2F;3&#x2F;library&#x2F;datetime.html&quot;&gt;datetime&lt;&#x2F;a&gt;, &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;numpy.org&#x2F;doc&#x2F;stable&#x2F;reference&#x2F;arrays.datetime.html&quot;&gt;Numpy&lt;&#x2F;a&gt;, &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;crates.io&#x2F;crates&#x2F;chrono&quot;&gt;Chrono&lt;&#x2F;a&gt;, and &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;crates.io&#x2F;crates&#x2F;time&quot;&gt;Time&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+        <content type="html" xml:base="https://jbcurtin.io/articles/datetime-benchmarks/">&lt;p&gt;Datetime parsing and rendering sometimes require optimization when iterating over a large dataset. Say you have about a couple million rows of timestamps you&#x27;d like to parse into a datatype. It could take some time if you use the wrong &lt;code&gt;import&lt;&#x2F;code&gt; or &lt;code&gt;crate&lt;&#x2F;code&gt;. In this article, I&#x27;ll benchmark what it takes to load a couple million datetime stamps with Python&#x27;s &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;docs.python.org&#x2F;3&#x2F;library&#x2F;datetime.html&quot;&gt;datetime&lt;&#x2F;a&gt;, &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;numpy.org&#x2F;doc&#x2F;stable&#x2F;reference&#x2F;arrays.datetime.html&quot;&gt;Numpy&lt;&#x2F;a&gt;, &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;crates.io&#x2F;crates&#x2F;chrono&quot;&gt;Chrono&lt;&#x2F;a&gt;, and &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;crates.io&#x2F;crates&#x2F;time&quot;&gt;Time&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;We&#x27;ll explore different architectural considerations and design patterns to improve the &lt;a rel=&quot;noopener&quot; target=&quot;_blank&quot; href=&quot;https:&#x2F;&#x2F;blog.rust-lang.org&#x2F;2017&#x2F;03&#x2F;02&#x2F;lang-ergonomics.html&quot;&gt;ergonomics&lt;&#x2F;a&gt; of using the different software libraries. Providing you with the ability to drop code into your project with minimal effort.&lt;&#x2F;p&gt;
 &lt;p&gt;There are some considerations to apply when selecting the right datetime alteration software.&lt;&#x2F;p&gt;
 &lt;ul&gt;
