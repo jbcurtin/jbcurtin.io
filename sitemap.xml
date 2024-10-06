@@ -11,10 +11,17 @@
         <lastmod>2024-08-29</lastmod>
     </url>
     <url>
+        <loc>https://jbcurtin.io/articles/timetravel/</loc>
+        <lastmod>2024-10-06</lastmod>
+    </url>
+    <url>
         <loc>https://jbcurtin.io/categories/</loc>
     </url>
     <url>
         <loc>https://jbcurtin.io/categories/benchmark/</loc>
+    </url>
+    <url>
+        <loc>https://jbcurtin.io/categories/optimization/</loc>
     </url>
     <url>
         <loc>https://jbcurtin.io/ja/</loc>
@@ -27,6 +34,10 @@
         <lastmod>2024-08-29</lastmod>
     </url>
     <url>
+        <loc>https://jbcurtin.io/ja/articles/timetravel/</loc>
+        <lastmod>2024-10-06</lastmod>
+    </url>
+    <url>
         <loc>https://jbcurtin.io/ja/benchmark/</loc>
     </url>
     <url>
@@ -34,6 +45,9 @@
     </url>
     <url>
         <loc>https://jbcurtin.io/ja/categories/benchmark/</loc>
+    </url>
+    <url>
+        <loc>https://jbcurtin.io/ja/categories/optimization/</loc>
     </url>
     <url>
         <loc>https://jbcurtin.io/ja/search/</loc>
