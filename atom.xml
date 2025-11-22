@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
-    <title>Ender</title>
+    <title>Joseph Curtin</title>
     <link rel="self" type="application/atom+xml" href="https://jbcurtin.io/atom.xml"/>
     <link rel="alternate" type="text/html" href="https://jbcurtin.io"/>
     <generator uri="https://www.getzola.org/">Zola</generator>
-    <updated>2025-11-11T00:00:00+00:00</updated>
+    <updated>2025-11-22T00:00:00+00:00</updated>
     <id>https://jbcurtin.io/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Whales</title>
+        <published>2025-11-22T00:00:00+00:00</published>
+        <updated>2025-11-22T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://jbcurtin.io/articles/whales/"/>
+        <id>https://jbcurtin.io/articles/whales/</id>
+        
+        <content type="html" xml:base="https://jbcurtin.io/articles/whales/">&lt;p&gt;I always found the science of whales fascinating. The process of humans trying to understand how whales communicate is what I focused in on, when I started to question what it was like to exist as an Autistic Individual. Of course, at the time I didn&#x27;t know I was autistic, I did however know there was a variance of interpretation before anyone provided the words to me.&lt;&#x2F;p&gt;
+&lt;p&gt;By simply paying attention to what people were saying to me, I was able to decern a pattern of communication that would be soft and remain resilient.&lt;&#x2F;p&gt;
+&lt;p&gt;I stopped to listen to how people projected their perceptions onto me. I think the key difference between who I was and who I am today, is I can stay in the conversation and not struggle to be apart of the conversation. Learning how not to let how others thought, about me, affect me, took me a while to figure out. Reason being is, people are most interested in getting along. They talk with what they know to be true first and you can either validate their sentiment genuinely or not. People who are extremely perceptive, can tell when you&#x27;re just saying yes to them rather than responding and thinking about your responses to them, regardless of neurotype divergence.&lt;&#x2F;p&gt;
+&lt;p&gt;Working with people who are not well practiced in talking with someone who is autistic, takes effort from me. In the autistic community, we put forth the importance of using identify first language. However, most functioning allistics without much exposure to functioning autistics have pretty much zero baseline in understanding how to talk with us. Therefore they have to start from something that is common to them, which might also feel insulting to us.&lt;&#x2F;p&gt;
+&lt;p&gt;Our voice boxes are very similar to neurotypical voice boxes, which allows us to make a lot of the same sounds they do. Neurotypical brains are a lot closer to our brains, which allows them to understand concepts just as well as we do. Our ears, mouth, and eyes are pretty similar too. We have a lot more in common and our differences help us approach problems with more originality rather than blind conformity, relative to each other.&lt;&#x2F;p&gt;
+&lt;p&gt;The internet carries our collective words father than our voices ever will.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
     <entry xml:lang="en">
         <title>Imminent Correction Advised</title>
         <published>2025-11-11T00:00:00+00:00</published>
