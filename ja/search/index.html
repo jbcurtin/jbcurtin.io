@@ -1,0 +1,509 @@
+<!DOCTYPE HTML>
+<html>
+  
+<head>
+  <!-- Encoding -->
+  <meta charset="UTF-8">
+  <link rel="icon" href="/favicon.ico">
+  <!-- Meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Joseph Curtin - Mindful communication & software engineering" />
+  <meta name="keywords" content="Machine Learning, Infrastructure, & Cloud" />
+  <meta name="author" content="Joseph Curtin's Website" />
+  <title>
+    Article Search 日本語
+    </title>
+  <!-- Imports -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css"
+    integrity="sha256-nQ6wLtrBdTlYGKygEWcUZItTqIGXhUmg2m34X4ZPXaQ="
+    crossorigin="anonymous"/>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer" />
+  <!-- <link rel="stylesheet" href="/main.css" crossorigin="anonymous" /> -->
+  <link rel="stylesheet" href="https://jbcurtin.io/main.css">
+  <script type="text/javascript" src="https://jbcurtin.io/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+</head>
+
+  <body>
+    <section class="columns">
+      <div class="column is-3">
+        
+<div class="has-text-right page-title-column">
+  <a href="/">
+    <h1 class="page-title title is-2 has-text-primary"> Joseph Curtin </h1>
+    <p class="page-subtitle subtitle is-6 vert-spacing"> Mindful communication & software engineering </p>
+  </a>
+  <!-- <hr class="title-divider" /> -->
+  <section class="vert-spacing">
+    <div class="equal-height">
+      <div class="card-content is-flex" style="justify-content: center;">
+        <figure class="image is-64x64 is-center">
+          <img src="/images/profile.svg" alt="Brain" />
+        </figure>
+      </div>
+    </div>
+  </section>
+  <section class="section" style="padding: 0;">
+    <ul class="buttons">
+      <li>
+  <div id="subscribe-field" class="field has-addons">
+    <div class="control has-icons-left has-icons-right">
+      <input class="input" name="subscribe-email" type="email" placeholder="your@email.here to subscribe" />
+      <span class="icon is-small is-left has-site-colors">
+        <i class="fa-regular fa-newspaper"></i>
+      </span>
+      <span class="icon is-small is-right has-site-colors">
+        <i class="fas fa-check"></i>
+      </span>
+    </div>
+    <div id="subscribe-button" class="control">
+      <button class="button has-site-colors">
+        Subscribe
+      </button>
+    </div>
+    <p class="note help is-danger" style="text-align: left;"> Invalid Email </p>
+  </div>
+</li>
+
+      <li>
+        <a href="mailto:webmain@jbcurtin.io" target="_blank" class="button">
+          <span class="has-site-colors"> Connect over Email </span>
+          <span class="icon is-medium has-site-colors">
+            <i class="fa-regular fa-envelope"></i>
+          </span>
+        </a>
+      </li>
+      <li>
+        <a href="/search&#x2F;" class="button">
+        <span class="has-site-colors">
+            English&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <i class="fa-solid fa-language"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            日本語
+          </span>
+        </a>
+      </li>
+    </ul>
+  </section>
+</div>
+
+        <div class="container">
+          <aside class="menu hide-on-mobile">
+            
+<p class="menu-label">Article Filters</p>
+<ul class="menu-list">
+
+
+  <li>
+    <a href="&#x2F;articles&#x2F;">Performance Analysis</a>
+  </li>
+
+</ul>
+
+          </aside>
+        </div>
+      </div>
+      <div class="column is-9">
+        <div class="columns content">
+          <div class="column is-9" style="padding-top:0;">
+            <header class="main-top">
+              <h1 class="page-title title is-2 has-text-primary"> Article Search 日本語 </h1>
+            </header>
+            <section class="content">
+              <div class="field">
+                <div class="control has-icons-left has-icons-right">
+                  <input autofocus id="search-input" name="search" class="input search-input" type="text" placeholder="Search Articles" value="">
+                  <span class="icon is-small is-left">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                  </span>
+                  <span class="icon is-small is-right">
+                    <i class="fas fa-close"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="search-result-container"></div>
+            </section>
+          </div>
+        </div>
+      </div>
+      <div class="column is-12 show-on-mobile">
+        <aside class="menu">
+          
+<p class="menu-label">Search</p>
+<ul class="menu-list">
+  <li>
+    <div class="field">
+      <div class="control has-icons-left has-icons-right">
+        <input id="aside-search-input" class="input" type="text" placeholder="Search Articles" value="">
+        <span class="icon is-small is-left">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </span>
+        <span class="icon is-small is-right">
+          <i class="fas fa-close"></i>
+        </span>
+      </div>
+    </div>
+  </li>
+</ul>
+
+          
+<p class="menu-label">Article Filters</p>
+<ul class="menu-list">
+
+
+  <li>
+    <a href="&#x2F;articles&#x2F;">Performance Analysis</a>
+  </li>
+
+</ul>
+
+        </aside>
+      </div>
+    </section>
+    
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VZP9H4GE0Y"></script>
+<script type="text/javascript" src="https://jbcurtin.io/elasticlunr.min.js" defer></script>
+<script type="text/javascript" src="https://jbcurtin.io/search_index.en.js" defer></script>
+<script type="text/javascript" src="https://jbcurtin.io/js.cookie-3.0.5.min.js" integrity="sha256-WCzAhd2P6gRJF9Hv3oOOd+hFJi/QJbv+Azn4CGB8gfY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://jbcurtin.io/MathJax-3.2.2.js" defer></script>
+<script type="text/javascript" src="https://jbcurtin.io/chart/tree_map.js" defer></script>
+<script type="text/javascript" src="https://jbcurtin.io/main.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js" integrity="sha256-6EJwvQzVvfYP78JtAMKjkcsugfTSanqe4WGFpUdzo88=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js" integrity="sha256-OMcKHnypGrQOLZ5uYBKYUacX7Rx9Ssu91Bv5UDeRz2g=" crossorigin="anonymous"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+</script>
+<script>
+  function genIden(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }
+  let gauid = Cookies.get('gauid');
+  if (gauid == undefined) {
+    gauid = genIden(8);
+    Cookies.set('gauid', gauid);
+  }
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-VZP9H4GE0Y', {
+    user_id: gauid
+  });
+</script>
+
+    <script type="text/javascript" src="/search_index.ja.js"></script>
+<script type="text/template" name="result-begin">
+  <li class="search-result content">
+    Enter search query above to begin
+  </li>
+</script>
+<script type="text/template" name="result-empty">
+  <li class="search-result content">
+    Nothing was found for search: <b>${query}</b>
+  </li>
+</script>
+<script type="text/template" name="result-template">
+  <li class="search-result content">
+    <header>
+      <h1 class="page-title title is-2 has-text-primary">
+        <a href="${ ref }">
+          <i style="font-size: 12px;" class="fa-solid fa-arrow-up-right-from-square"></i>
+          ${ doc.title }
+        </a>
+      </h1>
+      <p class="subtitle is-6">
+        <time datetime="2021-12-20">December 20th, 2021</time>
+      </p>
+    </header>
+    <section class="content">
+      <p>
+        ${doc.safe_teaser}
+      </p>
+    </section>
+  </li>
+</script>
+<script type="text/javascript">
+const lang = "ja";
+function make_params_safe(params) {
+  const replace_tags = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '(': '%28', ')': '%29' };
+  const safe_inner_html = text => text.toString().replace(/[&<>\(\)]/g, tag => replace_tags[tag] || tag);
+  const param_keys = Object.keys(params);
+  const params_result = {};
+  for (let idx = 0; idx < param_keys.length; idx++) {
+    const key = param_keys[idx];
+    const val = params[key];
+    if (
+      val.constructor === new String().constructor
+      || val.constructor === new Number().constructor
+      || val.constructor === new Boolean().constructor) {
+      if (key.toLowerCase().startsWith('safe_')) {
+        params_result[key] = val;
+      } else {
+        params_result[key] = safe_inner_html(val);
+      }
+    } else if (
+      val.constructor === {}.constructor) {
+      params_result[key] = make_params_safe(val);
+    } else {
+      console.error('Not Implemented', val.constructor.toString())
+    }
+  }
+  return params_result;
+}
+function interpolate_template(template, params) {
+  const safeParams = make_params_safe(params);
+  const keys = Object.keys(safeParams);
+  const funcContent = `return \`${template}\``;
+  return new Function(...keys, funcContent)(...Object.values(safeParams));
+}
+/// make_teaser
+// Taken from mdbook
+// The strategy is as follows:
+// First, assign a value to each word in the document:
+//  Words that correspond to search terms (stemmer aware): 40
+//  Normal words: 2
+//  First word in a sentence: 8
+// Then use a sliding window with a constant number of words and count the
+// sum of the values of the words within the window. Then use the window that got the
+// maximum sum. If there are multiple maximas, then get the last one.
+// Enclose the terms in <b>.
+function make_teaser(body, terms) {
+  var TERM_WEIGHT = 40;
+  var NORMAL_WORD_WEIGHT = 2;
+  var FIRST_WORD_WEIGHT = 8;
+  var TEASER_MAX_WORDS = 30;
+  var stemmedTerms = terms.map(function (w) {
+    return elasticlunr.stemmer(w.toLowerCase());
+  });
+  var termFound = false;
+  var index = 0;
+  var weighted = []; // contains elements of ["word", weight, index_in_document]
+  // split in sentences, then words
+  var sentences = body.toLowerCase().split(". ");
+  for (var i in sentences) {
+    var words = sentences[i].split(" ");
+    var value = FIRST_WORD_WEIGHT;
+    for (var j in words) {
+      var word = words[j];
+      if (word.length > 0) {
+        for (var k in stemmedTerms) {
+          if (elasticlunr.stemmer(word).startsWith(stemmedTerms[k])) {
+            value = TERM_WEIGHT;
+            termFound = true;
+          }
+        }
+        weighted.push([word, value, index]);
+        value = NORMAL_WORD_WEIGHT;
+      }
+      index += word.length;
+      index += 1;  // ' ' or '.' if last word in sentence
+    }
+    index += 1;  // because we split at a two-char boundary '. '
+  }
+  if (weighted.length === 0) {
+    return body;
+  }
+  var windowWeights = [];
+  var windowSize = Math.min(weighted.length, TEASER_MAX_WORDS);
+  // We add a window with all the weights first
+  var curSum = 0;
+  for (var i = 0; i < windowSize; i++) {
+    curSum += weighted[i][1];
+  }
+  windowWeights.push(curSum);
+  for (var i = 0; i < weighted.length - windowSize; i++) {
+    curSum -= weighted[i][1];
+    curSum += weighted[i + windowSize][1];
+    windowWeights.push(curSum);
+  }
+  // If we didn't find the term, just pick the first window
+  var maxSumIndex = 0;
+  if (termFound) {
+    var maxFound = 0;
+    // backwards
+    for (var i = windowWeights.length - 1; i >= 0; i--) {
+      if (windowWeights[i] > maxFound) {
+        maxFound = windowWeights[i];
+        maxSumIndex = i;
+      }
+    }
+  }
+  var teaser = [];
+  var startIndex = weighted[maxSumIndex][2];
+  for (var i = maxSumIndex; i < maxSumIndex + windowSize; i++) {
+    var word = weighted[i];
+    if (startIndex < word[2]) {
+      // missing text from index to start of `word`
+      teaser.push(body.substring(startIndex, word[2]));
+      startIndex = word[2];
+    }
+    // add <em/> around search terms
+    if (word[1] === TERM_WEIGHT) {
+      teaser.push("<b>");
+    }
+    startIndex = word[2] + word[0].length;
+    teaser.push(body.substring(word[2], startIndex));
+    if (word[1] === TERM_WEIGHT) {
+      teaser.push("</b>");
+    }
+  }
+  teaser.push("…");
+  return teaser.join("");
+}
+/// Debounce
+function debounce(func, wait) {
+  var timeout;
+  return function () {
+    var context = this;
+    var args = arguments;
+    clearTimeout(timeout);
+    timeout = setTimeout(function () {
+      timeout = null;
+      func.apply(context, args);
+    }, wait);
+  };
+}
+async function update_query(key, value) {
+  var url = new URL(window.location.href);
+  url.searchParams.set(key, value);
+  window.history.replaceState({}, '', url);
+}
+/// Init Search
+function initSearch() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const queryValue = urlParams.get('q');
+  var $searchInput = document.getElementById("search-input");
+  if ($searchInput === null) {
+    console.error("Search input not found");
+    return;
+  }
+  $searchInput.value = queryValue;
+  var $searchResults = document.querySelector(".search-result-container");
+  var $searchResultsItems = document.querySelector(".search-result-list");
+  var MAX_ITEMS = 10;
+  var options = {
+    bool: "AND",
+    fields: {
+      title: {boost: 2},
+      body: {boost: 1},
+    }
+  };
+  
+  var currentTerm = "";
+  var index;
+  var initIndex = async function () {
+    if (index === undefined) {
+      index = await elasticlunr.Index.load(window.searchIndex);
+    }
+    return index;
+  }
+  $searchInput.addEventListener("keyup", debounce(async function() {
+    var term = $searchInput.value.trim();
+    if (term === currentTerm) {
+      return;
+    }
+    if ($searchResultsItems === null) {
+      $searchResultsItems = document.createElement("ul");
+      $searchResultsItems.classList.add("search-result-list");
+      $searchResults.appendChild($searchResultsItems);
+    }
+    $searchResultsItems.innerHTML = "";
+    currentTerm = term;
+    if (term === "" || term === undefined) {
+      const template = document.querySelector("script[name='result-begin']").innerText
+      $searchResultsItems.innerHTML = interpolate_template(template, {});
+      return;
+    }
+    await update_query('q', term)
+    var results = (await initIndex()).search(term, options);
+    if (results.length === 0) {
+      const template = document.querySelector("script[name='result-empty']").innerText;
+      $searchResultsItems.innerHTML = interpolate_template(template, {query: term})
+      return;
+    }
+    const template = document.querySelector("script[name='result-template']").innerText;
+    for (var i = 0; i < Math.min(results.length, MAX_ITEMS); i++) {
+      results[i].doc.safe_teaser = make_teaser(results[i].doc.body, term.split(" "));
+      $searchResultsItems.innerHTML += interpolate_template(template, results[i]);
+    }
+  }, 150));
+  if (queryValue != null) {
+    if (queryValue.trim() != "") {
+      const keyUpEvent = new Event('keyup', {bubbles: false});
+      $searchInput.dispatchEvent(keyUpEvent);
+    }
+  }
+  window.addEventListener('click', function(e) {
+    if ($searchResults.style.display == "block" && !$searchResults.contains(e.target)) {
+      $searchResults.style.display = "none";
+    }
+  });
+}
+if (document.readyState === "complete" || (document.readyState !== "loading" && !document.documentElement.doScroll)) {
+  initSearch();
+} else {
+  document.addEventListener("DOMContentLoaded", initSearch);
+}
+</script>
+
+    <script type="text/javascript">
+/// Debounce
+function debounce(func, wait) {
+  var timeout;
+  return function () {
+    var context = this;
+    var args = arguments;
+    clearTimeout(timeout);
+    timeout = setTimeout(function () {
+      timeout = null;
+      func.apply(context, args);
+    }, wait);
+  };
+}
+function initAsideSearch() {
+  const $aside_search_input = document.getElementById('aside-search-input');
+  if($aside_search_input === null) {
+    return;
+  }
+  $aside_search_input.addEventListener("keyup", debounce(async function($event) {
+    if ($event.keyCode === 13 || $event.keyCode === 32) {
+      var term = $aside_search_input.value.trim();
+      if ($event.keyCode === 32) {
+        term = term + " ";
+      }
+      const url_parts = [window.location.protocol, '//', window.location.host];
+      if ("ja" != "en") {
+        url_parts.push('/ja');
+      }
+      url_parts.push('/search/')
+      const search_url = new URL(url_parts.join(''));
+      search_url.searchParams.set('q', term);
+      window.location.href = search_url;
+    }
+  }, 150));
+}
+if (document.readyState === "complete" || (document.readyState !== "loading" && !document.documentElement.doScroll)) {
+  initAsideSearch();
+} else {
+  document.addEventListener("DOMContentLoaded", initAsideSearch);
+} 
+</script>
+
+  </body>
+</html>

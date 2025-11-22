@@ -1,0 +1,568 @@
+<!DOCTYPE HTML>
+<html>
+  
+<head>
+  <!-- Encoding -->
+  <meta charset="UTF-8">
+  <link rel="icon" href="/favicon.ico">
+  <!-- Meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Joseph Curtin - Mindful communication & software engineering" />
+  <meta name="keywords" content="Machine Learning, Infrastructure, & Cloud" />
+  <meta name="author" content="Joseph Curtin's Website" />
+  <title>
+    Secure Connections to PostgreSQL
+    </title>
+  <!-- Imports -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css"
+    integrity="sha256-nQ6wLtrBdTlYGKygEWcUZItTqIGXhUmg2m34X4ZPXaQ="
+    crossorigin="anonymous"/>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer" />
+  <!-- <link rel="stylesheet" href="/main.css" crossorigin="anonymous" /> -->
+  <link rel="stylesheet" href="https://jbcurtin.io/main.css">
+  <script type="text/javascript" src="https://jbcurtin.io/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+</head>
+
+  <body>
+    <section class="columns">
+      <div class="column is-3">
+        
+<div class="has-text-right page-title-column">
+  <a href="/">
+    <h1 class="page-title title is-2 has-text-primary"> Joseph Curtin </h1>
+    <p class="page-subtitle subtitle is-6 vert-spacing"> Mindful communication & software engineering </p>
+  </a>
+  <!-- <hr class="title-divider" /> -->
+  <section class="vert-spacing">
+    <div class="equal-height">
+      <div class="card-content is-flex" style="justify-content: center;">
+        <figure class="image is-64x64 is-center">
+          <img src="/images/profile.svg" alt="Brain" />
+        </figure>
+      </div>
+    </div>
+  </section>
+  <section class="section" style="padding: 0;">
+    <ul class="buttons">
+      <li>
+  <div id="subscribe-field" class="field has-addons">
+    <div class="control has-icons-left has-icons-right">
+      <input class="input" name="subscribe-email" type="email" placeholder="your@email.here to subscribe" />
+      <span class="icon is-small is-left has-site-colors">
+        <i class="fa-regular fa-newspaper"></i>
+      </span>
+      <span class="icon is-small is-right has-site-colors">
+        <i class="fas fa-check"></i>
+      </span>
+    </div>
+    <div id="subscribe-button" class="control">
+      <button class="button has-site-colors">
+        Subscribe
+      </button>
+    </div>
+    <p class="note help is-danger" style="text-align: left;"> Invalid Email </p>
+  </div>
+</li>
+
+      <li>
+        <a href="mailto:webmain@jbcurtin.io" target="_blank" class="button">
+          <span class="has-site-colors"> Connect over Email </span>
+          <span class="icon is-medium has-site-colors">
+            <i class="fa-regular fa-envelope"></i>
+          </span>
+        </a>
+      </li>
+      <li>
+        <a href="/ja&#x2F;articles&#x2F;securing-postgresql&#x2F;" class="button">
+        <span class="has-site-colors">
+            English&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <i class="fa-solid fa-language"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            日本語
+          </span>
+        </a>
+      </li>
+    </ul>
+  </section>
+</div>
+
+        <div class="container">
+          <aside class="menu hide-on-mobile">
+            
+<p class="menu-label">Search</p>
+<ul class="menu-list">
+  <li>
+    <div class="field">
+      <div class="control has-icons-left has-icons-right">
+        <input id="aside-search-input" class="input" type="text" placeholder="Search Articles" value="">
+        <span class="icon is-small is-left">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </span>
+        <span class="icon is-small is-right">
+          <i class="fas fa-close"></i>
+        </span>
+      </div>
+    </div>
+  </li>
+</ul>
+
+            
+<p class="menu-label">Article Filters</p>
+<ul class="menu-list">
+
+
+  <li>
+    <a href="&#x2F;articles&#x2F;">Performance Analysis</a>
+  </li>
+
+</ul>
+
+          </aside>
+        </div>
+      </div>
+      <div class="column is-9">
+        <article class="content">
+          <header class="main-top">
+            <h1 class="page-title title is-2 has-text-primary"> Secure Connections to PostgreSQL </h1>
+            <p class="subtitle is-6">
+              <time datetime="2025-01-06"> January  6, 2025 </time>
+            </p>
+          </header>
+          <section class="content">
+            <p>
+              <p>Securing PostgreSQL using <a rel="noopener" target="_blank" href="https://en.wikipedia.org/wiki/Mutual_authentication">mutual authentication</a> over <a rel="noopener" target="_blank" href="https://en.wikipedia.org/wiki/Transport_Layer_Security">TLS</a> commonly known as <a rel="noopener" target="_blank" href="https://www.cloudflare.com/learning/access-management/what-is-mutual-tls/">mTLS</a> using a Self Signed Certificate Authority with <a rel="noopener" target="_blank" href="https://en.wikipedia.org/wiki/Strong_cryptography">good enough encryption</a>.</p>
+<p>The importance of implementing encryption for <a rel="noopener" target="_blank" href="https://en.wikipedia.org/wiki/Data_in_transit">data in transit</a> is a basic requirement for GDPR &amp; HIPAA. Through maintaining <a rel="noopener" target="_blank" href="https://www.splunk.com/en_us/blog/learn/cyber-hygiene.html">good security hygiene</a> even if you're not interested in compliance, you're reducing the chances of data being stolen. Rolling out a Certificate Authority is not an easy task. There are multiple levels to consider. For the purposes of this article, I'll show how to configure a Self Signed <a rel="noopener" target="_blank" href="https://en.wikipedia.org/wiki/Root_certificate">Root CA</a>. You could take in further and install the Root CA and Intermediate CAs into <a rel="noopener" target="_blank" href="https://manpages.debian.org/buster/ca-certificates/update-ca-certificates.8.en.html">Linux</a> or <a rel="noopener" target="_blank" href="https://learn.microsoft.com/en-us/windows-hardware/drivers/install/trusted-root-certification-authorities-certificate-store">Windows</a></p>
+<h3 id="ca-architecture">CA Architecture</h3>
+<p>Certificate Authority architecture is not as complicated as it might sound. There are however significant security considerations to consider when deciding how services will access adjacent or adjoining services. mTLS between services provides two protections, first by enforcing TLS 1.2/1.3 it reduces the chances of information being leaked. The second the server will authenticate the client when it connects and verify the connecting cert is valid relative to the Root CA. Those two protections are enough to provide good enough security for data in transit. <a rel="noopener" target="_blank" href="https://www.rfc-editor.org/rfc/rfc2818#section-3.1">Host Name Verification</a> can be used to further increase security between services; more on that later when talking about Common Name and Subject Alt name.</p>
+<p>CA Architecture has a Root CA protected on a machine only accessible to the DevOps utilities requesting and distributing certificates, a machine only a Developer can access manually, or inside a Cloud HSM service. There is zero necessity to have the RootCA directly exposed to the internet. If however that is the case.. you should strongly consider removing the RootCA from anything that can be accessed through a public IPAddress</p>
+<h4 id="2-tier-ca-architecture">2 Tier CA Architecture</h4>
+<p>2 Tier Architecture consists of a RootCA and many service Certificates. In the example below, <a rel="noopener" target="_blank" href="https://www.postgresql.org/">PostgreSQL</a>, <a rel="noopener" target="_blank" href="https://valkey.io/">Valkey</a>, and <a rel="noopener" target="_blank" href="https://rocket.rs/">Rocket.rs</a></p>
+<p><img src="/articles/securing-postgresql/CA%20Architecture.svg" alt="CA Architecture" /></p>
+<p><a rel="noopener" target="_blank" href="https://www.openssl.org/">OpenSSL</a> provides a command line interface that'll allow us to create the RootCA and services. Let's walk through an example for PostgreSQL</p>
+<pre data-lang="bash" style="background-color:#191919;color:#f8f8f2;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#e9fdac;">$</span><span> mkdir ca </span><span style="color:#ff5e5e;">&amp;&amp; </span><span style="color:#6699cc;">cd</span><span> ca
+</span><span style="color:#e9fdac;">$</span><span> openssl genrsa</span><span style="font-style:italic;color:#fc9354;"> -out</span><span> ca.key 2048
+</span><span style="color:#e9fdac;">$</span><span> openssl req</span><span style="font-style:italic;color:#fc9354;"> -new -x509 -key</span><span> ca.key</span><span style="font-style:italic;color:#fc9354;"> -out</span><span> ca.crt</span><span style="font-style:italic;color:#fc9354;"> -subj</span><span style="color:#ff5e5e;">=</span><span>/C=US/ST=None/L=None/O=Dev/CN=root-ca
+</span><span style="color:#e9fdac;">$</span><span> openssl genrsa</span><span style="font-style:italic;color:#fc9354;"> -out</span><span> postgresql.key 2048
+</span><span style="color:#e9fdac;">$</span><span> openssl rsa</span><span style="font-style:italic;color:#fc9354;"> -in</span><span> postgresql.key</span><span style="font-style:italic;color:#fc9354;"> -pubout -out</span><span> postgresql.pub
+</span><span style="color:#e9fdac;">$</span><span> openssl req</span><span style="font-style:italic;color:#fc9354;"> -new -key</span><span> postgresql.key</span><span style="font-style:italic;color:#fc9354;"> -out</span><span> postgresql.csr</span><span style="font-style:italic;color:#fc9354;"> -subj</span><span style="color:#ff5e5e;">=</span><span>/C=US/ST=None/L=None/O=Dev/CN=postgresql
+</span><span style="color:#e9fdac;">$</span><span> openssl x509</span><span style="font-style:italic;color:#fc9354;"> -req -in</span><span> postgresql.csr</span><span style="font-style:italic;color:#fc9354;"> -CA</span><span> ca.crt</span><span style="font-style:italic;color:#fc9354;"> -CAkey</span><span> ca.key</span><span style="font-style:italic;color:#fc9354;"> -CAcreateserial -out</span><span> postgresql.crt
+</span></code></pre>
+<h4 id="3-tier-ca-architecture">3 Tier CA Architecture</h4>
+<p>3 Tier CA Architecture takes it a step further and allows the creation of Key/Cert pairs for <a rel="noopener" target="_blank" href="https://en.wikipedia.org/wiki/Multitenancy">Tenants</a>. Anything signed with Tenant A Intermediate CA can only access services from Tenant A. Same for Tenant B, only PostgreSQL B and Valkey B can access each other. Access from PostgreSQL A to PostgreSQL B and vice versa would not work because the connecting Key/Cert pair connecting from either service to the other, would not be signed by an adjacent <a rel="noopener" target="_blank" href="https://en.wikipedia.org/wiki/Public_key_certificate#Types_of_certificate">Intermediate CA</a></p>
+<p>Similar to a 2 Tier CA Architecture, the 3 Tier CA Architecture keeps the Root CA offline and should only be accessed by orchestration software or a developer when necessary</p>
+<p><img src="/articles/securing-postgresql/CA%20Architecture%203.svg" alt="CA Architecture" /></p>
+<p>The process for creating an Intermediate CA is similar to creating Service Key/Cert pairs. However, there are specific parameters available in x509, one being the restriction of additional CA creation. We'll cover those values in a follow up article. For new, lets move forward with generating two tenants, each with a PostgreSQL Key/Cert pair</p>
+<pre data-lang="bash" style="background-color:#191919;color:#f8f8f2;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#e9fdac;">$</span><span> mkdir ca </span><span style="color:#ff5e5e;">&amp;&amp; </span><span style="color:#6699cc;">cd</span><span> ca
+</span><span style="color:#6d6d6d;"># Root CA
+</span><span style="color:#e9fdac;">$</span><span> openssl genrsa</span><span style="font-style:italic;color:#fc9354;"> -out</span><span> ca.key 2048
+</span><span style="color:#e9fdac;">$</span><span> openssl req</span><span style="font-style:italic;color:#fc9354;"> -new -x509 -key</span><span> ca.key</span><span style="font-style:italic;color:#fc9354;"> -out</span><span> ca.crt</span><span style="font-style:italic;color:#fc9354;"> -subj</span><span style="color:#ff5e5e;">=</span><span>/C=US/ST=None/L=None/O=Dev/CN=root-ca
+</span><span style="color:#6d6d6d;"># Tenant A
+</span><span style="color:#e9fdac;">$</span><span> openssl genrsa</span><span style="font-style:italic;color:#fc9354;"> -out</span><span> tenant-a.key 2048
+</span><span style="color:#e9fdac;">$</span><span> openssl rsa</span><span style="font-style:italic;color:#fc9354;"> -in</span><span> tenant-a.key</span><span style="font-style:italic;color:#fc9354;"> -pubout -out</span><span> tenant-a.pub
+</span><span style="color:#e9fdac;">$</span><span> openssl req</span><span style="font-style:italic;color:#fc9354;"> -new -key</span><span> tenant-a.key</span><span style="font-style:italic;color:#fc9354;"> -out</span><span> tenant-a.csr</span><span style="font-style:italic;color:#fc9354;"> -subj</span><span style="color:#ff5e5e;">=</span><span>/C=US/ST=None/L=None/O=Dev/CN=tenant-a
+</span><span style="color:#e9fdac;">$</span><span> openssl x509</span><span style="font-style:italic;color:#fc9354;"> -req -in</span><span> tenant-a.csr</span><span style="font-style:italic;color:#fc9354;"> -CA</span><span> ca.crt</span><span style="font-style:italic;color:#fc9354;"> -CAkey</span><span> ca.key</span><span style="font-style:italic;color:#fc9354;"> -CAcreateserial -out</span><span> tenant-a.crt
+</span><span style="color:#6d6d6d;"># PostgreSQL A
+</span><span style="color:#e9fdac;">$</span><span> openssl genrsa</span><span style="font-style:italic;color:#fc9354;"> -out</span><span> postgresql-a.key 2048
+</span><span style="color:#e9fdac;">$</span><span> openssl rsa</span><span style="font-style:italic;color:#fc9354;"> -in</span><span> postgresql-a.key</span><span style="font-style:italic;color:#fc9354;"> -pubout -out</span><span> postgresql-a.pub
+</span><span style="color:#e9fdac;">$</span><span> openssl req</span><span style="font-style:italic;color:#fc9354;"> -new -key</span><span> postgresql-a.key</span><span style="font-style:italic;color:#fc9354;"> -out</span><span> postgresql-a.csr</span><span style="font-style:italic;color:#fc9354;"> -subj</span><span style="color:#ff5e5e;">=</span><span>/C=US/ST=None/L=None/O=Dev/CN=postgresql-a
+</span><span style="color:#e9fdac;">$</span><span> openssl x509</span><span style="font-style:italic;color:#fc9354;"> -req -in</span><span> postgresql-a.csr</span><span style="font-style:italic;color:#fc9354;"> -CA</span><span> tenant-a.crt</span><span style="font-style:italic;color:#fc9354;"> -CAkey</span><span> tenant-a.key</span><span style="font-style:italic;color:#fc9354;"> -CAcreateserial -out</span><span> postgresql-a.crt
+</span><span style="color:#6d6d6d;"># Tenant B
+</span><span style="color:#e9fdac;">$</span><span> openssl genrsa</span><span style="font-style:italic;color:#fc9354;"> -out</span><span> tenant-b.key 2048
+</span><span style="color:#e9fdac;">$</span><span> openssl rsa</span><span style="font-style:italic;color:#fc9354;"> -in</span><span> tenant-b.key</span><span style="font-style:italic;color:#fc9354;"> -pubout -out</span><span> tenant-b.pub
+</span><span style="color:#e9fdac;">$</span><span> openssl req</span><span style="font-style:italic;color:#fc9354;"> -new -key</span><span> tenant-b.key</span><span style="font-style:italic;color:#fc9354;"> -out</span><span> tenant-b.csr</span><span style="font-style:italic;color:#fc9354;"> -subj</span><span style="color:#ff5e5e;">=</span><span>/C=US/ST=None/L=None/O=Dev/CN=tenant-b
+</span><span style="color:#e9fdac;">$</span><span> openssl x509</span><span style="font-style:italic;color:#fc9354;"> -req -in</span><span> tenant-b.csr</span><span style="font-style:italic;color:#fc9354;"> -CA</span><span> ca.crt</span><span style="font-style:italic;color:#fc9354;"> -CAkey</span><span> ca.key</span><span style="font-style:italic;color:#fc9354;"> -CAcreateserial -out</span><span> tenant-b.crt
+</span><span style="color:#6d6d6d;"># PostgreSQL B
+</span><span style="color:#e9fdac;">$</span><span> openssl genrsa</span><span style="font-style:italic;color:#fc9354;"> -out</span><span> postgresql-b.key 2048
+</span><span style="color:#e9fdac;">$</span><span> openssl rsa</span><span style="font-style:italic;color:#fc9354;"> -in</span><span> postgresql-b.key</span><span style="font-style:italic;color:#fc9354;"> -pubout -out</span><span> postgresql-b.pub
+</span><span style="color:#e9fdac;">$</span><span> openssl req</span><span style="font-style:italic;color:#fc9354;"> -new -key</span><span> postgresql-b.key</span><span style="font-style:italic;color:#fc9354;"> -out</span><span> postgresql-b.csr</span><span style="font-style:italic;color:#fc9354;"> -subj</span><span style="color:#ff5e5e;">=</span><span>/C=US/ST=None/L=None/O=Dev/CN=postgresql-b
+</span><span style="color:#e9fdac;">$</span><span> openssl x509</span><span style="font-style:italic;color:#fc9354;"> -req -in</span><span> postgresql-b.csr</span><span style="font-style:italic;color:#fc9354;"> -CA</span><span> tenant-b.crt</span><span style="font-style:italic;color:#fc9354;"> -CAkey</span><span> tenant-b.key</span><span style="font-style:italic;color:#fc9354;"> -CAcreateserial -out</span><span> postgresql-b.crt
+</span></code></pre>
+<h2 id="setup-postgresql-using-docker">Setup PostgreSQL using Docker</h2>
+<p>For the rest of the article, I'll stick to using a 2 Tier CA Architecture. Let's go ahead and configure PostgreSQL</p>
+<h3 id="configuration">Configuration</h3>
+<h4 id="docker-compose-yml"><code>docker-compose.yml</code></h4>
+<p>Adding <code>storage</code> as a <a rel="noopener" target="_blank" href="https://docs.docker.com/reference/compose-file/services/">Docker Service</a> in <code>docker-compose.yml</code> provides a bare minimum configuration for a relatively secure PostgreSQL service running locally. The configuration could easily be expanded and deployed using other orchestration software such as <a rel="noopener" target="_blank" href="https://about.gitlab.com/topics/gitops/">GitOps</a> or <a rel="noopener" target="_blank" href="https://kubernetes.io/">k8s</a>. The <a rel="noopener" target="_blank" href="https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-an-image/">Docker Image</a> used is <a rel="noopener" target="_blank" href="https://hub.docker.com/_/postgres">postgres:17.2-alpine3.21</a> which is an official image managed and maintained by <a rel="noopener" target="_blank" href="https://github.com/docker-library/postgres">the PostgreSQL Docker Community</a></p>
+<p>Using the <code>latest</code> tag for an image is something you could do, but I recommend pinning to a specific version(<code>:17.2-alpine3.21</code>) so when it comes time to update the software, it doesn't migrate the database from a previous version(16) to the latest version(17) without you realizing it. Automation is great, until it fails and you have to figure out what happened</p>
+<p><code>command</code> in docker compose can override <a rel="noopener" target="_blank" href="https://www.docker.com/blog/docker-best-practices-choosing-between-run-cmd-and-entrypoint/">CMD</a> with options or arguments. This is possible because the <code>17.2-alpine3.21</code> image uses <code>CMD</code> to specify a default command. <code>&gt;-</code> is the <a rel="noopener" target="_blank" href="https://stackoverflow.com/a/75683105">Block Chomping Indicator</a>. It flags a <code>yaml</code> parser to remove newlines from the multi-line string. You'll need to coordinate the filepath location relative to where the RootCA and Key/Cert pair is mounted into the <a rel="noopener" target="_blank" href="https://www.docker.com/resources/what-container/">container</a> using a few <a rel="noopener" target="_blank" href="https://docs.docker.com/engine/storage/volumes/">volume</a> entries in the <a rel="noopener" target="_blank" href="https://en.wikipedia.org/wiki/YAML">yaml</a>. Finally, set default environment variables for the username, database name, and password to access the container while its in operation and expose the container port <code>5432</code> to <code>8432</code> or something more to your liking</p>
+<pre data-lang="yaml" style="background-color:#191919;color:#f8f8f2;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#ff5e5e;">storage</span><span>:
+</span><span>  </span><span style="color:#ff5e5e;">restart</span><span>: </span><span style="color:#fbe3bf;">always
+</span><span>  </span><span style="color:#ff5e5e;">image</span><span>: </span><span style="color:#fbe3bf;">postgres:17.2-alpine3.21
+</span><span>  </span><span style="color:#ff5e5e;">command</span><span>: </span><span style="color:#ff5e5e;">&gt;-
+</span><span style="color:#fbe3bf;">    -c ssl=on
+</span><span style="color:#fbe3bf;">    -c ssl_min_protocol_version=TLSv1.3
+</span><span style="color:#fbe3bf;">    -c ssl_cert_file=/var/lib/postgresql/postgresql.crt
+</span><span style="color:#fbe3bf;">    -c ssl_key_file=/var/lib/postgresql/postgresql.key
+</span><span style="color:#fbe3bf;">    -c ssl_ca_file=/var/lib/postgresql/ca.crt
+</span><span style="color:#fbe3bf;">    -c hba_file=/var/lib/postgresql/pg_hba.conf
+</span><span>  </span><span style="color:#ff5e5e;">environment</span><span>:
+</span><span>    </span><span style="color:#ff5e5e;">POSTGRES_DB</span><span>: </span><span style="color:#fbe3bf;">dbname
+</span><span>    </span><span style="color:#ff5e5e;">POSTGRES_USER</span><span>: </span><span style="color:#fbe3bf;">dbuser
+</span><span>    </span><span style="color:#ff5e5e;">POSTGRES_PASSWORD</span><span>: </span><span style="color:#fbe3bf;">password
+</span><span>  </span><span style="color:#ff5e5e;">ports</span><span>:
+</span><span>    - </span><span style="color:#fbe3bf;">8432:5432
+</span><span>  </span><span style="color:#ff5e5e;">volumes</span><span>:
+</span><span>    - </span><span style="color:#fbe3bf;">./docker-data/postgresql-data:/var/lib/postgresql/data:rw
+</span><span>    - </span><span style="color:#fbe3bf;">./docker-data/configs/pg_hba.conf:/var/lib/postgresql/pg_hba.conf:ro
+</span><span>    - </span><span style="color:#fbe3bf;">./docker-data/postgresql-logs:/var/log/postgresql:rw
+</span><span>    - </span><span style="color:#fbe3bf;">./docker-data/ca/ca.crt:/var/lib/postgresql/ca.crt:ro
+</span><span>    - </span><span style="color:#fbe3bf;">./docker-data/ca/postgresql.crt:/var/lib/postgresql/postgresql.crt:ro
+</span><span>    - </span><span style="color:#fbe3bf;">./docker-data/ca/postgresql.key:/var/lib/postgresql/postgresql.key:ro
+</span></code></pre>
+<h4 id="pg-hba-conf"><code>pg_hba.conf</code></h4>
+<p><code>pg_hba.conf</code> file provides the configuration entry point to secure connections being made to various databases for all or for each user relative to how it connects. For our purposes, we'll want something that is secure enough by asking for two challenges. First set <code>hostssl</code> and require a Key/Cert pair signed by the RootCA created above. The second challenge is enabled by specifying <code>scram-sha-256</code> instead of <code>trust</code>, which will prompt the connecting clients for a password</p>
+<pre data-lang="plain" style="background-color:#191919;color:#f8f8f2;" class="language-plain "><code class="language-plain" data-lang="plain"><span>hostssl dbname  dbuser  127.0.0.1/32    scram-sha-256
+</span><span>hostssl dbname  dbuser  ::1/128         scram-sha-256
+</span><span>hostssl dbname  dbuser  all             scram-sha-256
+</span><span># Replication Privilges
+</span><span>local   replication     all                                     trust
+</span><span>host    replication     all             127.0.0.1/32            trust
+</span><span>host    replication     all             ::1/128                 trust
+</span></code></pre>
+<p>The more details for the <code>hb_conf.conf</code> file are available in <a rel="noopener" target="_blank" href="https://github.com/postgres/postgres/blob/30f017626308a06cf0c0c82a706a1ba1b07df34a/src/backend/libpq/pg_hba.conf.sample#L16">PostgreSQL source control</a>. By restricting connections to the one database managed by Docker Compose, attackers will need to guess the exact database name to connect into rather than dropping into a default database. We further reduce the attack surface even more by only allowing <code>dbuser</code> to connect</p>
+<h3 id="connection-testing">Connection Testing</h3>
+<pre data-lang="bash" style="background-color:#191919;color:#f8f8f2;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#e9fdac;">$</span><span> export PGSSLCERT=</span><span style="color:#ffffff;">$</span><span style="color:#e9fdac;">PWD</span><span>/docker-data/ca/postgresql.crt
+</span><span style="color:#e9fdac;">$</span><span> export PGSSLKEY=</span><span style="color:#ffffff;">$</span><span style="color:#e9fdac;">PWD</span><span>/docker-data/ca/postgresql.key
+</span><span style="color:#e9fdac;">$</span><span> export PGSSLROOTCERT=</span><span style="color:#ffffff;">$</span><span style="color:#e9fdac;">PWD</span><span>/docker-data/ca/ca.crt
+</span><span style="color:#e9fdac;">$</span><span> export PGSSLMODE=verify-ca
+</span><span style="color:#e9fdac;">$</span><span> export PGPASSWORD=password
+</span><span style="color:#e9fdac;">$</span><span> psql</span><span style="font-style:italic;color:#fc9354;"> -h</span><span> localhost</span><span style="font-style:italic;color:#fc9354;"> -p</span><span> 8432</span><span style="font-style:italic;color:#fc9354;"> -U</span><span> dbuser dbname
+</span></code></pre>
+<h4 id="openssl-debugging">OpenSSL Debugging</h4>
+<p><code>OpenSSL</code> ships with a number of utilities that will help you test your TLS implementation. <a rel="noopener" target="_blank" href="https://datatracker.ietf.org/doc/html/rfc8446">TLS 1.3</a> provides a specification that both <a rel="noopener" target="_blank" href="https://wiki.openssl.org/index.php/TLS1.3">OpenSSL</a> and <a rel="noopener" target="_blank" href="https://docs.rs/rustls/latest/rustls/manual/_04_features/index.html#current-features">rustls</a> implement in order to provide secure connections for transmitting data between services. The specification is also implemented by other languages; I only make a specific note here about OpenSSL and <code>rustls</code> because we'll be using OpenSSL to test <code>rustls</code> in other articles</p>
+<h5 id="openssl-s-client"><code>openssl s_client</code></h5>
+<p><a rel="noopener" target="_blank" href="https://docs.openssl.org/1.0.2/man1/s_client/">s_client</a> will connect to a host using DNS, IPv4, or IPv6 with a Port. Let's use Docker Service <code>storage</code> to test it out</p>
+<pre data-lang="bash" style="background-color:#191919;color:#f8f8f2;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#e9fdac;">$</span><span> openssl s_client</span><span style="font-style:italic;color:#fc9354;"> -connect</span><span> localhost:8432 </span><span style="color:#ff5e5e;">&gt;</span><span> debug.log </span><span style="color:#fdb082;">2</span><span style="color:#ff5e5e;">&gt;&amp;</span><span style="color:#fdb082;">1
+</span></code></pre>
+<p>Let's take a look at the diagnostic information</p>
+<pre data-lang="plain" style="background-color:#191919;color:#f8f8f2;" class="language-plain "><code class="language-plain" data-lang="plain"><span>$ cat debug.log
+</span><span>
+</span><span>CONNECTED(00000005)
+</span><span>---
+</span><span>Certificate chain
+</span><span> 0 s:C=US, ST=None, L=None, O=Dev, CN=postgresql
+</span><span>   i:C=US, ST=None, L=None, O=Dev, CN=rootca
+</span><span>   a:PKEY: rsaEncryption, 2048 (bit); sigalg: RSA-SHA256
+</span><span>   v:NotBefore: Jan  4 09:00:33 2025 GMT; NotAfter: Feb  3 09:00:33 2025 GMT
+</span><span> 1 s:C=US, ST=None, L=None, O=Dev, CN=rootca
+</span><span>   i:C=US, ST=None, L=None, O=Dev, CN=rootca
+</span><span>   a:PKEY: rsaEncryption, 2048 (bit); sigalg: RSA-SHA256
+</span><span>   v:NotBefore: Jan  4 09:00:33 2025 GMT; NotAfter: Feb  3 09:00:33 2025 GMT
+</span><span>---
+</span><span>Server certificate
+</span><span>-----BEGIN CERTIFICATE-----
+</span><span>&lt;redacted&gt;
+</span><span>-----END CERTIFICATE-----
+</span><span>subject=C=US, ST=None, L=None, O=Dev, CN=postgresql
+</span><span>issuer=C=US, ST=None, L=None, O=Dev, CN=rootca
+</span><span>---
+</span><span>Acceptable client certificate CA names
+</span><span>C=US, ST=None, L=None, O=Dev, CN=rootca
+</span><span>Requested Signature Algorithms: ECDSA+SHA256:ECDSA+SHA384:ECDSA+SHA512:Ed25519:Ed448:ECDSA+SHA256:ECDSA+SHA384:ECDSA+SHA512:RSA-PSS+SHA256:RSA-PSS+SHA384:RSA-PSS+SHA512:RSA-PSS+SHA256:RSA-PSS+SHA384:RSA-PSS+SHA512:RSA+SHA256:RSA+SHA384:RSA+SHA512:ECDSA+SHA224:RSA+SHA224
+</span><span>Shared Requested Signature Algorithms: ECDSA+SHA256:ECDSA+SHA384:ECDSA+SHA512:Ed25519:Ed448:ECDSA+SHA256:ECDSA+SHA384:ECDSA+SHA512:RSA-PSS+SHA256:RSA-PSS+SHA384:RSA-PSS+SHA512:RSA-PSS+SHA256:RSA-PSS+SHA384:RSA-PSS+SHA512:RSA+SHA256:RSA+SHA384:RSA+SHA512
+</span><span>Peer signing digest: SHA256
+</span><span>Peer signature type: RSA-PSS
+</span><span>Server Temp Key: ECDH, prime256v1, 256 bits
+</span><span>---
+</span><span>SSL handshake has read 2609 bytes and written 747 bytes
+</span><span>Verification error: self-signed certificate in certificate chain
+</span><span>---
+</span><span>New, TLSv1.3, Cipher is TLS_AES_256_GCM_SHA384
+</span><span>Protocol: TLSv1.3
+</span><span>Server public key is 2048 bit
+</span><span>This TLS version forbids renegotiation.
+</span><span>Compression: NONE
+</span><span>Expansion: NONE
+</span><span>No ALPN negotiated
+</span><span>Early data was not sent
+</span><span>Verify return code: 19 (self-signed certificate in certificate chain)
+</span><span>---
+</span><span>closed
+</span></code></pre>
+<p>The diagnostic information provides the full cert chain and verifies the TLS configuration is correct enough for us. What I mean by correct enough, is that we're still using a self-signed cert. That part of the validation will fail, and the part that checks the hostname should fail, but everything else should be fine</p>
+<pre data-lang="plain" style="background-color:#191919;color:#f8f8f2;" class="language-plain "><code class="language-plain" data-lang="plain"><span>Verification error: self-signed certificate in certificate chain
+</span><span>Verify return code: 19 (self-signed certificate in certificate chain)
+</span></code></pre>
+<h5 id="openssl-x509"><code>openssl x509</code></h5>
+<p><a rel="noopener" target="_blank" href="https://docs.openssl.org/1.1.1/man1/x509/">x509</a> provides diagnostic information about <code>crt</code> and other files. It's best used when you'd like to learn more about the service your connecting to, or extract more parameters about the CA that signed the certificate</p>
+<pre data-lang="bash" style="background-color:#191919;color:#f8f8f2;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#e9fdac;">$</span><span> openssl x509</span><span style="font-style:italic;color:#fc9354;"> -noout -text -in</span><span> docker-data/ca/ca.crt </span><span style="color:#ff5e5e;">&gt;</span><span> debug.log
+</span></code></pre>
+<p><code>-noout</code> and <code>-text</code> together seem odd together, at least to me. Together, the options indicate to <code>x509</code> there will be no output such as a <code>crt</code> or <code>csr</code> file and to print diagnostic information about the certification from the <code>-in</code> option to <code>stdout</code></p>
+<pre data-lang="plain" style="background-color:#191919;color:#f8f8f2;" class="language-plain "><code class="language-plain" data-lang="plain"><span>Certificate:
+</span><span>    Data:
+</span><span>        Version: 3 (0x2)
+</span><span>        Serial Number:
+</span><span>            &lt;redacted&gt;
+</span><span>        Signature Algorithm: sha256WithRSAEncryption
+</span><span>        Issuer: C=US, ST=None, L=None, O=Dev, CN=rootca
+</span><span>        Validity
+</span><span>            Not Before: Jan  4 09:00:33 2025 GMT
+</span><span>            Not After : Feb  3 09:00:33 2025 GMT
+</span><span>        Subject: C=US, ST=None, L=None, O=Dev, CN=rootca
+</span><span>        Subject Public Key Info:
+</span><span>            Public Key Algorithm: rsaEncryption
+</span><span>                Public-Key: (2048 bit)
+</span><span>                Modulus:
+</span><span>                    &lt;redacted&gt;
+</span><span>                Exponent: &lt;redacted&gt;
+</span><span>        X509v3 extensions:
+</span><span>            X509v3 Subject Key Identifier: 
+</span><span>                &lt;redacted&gt;
+</span><span>            X509v3 Authority Key Identifier: 
+</span><span>                &lt;redacted&gt;
+</span><span>            X509v3 Basic Constraints: critical
+</span><span>                CA:TRUE
+</span><span>    Signature Algorithm: sha256WithRSAEncryption
+</span><span>    Signature Value:
+</span><span>        &lt;redacted&gt;
+</span></code></pre>
+<p>There is quite a bit of information to look at, most notably is <code>Validity</code> and information on how the fingerprints and block ciphers are implemented for the Certificate. I've <code>&lt;redacted&gt;</code> anything that makes the output harder to read</p>
+<p>Common Name(<code>CN</code>) and Subject Alt Name(<code>SAN</code>) <a rel="noopener" target="_blank" href="https://en.wikipedia.org/wiki/X.509#Certificate_filename_extensions">extensions</a> provided can be used to verify the hostname against the Server's Certificate to line up with DNS entry or an IPAddress. Traditionally, only Common Name would be used to line up to something like <code>localhost</code> to your server. Subject Alt Name provides the ability to set multiple aliases such <code>localhost</code>, <code>127.0.0.1</code>, or even <code>pc-name.local</code>. Therefore you'll be able to have as many DNS or IP entries as you'd like</p>
+
+            </p>
+          </section>
+        </article>
+        <div class="column is-12 show-on-mobile">
+          <aside class="menu">
+            
+<p class="menu-label">Search</p>
+<ul class="menu-list">
+  <li>
+    <div class="field">
+      <div class="control has-icons-left has-icons-right">
+        <input id="aside-search-input" class="input" type="text" placeholder="Search Articles" value="">
+        <span class="icon is-small is-left">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </span>
+        <span class="icon is-small is-right">
+          <i class="fas fa-close"></i>
+        </span>
+      </div>
+    </div>
+  </li>
+</ul>
+
+            
+<p class="menu-label">Article Filters</p>
+<ul class="menu-list">
+
+
+  <li>
+    <a href="&#x2F;articles&#x2F;">Performance Analysis</a>
+  </li>
+
+</ul>
+
+          </aside>
+        </div>
+      </div>
+    </section>
+    
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VZP9H4GE0Y"></script>
+<script type="text/javascript" src="https://jbcurtin.io/elasticlunr.min.js" defer></script>
+<script type="text/javascript" src="https://jbcurtin.io/search_index.en.js" defer></script>
+<script type="text/javascript" src="https://jbcurtin.io/js.cookie-3.0.5.min.js" integrity="sha256-WCzAhd2P6gRJF9Hv3oOOd+hFJi/QJbv+Azn4CGB8gfY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://jbcurtin.io/MathJax-3.2.2.js" defer></script>
+<script type="text/javascript" src="https://jbcurtin.io/chart/tree_map.js" defer></script>
+<script type="text/javascript" src="https://jbcurtin.io/main.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js" integrity="sha256-6EJwvQzVvfYP78JtAMKjkcsugfTSanqe4WGFpUdzo88=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js" integrity="sha256-OMcKHnypGrQOLZ5uYBKYUacX7Rx9Ssu91Bv5UDeRz2g=" crossorigin="anonymous"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+</script>
+<script>
+  function genIden(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }
+  let gauid = Cookies.get('gauid');
+  if (gauid == undefined) {
+    gauid = genIden(8);
+    Cookies.set('gauid', gauid);
+  }
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-VZP9H4GE0Y', {
+    user_id: gauid
+  });
+</script>
+
+    <script type="text/javascript">
+/// Debounce
+function debounce(func, wait) {
+  var timeout;
+  return function () {
+    var context = this;
+    var args = arguments;
+    clearTimeout(timeout);
+    timeout = setTimeout(function () {
+      timeout = null;
+      func.apply(context, args);
+    }, wait);
+  };
+}
+function initAsideSearch() {
+  const $aside_search_input = document.getElementById('aside-search-input');
+  if($aside_search_input === null) {
+    return;
+  }
+  $aside_search_input.addEventListener("keyup", debounce(async function($event) {
+    if ($event.keyCode === 13 || $event.keyCode === 32) {
+      var term = $aside_search_input.value.trim();
+      if ($event.keyCode === 32) {
+        term = term + " ";
+      }
+      const url_parts = [window.location.protocol, '//', window.location.host];
+      if ("en" != "en") {
+        url_parts.push('/en');
+      }
+      url_parts.push('/search/')
+      const search_url = new URL(url_parts.join(''));
+      search_url.searchParams.set('q', term);
+      window.location.href = search_url;
+    }
+  }, 150));
+}
+if (document.readyState === "complete" || (document.readyState !== "loading" && !document.documentElement.doScroll)) {
+  initAsideSearch();
+} else {
+  document.addEventListener("DOMContentLoaded", initAsideSearch);
+} 
+</script>
+
+    <script type="text/javascript">
+  $.fn.SubscribeField = function() {
+    const COOKIE_NAME = 'subscribe-email';
+    const elm = $(this);
+    const regBttnElm = $("#subscribe-button");
+    const noteElm = elm.find(".note");
+    noteElm.hide();
+    const setInvalid = function() {
+      const newspaper_container = elm.find('.fa-newspaper').parent();
+      newspaper_container.addClass('has-text-danger');
+      // Right Icon
+      const right_icon_container = elm.find('.icon.is-right');
+      right_icon_container.addClass('has-text-danger');
+      const right_icon = right_icon_container.find('i.fa-check');
+      right_icon.removeClass('fa-check');
+      right_icon.addClass('fa-close');
+    }
+    const setValid = function() {
+      const newspaper_container = elm.find('.fa-newspaper').parent();
+      newspaper_container.removeClass('has-text-danger');
+      // Right Icon
+      const right_icon_container = elm.find('.icon.is-right');
+      right_icon_container.removeClass('has-text-danger');
+      const right_icon = right_icon_container.find('i.fa-close');
+      right_icon.removeClass('fa-close');
+      right_icon.addClass('fa-check');
+    }
+    const setConfirmState = function(email) {
+      const msg = `is been subscribed`;
+      regBttnElm.find('button').text('Subscribed');
+      regBttnElm.find('button').attr('disabled', 'disabled');
+      elm.find('input[name=subscribe-email]').attr('disabled', 'disabled');
+      elm.find('input[name=subscribe-email]').val(email);
+      elm.find('.fa-newspaper').addClass('has-text-info');
+      elm.find('.fa-check').parent().hide();
+      // elm.find('.fa-check').parent().html('<span> Saved </span>');
+      Cookies.set(COOKIE_NAME, email, { expires: 365, domain: window.location.hostname, SameSite: 'Strict', Secure: true });
+    }
+    const validateEmail = (email) => {
+      return email.match(
+        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+    }
+    const handleKeyEvent = function($event) {
+      const email = elm.find('input[name=subscribe-email]').val();
+      if (validateEmail(email) == null) {
+        setInvalid();
+      } else {
+        setValid();
+        if ($event.originalEvent.keyCode == 13) {
+          submitEmail();
+        }
+      }
+    }
+    // Handle Submission to Backend - ajax
+    const submitEmail = function() {
+      const email = elm.find('input[name=subscribe-email]').val();
+      if (validateEmail(email) == null) {
+        setInvalid();
+        return;
+      }
+      const buildUrl = function (path) {
+        if (window.location.hostname == 'localhost') {
+          return `http://localhost:8200${path}`;
+        } else if (window.location.hostname == 'jbcurtin.io') {
+          return `https://newsletter.mlops-and-cloud-db.com${path}`;
+        } else {
+          console.error("Unable to build path");
+        }
+      }
+      const handleSubmission = function(data) {
+        setConfirmState(email);
+      }
+      const handleSubmissionError = function($event) {
+        if ($event.responseText == "Success") {
+          handleSubmission($event);
+          return;
+        }
+        setInvalid();
+      }
+      $.ajax({
+        type: 'POST',
+        url: buildUrl('/nl/register'),
+        data: `{ "email": "${email}" }`,
+        success: handleSubmission,
+        error: handleSubmissionError,
+        contentType: "application/json",
+        dataType: "json"
+      });
+    }
+    // Attach Events
+    setValid();
+    // Detect Cookies
+    if (Cookies.get(COOKIE_NAME) != undefined) {
+      const email = Cookies.get(COOKIE_NAME);
+      setConfirmState(email);
+    } else {
+      elm.find('input[name=subscribe-email]').on('keyup', handleKeyEvent);
+      regBttnElm.on('click', function($event) {
+        submitEmail();
+        $event.preventDefault();
+      });
+    }
+  }
+  $(document).ready(() => {
+    console.log('activate')
+    $("#subscribe-field").SubscribeField();
+  })
+</script>
+
+    <script type="text/javascript">
+      gtag('set', 'content_group', '/articles');
+      gtag('event', 'select_content', {
+        'content_type': 'article',
+        'content_id': '/articles/securing-postgresql/'
+      });
+    </script>
+  </body>
+</html>

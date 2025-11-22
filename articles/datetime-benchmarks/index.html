@@ -1,0 +1,937 @@
+<!DOCTYPE HTML>
+<html>
+  
+<head>
+  <!-- Encoding -->
+  <meta charset="UTF-8">
+  <link rel="icon" href="/favicon.ico">
+  <!-- Meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Joseph Curtin - Mindful communication & software engineering" />
+  <meta name="keywords" content="Machine Learning, Infrastructure, & Cloud" />
+  <meta name="author" content="Joseph Curtin's Website" />
+  <title>
+     DateTime (de)Serialization Benchmarks from Python, Numpy, Chrono, and Time
+    </title>
+  <!-- Imports -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css"
+    integrity="sha256-nQ6wLtrBdTlYGKygEWcUZItTqIGXhUmg2m34X4ZPXaQ="
+    crossorigin="anonymous"/>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer" />
+  <!-- <link rel="stylesheet" href="/main.css" crossorigin="anonymous" /> -->
+  <link rel="stylesheet" href="https://jbcurtin.io/main.css">
+  <script type="text/javascript" src="https://jbcurtin.io/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+</head>
+
+  <body>
+    <section class="columns">
+      <div class="column is-3">
+        
+<div class="has-text-right page-title-column">
+  <a href="/">
+    <h1 class="page-title title is-2 has-text-primary"> Joseph Curtin </h1>
+    <p class="page-subtitle subtitle is-6 vert-spacing"> Mindful communication & software engineering </p>
+  </a>
+  <!-- <hr class="title-divider" /> -->
+  <section class="vert-spacing">
+    <div class="equal-height">
+      <div class="card-content is-flex" style="justify-content: center;">
+        <figure class="image is-64x64 is-center">
+          <img src="/images/profile.svg" alt="Brain" />
+        </figure>
+      </div>
+    </div>
+  </section>
+  <section class="section" style="padding: 0;">
+    <ul class="buttons">
+      <li>
+  <div id="subscribe-field" class="field has-addons">
+    <div class="control has-icons-left has-icons-right">
+      <input class="input" name="subscribe-email" type="email" placeholder="your@email.here to subscribe" />
+      <span class="icon is-small is-left has-site-colors">
+        <i class="fa-regular fa-newspaper"></i>
+      </span>
+      <span class="icon is-small is-right has-site-colors">
+        <i class="fas fa-check"></i>
+      </span>
+    </div>
+    <div id="subscribe-button" class="control">
+      <button class="button has-site-colors">
+        Subscribe
+      </button>
+    </div>
+    <p class="note help is-danger" style="text-align: left;"> Invalid Email </p>
+  </div>
+</li>
+
+      <li>
+        <a href="mailto:webmain@jbcurtin.io" target="_blank" class="button">
+          <span class="has-site-colors"> Connect over Email </span>
+          <span class="icon is-medium has-site-colors">
+            <i class="fa-regular fa-envelope"></i>
+          </span>
+        </a>
+      </li>
+      <li>
+        <a href="/ja&#x2F;articles&#x2F;datetime-benchmarks&#x2F;" class="button">
+        <span class="has-site-colors">
+            English&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <i class="fa-solid fa-language"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            日本語
+          </span>
+        </a>
+      </li>
+    </ul>
+  </section>
+</div>
+
+        <div class="container">
+          <aside class="menu hide-on-mobile">
+            
+<p class="menu-label">Search</p>
+<ul class="menu-list">
+  <li>
+    <div class="field">
+      <div class="control has-icons-left has-icons-right">
+        <input id="aside-search-input" class="input" type="text" placeholder="Search Articles" value="">
+        <span class="icon is-small is-left">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </span>
+        <span class="icon is-small is-right">
+          <i class="fas fa-close"></i>
+        </span>
+      </div>
+    </div>
+  </li>
+</ul>
+
+            
+<p class="menu-label">Article Filters</p>
+<ul class="menu-list">
+
+
+  <li>
+    <a href="&#x2F;articles&#x2F;">Performance Analysis</a>
+  </li>
+
+</ul>
+
+          </aside>
+        </div>
+      </div>
+      <div class="column is-9">
+        <article class="content">
+          <header class="main-top">
+            <h1 class="page-title title is-2 has-text-primary">  DateTime (de)Serialization Benchmarks from Python, Numpy, Chrono, and Time </h1>
+            <p class="subtitle is-6">
+              <time datetime="2024-10-06"> October  6, 2024 </time>
+            </p>
+          </header>
+          <section class="content">
+            <p>
+              <p>Datetime parsing and rendering sometimes require optimization when iterating over a large dataset. Say you have about a couple million rows of timestamps you'd like to parse into a datatype. It could take some time if you use the wrong <code>import</code> or <code>crate</code>. In this article, I'll benchmark what it takes to load a couple million datetime stamps with Python's <a rel="noopener" target="_blank" href="https://docs.python.org/3/library/datetime.html">datetime</a>, <a rel="noopener" target="_blank" href="https://numpy.org/doc/stable/reference/arrays.datetime.html">Numpy</a>, <a rel="noopener" target="_blank" href="https://crates.io/crates/chrono">Chrono</a>, and <a rel="noopener" target="_blank" href="https://crates.io/crates/time">Time</a></p>
+<p>We'll explore different architectural considerations and design patterns to improve the <a rel="noopener" target="_blank" href="https://blog.rust-lang.org/2017/03/02/lang-ergonomics.html">ergonomics</a> of using the different software libraries. Providing you with the ability to drop code into your project with minimal effort.</p>
+<p>There are some considerations to apply when selecting the right datetime alteration software.</p>
+<ul>
+<li>Leap Seconds</li>
+<li>Leap Years</li>
+<li>US Daylight Savings Timezone Offsets</li>
+<li>Nanosecond Support</li>
+</ul>
+<p>Where to apply these considerations is an architectural decision, for example storing all datetime strings in a database should be in UTC, would take care of Leap Seconds &amp; Leap years and avoid having to manage US Daylight Timezone Offset. When rendering a datetime string on a webpage using technologies such as VueJS or ReactJS. We can leverage <a rel="noopener" target="_blank" href="https://www.typescriptlang.org/">Typescript</a>|<a rel="noopener" target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">JavaScript</a> to transform those datetime strings from UTC into client-facing timezone aware objects. Client-facing browsers such as <a rel="noopener" target="_blank" href="https://www.mozilla.org/en-US/firefox/">Firefox</a>, <a rel="noopener" target="_blank" href="https://www.google.com/chrome/">Chrome</a>, <a rel="noopener" target="_blank" href="https://www.microsoft.com/en-us/edge/download?form=MA13FJ">Edge</a>, and <a rel="noopener" target="_blank" href="https://www.opera.com/download">Opera</a> know where the user is situated based of their computer system clocks. Therefore, we can pass a UTC datetime string into <code>new Date()</code> and it should render in the correct timezone with the correct offset. Furthermore, we can transform those same UTC datetime strings into Python or Rust and format the objects accordingly in the event we need to render a time-series</p>
+<h2 id="python-s-datetime-module">Python's <code>datetime</code> Module</h2>
+<p>I find when working with the <code>datetime</code> module, its fast enough to use in a JSON-WebAPI, but to slow when loading, rendering, or generating large amounts of data. Therefore, its very well suited in enterprise projects which would could include like <a rel="noopener" target="_blank" href="https://github.com/django/django">Django</a>, <a rel="noopener" target="_blank" href="https://github.com/fastapi/fastapi">FastAPI</a>, or <a rel="noopener" target="_blank" href="https://github.com/pallets/flask">Flask</a>.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#ff5e5e;">import </span><span>typing
+</span><span>
+</span><span style="color:#ff5e5e;">from </span><span>datetime </span><span style="color:#ff5e5e;">import </span><span>datetime, timedelta, timezone
+</span><span>
+</span><span>T </span><span style="color:#ff5e5e;">= </span><span>typing.</span><span style="color:#e9fdac;">TypeVar</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">T</span><span style="color:#ffffff;">&#39;</span><span>)
+</span><span>
+</span><span style="font-style:italic;color:#ff5e5e;">class </span><span style="text-decoration:underline;color:#8cdaff;">DateTimeUTC</span><span>:
+</span><span>  </span><span style="color:#e9fdac;">FORMAT </span><span style="color:#ff5e5e;">= </span><span style="color:#ffffff;">&#39;</span><span style="color:#fdb082;">%Y</span><span style="color:#fbe3bf;">-</span><span style="color:#fdb082;">%m</span><span style="color:#fbe3bf;">-</span><span style="color:#fdb082;">%d</span><span style="color:#fbe3bf;">T</span><span style="color:#fdb082;">%H</span><span style="color:#fbe3bf;">:</span><span style="color:#fdb082;">%M</span><span style="color:#fbe3bf;">:</span><span style="color:#fdb082;">%S%z</span><span style="color:#ffffff;">&#39;
+</span><span>  </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#6699cc;">__init__</span><span>(</span><span style="font-style:italic;color:#fc9354;">self</span><span>, </span><span style="font-style:italic;color:#fc9354;">current_datetime</span><span>: </span><span style="color:#fbe3bf;">str </span><span style="color:#ff5e5e;">| </span><span>datetime </span><span style="color:#ff5e5e;">= </span><span style="color:#ff8942;">None</span><span>) -&gt; </span><span style="color:#ff8942;">None</span><span>:
+</span><span>    </span><span style="color:#ff5e5e;">if </span><span style="color:#6699cc;">isinstance</span><span>(current_datetime, datetime):
+</span><span>      </span><span style="color:#e9fdac;">self</span><span>._datetime </span><span style="color:#ff5e5e;">= </span><span>current_datetime
+</span><span>    </span><span style="color:#ff5e5e;">elif </span><span style="color:#6699cc;">isinstance</span><span>(current_datetime, </span><span style="color:#fbe3bf;">str</span><span>):
+</span><span>      </span><span style="color:#e9fdac;">self</span><span>._datetime </span><span style="color:#ff5e5e;">= </span><span>datetime.</span><span style="color:#e9fdac;">strptime</span><span>(current_datetime, </span><span style="color:#e9fdac;">self</span><span>.</span><span style="color:#e9fdac;">FORMAT</span><span>)
+</span><span>    </span><span style="color:#ff5e5e;">elif </span><span>current_datetime </span><span style="color:#ff5e5e;">is </span><span style="color:#ff8942;">None</span><span>:
+</span><span>      </span><span style="color:#e9fdac;">self</span><span>._datetime </span><span style="color:#ff5e5e;">= </span><span>datetime.</span><span style="color:#e9fdac;">now</span><span>(timezone.utc)
+</span><span>    </span><span style="color:#ff5e5e;">else</span><span>:
+</span><span>      </span><span style="color:#ff5e5e;">raise </span><span style="color:#fbe3bf;">NotImplementedError</span><span>(current_datetime.__class__)
+</span><span>
+</span><span>  </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#6699cc;">__str__</span><span>(</span><span style="font-style:italic;color:#fc9354;">self</span><span>) -&gt; </span><span style="color:#fbe3bf;">str</span><span>:
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span style="color:#e9fdac;">self</span><span>._datetime.</span><span style="color:#e9fdac;">strftime</span><span>(</span><span style="color:#e9fdac;">self</span><span>.</span><span style="color:#e9fdac;">FORMAT</span><span>)
+</span><span>  
+</span><span>  </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#6699cc;">__repr__</span><span>(</span><span style="font-style:italic;color:#fc9354;">self</span><span>) -&gt; </span><span style="color:#fbe3bf;">str</span><span>:
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span style="font-style:italic;color:#fbdfb5;">f</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">DateTimeUTC: </span><span>{</span><span style="color:#e9fdac;">self</span><span>}</span><span style="color:#ffffff;">&#39;
+</span><span>  
+</span><span>  </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#6699cc;">__eq__</span><span>(</span><span style="font-style:italic;color:#fc9354;">self</span><span>, </span><span style="font-style:italic;color:#fc9354;">other</span><span>: T) -&gt; </span><span style="color:#fbe3bf;">bool</span><span>:
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span style="color:#e9fdac;">self</span><span>._datetime.</span><span style="color:#6699cc;">__eq__</span><span>(other._datetime)
+</span><span>  
+</span><span>  </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#6699cc;">__ne__</span><span>(</span><span style="font-style:italic;color:#fc9354;">self</span><span>, </span><span style="font-style:italic;color:#fc9354;">other</span><span>: T) -&gt; </span><span style="color:#fbe3bf;">bool</span><span>:
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span style="color:#e9fdac;">self</span><span>._datetime.</span><span style="color:#6699cc;">__ne__</span><span>(other._datetime)
+</span><span>  
+</span><span>  </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#6699cc;">__lt__</span><span>(</span><span style="font-style:italic;color:#fc9354;">self</span><span>, </span><span style="font-style:italic;color:#fc9354;">other</span><span>: T) -&gt; </span><span style="color:#fbe3bf;">bool</span><span>:
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span style="color:#e9fdac;">self</span><span>._datetime.</span><span style="color:#6699cc;">__lt__</span><span>(other._datetime)
+</span><span>  
+</span><span>  </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#6699cc;">__le__</span><span>(</span><span style="font-style:italic;color:#fc9354;">self</span><span>, </span><span style="font-style:italic;color:#fc9354;">other</span><span>: T) -&gt; </span><span style="color:#fbe3bf;">bool</span><span>:
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span style="color:#e9fdac;">self</span><span>._datetime.</span><span style="color:#6699cc;">__le__</span><span>(other._datetime)
+</span><span>  
+</span><span>  </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#6699cc;">__gt__</span><span>(</span><span style="font-style:italic;color:#fc9354;">self</span><span>, </span><span style="font-style:italic;color:#fc9354;">other</span><span>: T) -&gt; </span><span style="color:#fbe3bf;">bool</span><span>:
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span style="color:#e9fdac;">self</span><span>._datetime.</span><span style="color:#6699cc;">__gt__</span><span>(other._datetime)
+</span><span>  
+</span><span>  </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#6699cc;">__ge__</span><span>(</span><span style="font-style:italic;color:#fc9354;">self</span><span>, </span><span style="font-style:italic;color:#fc9354;">other</span><span>: T) -&gt; </span><span style="color:#fbe3bf;">bool</span><span>:
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span style="color:#e9fdac;">self</span><span>._datetime.</span><span style="color:#6699cc;">__ge__</span><span>(other._datetime)
+</span><span>  
+</span><span>  </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#6699cc;">__add__</span><span>(</span><span style="font-style:italic;color:#fc9354;">self</span><span>, </span><span style="font-style:italic;color:#fc9354;">delta</span><span>: timedelta </span><span style="color:#ff5e5e;">| </span><span>T) -&gt; timedelta </span><span style="color:#ff5e5e;">| </span><span>T:
+</span><span>    </span><span style="color:#ff5e5e;">if </span><span style="color:#6699cc;">isinstance</span><span>(delta, timedelta):
+</span><span>      </span><span style="color:#ff5e5e;">return </span><span style="color:#e9fdac;">DateTimeUTC</span><span>(</span><span style="color:#e9fdac;">self</span><span>._datetime </span><span style="color:#ff5e5e;">+ </span><span>delta)
+</span><span>    </span><span style="color:#ff5e5e;">elif </span><span style="color:#6699cc;">isinstance</span><span>(delta, </span><span style="color:#e9fdac;">self</span><span>.__class__):
+</span><span>      </span><span style="color:#ff5e5e;">return </span><span style="color:#e9fdac;">self</span><span>._datetime </span><span style="color:#ff5e5e;">+ </span><span>delta._datetime
+</span><span>    </span><span style="color:#ff5e5e;">else</span><span>:
+</span><span>      </span><span style="color:#ff5e5e;">raise </span><span style="color:#fbe3bf;">NotImplementedError</span><span>(delta.__class__)
+</span><span>  
+</span><span>  </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#6699cc;">__sub__</span><span>(</span><span style="font-style:italic;color:#fc9354;">self</span><span>, </span><span style="font-style:italic;color:#fc9354;">delta</span><span>: timedelta </span><span style="color:#ff5e5e;">| </span><span>T) -&gt; timedelta </span><span style="color:#ff5e5e;">| </span><span>T:
+</span><span>    </span><span style="color:#ff5e5e;">if </span><span style="color:#6699cc;">isinstance</span><span>(delta, timedelta):
+</span><span>      </span><span style="color:#ff5e5e;">return </span><span style="color:#e9fdac;">DateTimeUTC</span><span>(</span><span style="color:#e9fdac;">self</span><span>._datetime </span><span style="color:#ff5e5e;">+ </span><span>delta)
+</span><span>    </span><span style="color:#ff5e5e;">elif </span><span style="color:#6699cc;">isinstance</span><span>(delta, </span><span style="color:#e9fdac;">self</span><span>.__class__):
+</span><span>      </span><span style="color:#ff5e5e;">return </span><span style="color:#e9fdac;">self</span><span>._datetime </span><span style="color:#ff5e5e;">- </span><span>delta._datetime
+</span><span>    </span><span style="color:#ff5e5e;">else</span><span>:
+</span><span>      </span><span style="color:#ff5e5e;">raise </span><span style="color:#fbe3bf;">NotImplementedError</span><span>(delta.__class__)
+</span></code></pre>
+<p>In the implementation below, there are a series of <a rel="noopener" target="_blank" href="https://docs.python.org/3/reference/datamodel.html#basic-customization">dunder methods</a> implemented on the <code>DateTimeUTC</code> object. Those methods allow for to transform, subtract, add time to an existing object using <code>timedelta</code>. At the core is the formatting, implemented in a similar way the <code>new Date()</code> object has been implemented in common browsers.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#ff5e5e;">&gt;&gt;&gt; </span><span>future_timestamp </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">str</span><span>(</span><span style="color:#e9fdac;">DateTimeUTC</span><span>() </span><span style="color:#ff5e5e;">+ </span><span style="color:#e9fdac;">timedelta</span><span>(</span><span style="font-style:italic;color:#fc9354;">hours</span><span style="color:#ff5e5e;">=</span><span style="color:#fdb082;">1</span><span>))
+</span><span style="color:#ff5e5e;">&gt;&gt;&gt; </span><span>future_timestamp
+</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">2024-10-02T06:12:10+0000</span><span style="color:#ffffff;">&#39;
+</span></code></pre>
+<p>The format <code>%Y-%m-%dT%H:%M:%S%z</code> provides a datetime string that <code>new Date()</code> can interpret without having to manage timezones in TypeScript.</p>
+<pre data-lang="typescript" style="background-color:#191919;color:#f8f8f2;" class="language-typescript "><code class="language-typescript" data-lang="typescript"><span style="color:#ff5e5e;">new </span><span>Date(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">2024-10-02T06:12:10+0000</span><span style="color:#ffffff;">&#39;</span><span>)
+</span></code></pre>
+<p>Okay, great. Now that we know how to use the <code>datetime</code> module. Let's benchmark the performance of it</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span>timestamps </span><span style="color:#ff5e5e;">= </span><span>[</span><span style="color:#e9fdac;">DateTimeUTC</span><span>(</span><span style="color:#e9fdac;">datetime</span><span>(</span><span style="font-style:italic;color:#fc9354;">year</span><span style="color:#ff5e5e;">=</span><span style="color:#fdb082;">1800</span><span>, </span><span style="font-style:italic;color:#fc9354;">month</span><span style="color:#ff5e5e;">=</span><span style="color:#fdb082;">1</span><span>, </span><span style="font-style:italic;color:#fc9354;">day</span><span style="color:#ff5e5e;">=</span><span style="color:#fdb082;">1</span><span>)) </span><span style="color:#ff5e5e;">+ </span><span style="color:#e9fdac;">timedelta</span><span>(</span><span style="font-style:italic;color:#fc9354;">seconds</span><span style="color:#ff5e5e;">=</span><span>idx) </span><span style="color:#ff5e5e;">for </span><span>idx </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">0</span><span>, </span><span style="color:#fdb082;">2000000</span><span>)]
+</span><span>results </span><span style="color:#ff5e5e;">= </span><span>[]
+</span><span style="color:#ff5e5e;">for </span><span>idx </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">0</span><span>, </span><span style="color:#fdb082;">10</span><span>):
+</span><span>  start </span><span style="color:#ff5e5e;">= </span><span style="color:#e9fdac;">DateTimeUTC</span><span>()
+</span><span>  timestamps_rendered </span><span style="color:#ff5e5e;">= </span><span>[]
+</span><span>  </span><span style="color:#ff5e5e;">for </span><span>timestamp </span><span style="color:#ff5e5e;">in </span><span>timestamps:
+</span><span>    timestamps_rendered.</span><span style="color:#e9fdac;">append</span><span>(</span><span style="color:#fbe3bf;">str</span><span>(timestamp))
+</span><span>
+</span><span>  stop </span><span style="color:#ff5e5e;">= </span><span style="color:#e9fdac;">DateTimeUTC</span><span>()
+</span><span>  duration </span><span style="color:#ff5e5e;">= </span><span>stop </span><span style="color:#ff5e5e;">- </span><span>start
+</span><span>  results.</span><span style="color:#e9fdac;">append</span><span>(duration)
+</span><span>
+</span><span style="color:#6d6d6d;"># Rendering timestamp results
+</span><span>[r.seconds </span><span style="color:#ff5e5e;">for </span><span>r </span><span style="color:#ff5e5e;">in </span><span>results]
+</span><span>[</span><span style="color:#fdb082;">4</span><span>, </span><span style="color:#fdb082;">4</span><span>, </span><span style="color:#fdb082;">4</span><span>, </span><span style="color:#fdb082;">4</span><span>, </span><span style="color:#fdb082;">4</span><span>, </span><span style="color:#fdb082;">4</span><span>, </span><span style="color:#fdb082;">4</span><span>, </span><span style="color:#fdb082;">4</span><span>, </span><span style="color:#fdb082;">4</span><span>, </span><span style="color:#fdb082;">4</span><span>]
+</span></code></pre>
+<p>Adding the timezone to the <code>datetime</code> object increased the duration of each benchmark by almost a whole second.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span>results </span><span style="color:#ff5e5e;">= </span><span>[]
+</span><span style="color:#ff5e5e;">for </span><span>idx </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">0</span><span>, </span><span style="color:#fdb082;">10</span><span>):
+</span><span>  </span><span style="color:#6699cc;">print</span><span>(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">Iteration: </span><span style="color:#ffffff;">&quot;</span><span>, idx)
+</span><span>  start </span><span style="color:#ff5e5e;">= </span><span style="color:#e9fdac;">DateTimeUTC</span><span>()
+</span><span>  </span><span style="color:#ff5e5e;">for </span><span>timestamp </span><span style="color:#ff5e5e;">in </span><span>timestamps_rendered:
+</span><span>    </span><span style="color:#e9fdac;">_ </span><span style="color:#ff5e5e;">= </span><span style="color:#e9fdac;">DateTimeUTC</span><span>(timestamp)
+</span><span>
+</span><span>  stop </span><span style="color:#ff5e5e;">= </span><span style="color:#e9fdac;">DateTimeUTC</span><span>()
+</span><span>  duration </span><span style="color:#ff5e5e;">= </span><span>stop </span><span style="color:#ff5e5e;">- </span><span>start
+</span><span>  results.</span><span style="color:#e9fdac;">append</span><span>(duration)
+</span><span>
+</span><span style="color:#6d6d6d;"># Loading timestamp results
+</span><span>[r.seconds </span><span style="color:#ff5e5e;">for </span><span>r </span><span style="color:#ff5e5e;">in </span><span>results]
+</span><span>[</span><span style="color:#fdb082;">10</span><span>, </span><span style="color:#fdb082;">10</span><span>, </span><span style="color:#fdb082;">10</span><span>, </span><span style="color:#fdb082;">10</span><span>, </span><span style="color:#fdb082;">10</span><span>, </span><span style="color:#fdb082;">10</span><span>, </span><span style="color:#fdb082;">10</span><span>, </span><span style="color:#fdb082;">10</span><span>, </span><span style="color:#fdb082;">10</span><span>, </span><span style="color:#fdb082;">10</span><span>]
+</span></code></pre>
+<p>As you can see, loading the timestamp is immensely slower. We can extrapolate meaning from these results. If our JSON-WebAPIs are receiving more than, say 500,000 requests per-second. Than this is probably an area we could improve the API performance. Its just a lot of CPU time spent rendering data. We could also consider assuming every datetime string is UTC and drop handling the <code>timezone</code> entirely. I personally wouldn't do that; mostly because I think it is more <a rel="noopener" target="_blank" href="https://stackoverflow.com/a/25011492">pythonic</a> to keep <code>timezone</code> intact. <em>Explicit is better than implicit</em></p>
+<h2 id="numpy-s-np-datetime64-module">Numpy's <code>np.datetime64</code> module</h2>
+<p><code>numpy</code> provides <code>datetime64</code> which is timezone unaware. Meaning, it won't handle UTC, EST, IST, JPN, or GMT. Therefore we'll need to omit the timezone data. This probably improves the performance of the module and is much more ideal for loading data into a database, rending to flat files, or producing <a rel="noopener" target="_blank" href="https://parquet.apache.org/">parquet</a> files. Like we did with the <code>DateTimeUTC</code> class, make a <code>Timestamp</code> class to encapsulate logic for datetime alterations.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#e9fdac;">TS_FORMAT </span><span style="color:#ff5e5e;">= </span><span style="color:#ffffff;">&#39;</span><span style="color:#fdb082;">%Y</span><span style="color:#fbe3bf;">-</span><span style="color:#fdb082;">%m</span><span style="color:#fbe3bf;">-</span><span style="color:#fdb082;">%d</span><span style="color:#fbe3bf;">T</span><span style="color:#fdb082;">%H</span><span style="color:#fbe3bf;">:</span><span style="color:#fdb082;">%M</span><span style="color:#fbe3bf;">:</span><span style="color:#fdb082;">%S%z</span><span style="color:#ffffff;">&#39;
+</span><span style="color:#e9fdac;">NP_TS_FORMAT </span><span style="color:#ff5e5e;">= </span><span style="color:#ffffff;">&#39;</span><span style="color:#fdb082;">%Y</span><span style="color:#fbe3bf;">-</span><span style="color:#fdb082;">%m</span><span style="color:#fbe3bf;">-</span><span style="color:#fdb082;">%d</span><span style="color:#fbe3bf;">T</span><span style="color:#fdb082;">%H</span><span style="color:#fbe3bf;">:</span><span style="color:#fdb082;">%M</span><span style="color:#fbe3bf;">:</span><span style="color:#fdb082;">%S</span><span style="color:#fbe3bf;">.</span><span style="color:#fdb082;">%f</span><span style="color:#ffffff;">&#39;
+</span><span>T </span><span style="color:#ff5e5e;">= </span><span>typing.</span><span style="color:#e9fdac;">TypeVar</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">T</span><span style="color:#ffffff;">&#39;</span><span>)
+</span><span style="font-style:italic;color:#ff5e5e;">class </span><span style="text-decoration:underline;color:#8cdaff;">DatetimeEncodeError</span><span>(</span><span style="text-decoration:underline;font-style:italic;color:#8cdaff;">Exception</span><span>):
+</span><span>  </span><span style="color:#ff5e5e;">pass
+</span><span>
+</span><span style="font-style:italic;color:#ff5e5e;">class </span><span style="text-decoration:underline;color:#8cdaff;">TimestampPart</span><span>(</span><span style="text-decoration:underline;font-style:italic;color:#8cdaff;">enum.Enum</span><span>):
+</span><span>  Year </span><span style="color:#ff5e5e;">= </span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">Y</span><span style="color:#ffffff;">&#39;
+</span><span>  Month </span><span style="color:#ff5e5e;">= </span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">m</span><span style="color:#ffffff;">&#39;
+</span><span>  Week </span><span style="color:#ff5e5e;">= </span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">W</span><span style="color:#ffffff;">&#39;
+</span><span>  Day </span><span style="color:#ff5e5e;">= </span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">d</span><span style="color:#ffffff;">&#39;
+</span><span>  Hour </span><span style="color:#ff5e5e;">= </span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">H</span><span style="color:#ffffff;">&#39;
+</span><span>  Minute </span><span style="color:#ff5e5e;">= </span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">M</span><span style="color:#ffffff;">&#39;
+</span><span>  Second </span><span style="color:#ff5e5e;">= </span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">S</span><span style="color:#ffffff;">&#39;
+</span><span>  Nanosecond </span><span style="color:#ff5e5e;">= </span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">f</span><span style="color:#ffffff;">&#39;
+</span><span>
+</span><span style="font-style:italic;color:#ff5e5e;">class </span><span style="text-decoration:underline;color:#8cdaff;">Timestamp</span><span>(</span><span style="text-decoration:underline;font-style:italic;color:#8cdaff;">typing.NamedTuple</span><span>):
+</span><span>  value: np.datetime64
+</span><span>  </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#6699cc;">__hash__</span><span>(</span><span style="font-style:italic;color:#fc9354;">self</span><span>) -&gt; </span><span style="color:#fbe3bf;">int</span><span>:
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span style="color:#e9fdac;">self</span><span>.value.</span><span style="color:#6699cc;">__hash__</span><span>()
+</span><span>  
+</span><span>  </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#6699cc;">__add__</span><span>(</span><span style="font-style:italic;color:#fc9354;">self</span><span>: T, </span><span style="font-style:italic;color:#fc9354;">delta</span><span>: np.timedelta64) -&gt; T:
+</span><span>    </span><span style="color:#ff5e5e;">if not </span><span style="color:#6699cc;">isinstance</span><span>(delta, np.timedelta64):
+</span><span>      </span><span style="color:#ff5e5e;">raise </span><span style="color:#fbe3bf;">TypeError</span><span>(</span><span style="font-style:italic;color:#fbdfb5;">f</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">Expected np.timedelta64, got </span><span>{</span><span style="color:#6699cc;">type</span><span>(delta)}</span><span style="color:#ffffff;">&#39;</span><span>)
+</span><span>    
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span style="color:#e9fdac;">self</span><span>.</span><span style="color:#e9fdac;">__class__</span><span>(operator.</span><span style="color:#e9fdac;">add</span><span>(</span><span style="color:#e9fdac;">self</span><span>.value, delta))
+</span><span>
+</span><span>  </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#6699cc;">__sub__</span><span>(</span><span style="font-style:italic;color:#fc9354;">self</span><span>: T, </span><span style="font-style:italic;color:#fc9354;">delta</span><span>: np.timedelta64) -&gt; T:
+</span><span>    </span><span style="color:#ff5e5e;">if not </span><span style="color:#6699cc;">isinstance</span><span>(delta, np.timedelta64):
+</span><span>      </span><span style="color:#ff5e5e;">raise </span><span style="color:#fbe3bf;">TypeError</span><span>(</span><span style="font-style:italic;color:#fbdfb5;">f</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">Expected np.timedelta64, got </span><span>{</span><span style="color:#6699cc;">type</span><span>(delta)}</span><span style="color:#ffffff;">&#39;</span><span>)
+</span><span>    
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span style="color:#e9fdac;">self</span><span>.</span><span style="color:#e9fdac;">__class__</span><span>(operator.</span><span style="color:#e9fdac;">sub</span><span>(</span><span style="color:#e9fdac;">self</span><span>.value, delta))
+</span><span>  
+</span><span>  </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#6699cc;">__gt__</span><span>(</span><span style="font-style:italic;color:#fc9354;">self</span><span>, </span><span style="font-style:italic;color:#fc9354;">timestamp</span><span>: T) -&gt; </span><span style="color:#fbe3bf;">bool</span><span>:
+</span><span>    </span><span style="color:#ff5e5e;">if not </span><span style="color:#6699cc;">isinstance</span><span>(timestamp, </span><span style="color:#e9fdac;">self</span><span>.__class__):
+</span><span>      </span><span style="color:#ff5e5e;">raise </span><span style="color:#fbe3bf;">TypeError</span><span>(</span><span style="font-style:italic;color:#fbdfb5;">f</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">Expected Timestamp, got </span><span>{</span><span style="color:#6699cc;">type</span><span>(timestamp)}</span><span style="color:#ffffff;">&#39;</span><span>)
+</span><span>    
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span>operator.</span><span style="color:#e9fdac;">gt</span><span>(</span><span style="color:#e9fdac;">self</span><span>.value, timestamp.value)
+</span><span>  
+</span><span>  </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#6699cc;">__ge__</span><span>(</span><span style="font-style:italic;color:#fc9354;">self</span><span>, </span><span style="font-style:italic;color:#fc9354;">timestamp</span><span>: T) -&gt; </span><span style="color:#fbe3bf;">bool</span><span>:
+</span><span>    </span><span style="color:#ff5e5e;">if not </span><span style="color:#6699cc;">isinstance</span><span>(timestamp, </span><span style="color:#e9fdac;">self</span><span>.__class__):
+</span><span>      </span><span style="color:#ff5e5e;">raise </span><span style="color:#fbe3bf;">TypeError</span><span>(</span><span style="font-style:italic;color:#fbdfb5;">f</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">Expected Timestamp, got </span><span>{</span><span style="color:#6699cc;">type</span><span>(timestamp)}</span><span style="color:#ffffff;">&#39;</span><span>)
+</span><span>    
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span>operator.</span><span style="color:#e9fdac;">ge</span><span>(</span><span style="color:#e9fdac;">self</span><span>.value, timestamp.value)
+</span><span>  
+</span><span>  </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#6699cc;">__eq__</span><span>(</span><span style="font-style:italic;color:#fc9354;">self</span><span>, </span><span style="font-style:italic;color:#fc9354;">timestamp</span><span>: T) -&gt; </span><span style="color:#fbe3bf;">bool</span><span>:
+</span><span>    </span><span style="color:#ff5e5e;">if not </span><span style="color:#6699cc;">isinstance</span><span>(timestamp, </span><span style="color:#e9fdac;">self</span><span>.__class__):
+</span><span>      </span><span style="color:#ff5e5e;">raise </span><span style="color:#fbe3bf;">TypeError</span><span>(</span><span style="font-style:italic;color:#fbdfb5;">f</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">Expected Timestamp, got </span><span>{</span><span style="color:#6699cc;">type</span><span>(timestamp)}</span><span style="color:#ffffff;">&#39;</span><span>)
+</span><span>    
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span>operator.</span><span style="color:#e9fdac;">eq</span><span>(</span><span style="color:#e9fdac;">self</span><span>.value, timestamp.value)
+</span><span>  
+</span><span>  </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#6699cc;">__le__</span><span>(</span><span style="font-style:italic;color:#fc9354;">self</span><span>, </span><span style="font-style:italic;color:#fc9354;">timestamp</span><span>: T) -&gt; </span><span style="color:#fbe3bf;">bool</span><span>:
+</span><span>    </span><span style="color:#ff5e5e;">if not </span><span style="color:#6699cc;">isinstance</span><span>(timestamp, </span><span style="color:#e9fdac;">self</span><span>.__class__):
+</span><span>      </span><span style="color:#ff5e5e;">raise </span><span style="color:#fbe3bf;">TypeError</span><span>(</span><span style="font-style:italic;color:#fbdfb5;">f</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">Expected Timestamp, got </span><span>{</span><span style="color:#6699cc;">type</span><span>(timestamp)}</span><span style="color:#ffffff;">&#39;</span><span>)
+</span><span>    
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span>operator.</span><span style="color:#e9fdac;">le</span><span>(</span><span style="color:#e9fdac;">self</span><span>.value, timestamp.value)
+</span><span>  
+</span><span>  </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#6699cc;">__lt__</span><span>(</span><span style="font-style:italic;color:#fc9354;">self</span><span>, </span><span style="font-style:italic;color:#fc9354;">timestamp</span><span>: T) -&gt; </span><span style="color:#fbe3bf;">bool</span><span>:
+</span><span>    </span><span style="color:#ff5e5e;">if not </span><span style="color:#6699cc;">isinstance</span><span>(timestamp, </span><span style="color:#e9fdac;">self</span><span>.__class__):
+</span><span>      </span><span style="color:#ff5e5e;">raise </span><span style="color:#fbe3bf;">TypeError</span><span>(</span><span style="font-style:italic;color:#fbdfb5;">f</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">Expected Timestamp, got </span><span>{</span><span style="color:#6699cc;">type</span><span>(timestamp)}</span><span style="color:#ffffff;">&#39;</span><span>)
+</span><span>    
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span>operator.</span><span style="color:#e9fdac;">lt</span><span>(</span><span style="color:#e9fdac;">self</span><span>.value, timestamp.value)
+</span><span>  
+</span><span>  </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">format</span><span>(</span><span style="font-style:italic;color:#fc9354;">self</span><span>: T, </span><span style="font-style:italic;color:#fc9354;">format</span><span>: </span><span style="color:#fbe3bf;">str </span><span style="color:#ff5e5e;">= </span><span style="color:#e9fdac;">TS_FORMAT</span><span>) -&gt; </span><span style="color:#fbe3bf;">str</span><span>:
+</span><span>    </span><span style="color:#fbe3bf;">str</span><span>(</span><span style="color:#e9fdac;">self</span><span>.value)
+</span><span>
+</span><span>  @</span><span style="color:#6699cc;">classmethod
+</span><span>  </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">Parse</span><span>(</span><span style="font-style:italic;color:#fc9354;">cls</span><span>: T, </span><span style="font-style:italic;color:#fc9354;">value</span><span>: </span><span style="color:#fbe3bf;">str</span><span>) -&gt; T:
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span style="color:#e9fdac;">cls</span><span>(np.</span><span style="color:#e9fdac;">datetime64</span><span>(value))
+</span><span>  
+</span><span>  </span><span style="font-style:italic;color:#ff5e5e;">def </span><span style="color:#8cdaff;">replace</span><span>(</span><span style="font-style:italic;color:#fc9354;">self</span><span>: T, </span><span style="font-style:italic;color:#fc9354;">replace_part</span><span>: TimestampPart, </span><span style="font-style:italic;color:#fc9354;">replace_value</span><span>: </span><span style="color:#fbe3bf;">int</span><span>) -&gt; T:
+</span><span>    result </span><span style="color:#ff5e5e;">= </span><span>[]
+</span><span>    skip_one </span><span style="color:#ff5e5e;">= </span><span style="color:#ff8942;">False
+</span><span>    </span><span style="color:#ff5e5e;">for </span><span>idx, char </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">enumerate</span><span>(</span><span style="color:#e9fdac;">NP_TS_FORMAT</span><span>):
+</span><span>      </span><span style="color:#ff5e5e;">if </span><span>skip_one </span><span style="color:#ff5e5e;">is </span><span style="color:#ff8942;">True</span><span>:
+</span><span>        skip_one </span><span style="color:#ff5e5e;">= </span><span style="color:#ff8942;">False
+</span><span>        </span><span style="color:#ff5e5e;">continue
+</span><span>
+</span><span>      </span><span style="color:#ff5e5e;">if </span><span>char </span><span style="color:#ff5e5e;">== </span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">%</span><span style="color:#ffffff;">&#39;</span><span>:
+</span><span>        code </span><span style="color:#ff5e5e;">= </span><span style="color:#e9fdac;">NP_TS_FORMAT</span><span>[idx </span><span style="color:#ff5e5e;">+ </span><span style="color:#fdb082;">1</span><span>]
+</span><span>        </span><span style="color:#ff5e5e;">try</span><span>:
+</span><span>          part_type </span><span style="color:#ff5e5e;">= </span><span>[part </span><span style="color:#ff5e5e;">for </span><span>part </span><span style="color:#ff5e5e;">in </span><span>TimestampPart </span><span style="color:#ff5e5e;">if </span><span>part.value </span><span style="color:#ff5e5e;">== </span><span>code][</span><span style="color:#fdb082;">0</span><span>]
+</span><span>        </span><span style="color:#ff5e5e;">except </span><span style="color:#fbe3bf;">IndexError</span><span>:
+</span><span>          </span><span style="color:#ff5e5e;">raise </span><span style="color:#e9fdac;">DatetimeEncodeError</span><span>(</span><span style="font-style:italic;color:#fbdfb5;">f</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">Unknown datetime part: </span><span>{char}{code}</span><span style="color:#ffffff;">&#39;</span><span>)
+</span><span>        </span><span style="color:#ff5e5e;">else</span><span>:
+</span><span>          </span><span style="color:#ff5e5e;">if </span><span>part_type </span><span style="color:#ff5e5e;">is </span><span>TimestampPart.Year:
+</span><span>            value </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">str</span><span>(</span><span style="color:#e9fdac;">self</span><span>.value.</span><span style="color:#e9fdac;">astype</span><span>(</span><span style="font-style:italic;color:#fbdfb5;">f</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">datetime64[Y]</span><span style="color:#ffffff;">&#39;</span><span>))
+</span><span>
+</span><span>          </span><span style="color:#ff5e5e;">elif </span><span>part_type </span><span style="color:#ff5e5e;">is </span><span>TimestampPart.Month:
+</span><span>            value </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">str</span><span>(</span><span style="color:#e9fdac;">self</span><span>.value.</span><span style="color:#e9fdac;">astype</span><span>(</span><span style="font-style:italic;color:#fbdfb5;">f</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">datetime64[M]</span><span style="color:#ffffff;">&#39;</span><span>)).</span><span style="color:#e9fdac;">rsplit</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">-</span><span style="color:#ffffff;">&#39;</span><span>, </span><span style="color:#fdb082;">1</span><span>)[</span><span style="color:#fdb082;">1</span><span>]
+</span><span>
+</span><span>          </span><span style="color:#ff5e5e;">elif </span><span>part_type </span><span style="color:#ff5e5e;">is </span><span>TimestampPart.Day:
+</span><span>            value </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">str</span><span>(</span><span style="color:#e9fdac;">self</span><span>.value.</span><span style="color:#e9fdac;">astype</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">datetime64[D]</span><span style="color:#ffffff;">&#39;</span><span>)).</span><span style="color:#e9fdac;">rsplit</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">-</span><span style="color:#ffffff;">&#39;</span><span>, </span><span style="color:#fdb082;">1</span><span>)[</span><span style="color:#fdb082;">1</span><span>]
+</span><span>
+</span><span>          </span><span style="color:#ff5e5e;">elif </span><span>part_type </span><span style="color:#ff5e5e;">is </span><span>TimestampPart.Hour:
+</span><span>            value </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">str</span><span>(</span><span style="color:#e9fdac;">self</span><span>.value.</span><span style="color:#e9fdac;">astype</span><span>(</span><span style="font-style:italic;color:#fbdfb5;">f</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">datetime64[h]</span><span style="color:#ffffff;">&#39;</span><span>)).</span><span style="color:#e9fdac;">rsplit</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">T</span><span style="color:#ffffff;">&#39;</span><span>, </span><span style="color:#fdb082;">1</span><span>)[</span><span style="color:#fdb082;">1</span><span>]
+</span><span>
+</span><span>          </span><span style="color:#ff5e5e;">elif </span><span>part_type </span><span style="color:#ff5e5e;">is </span><span>TimestampPart.Minute:
+</span><span>            value </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">str</span><span>(</span><span style="color:#e9fdac;">self</span><span>.value.</span><span style="color:#e9fdac;">astype</span><span>(</span><span style="font-style:italic;color:#fbdfb5;">f</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">datetime64[m]</span><span style="color:#ffffff;">&#39;</span><span>)).</span><span style="color:#e9fdac;">rsplit</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">:</span><span style="color:#ffffff;">&#39;</span><span>, </span><span style="color:#fdb082;">1</span><span>)[</span><span style="color:#fdb082;">1</span><span>]
+</span><span>
+</span><span>          </span><span style="color:#ff5e5e;">elif </span><span>part_type </span><span style="color:#ff5e5e;">is </span><span>TimestampPart.Second:
+</span><span>            value </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">str</span><span>(</span><span style="color:#e9fdac;">self</span><span>.value.</span><span style="color:#e9fdac;">astype</span><span>(</span><span style="font-style:italic;color:#fbdfb5;">f</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">datetime64[s]</span><span style="color:#ffffff;">&#39;</span><span>)).</span><span style="color:#e9fdac;">rsplit</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">:</span><span style="color:#ffffff;">&#39;</span><span>, </span><span style="color:#fdb082;">1</span><span>)[</span><span style="color:#fdb082;">1</span><span>]
+</span><span>
+</span><span>          </span><span style="color:#ff5e5e;">elif </span><span>part_type </span><span style="color:#ff5e5e;">is </span><span>TimestampPart.Nanosecond:
+</span><span>            value </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">str</span><span>(</span><span style="color:#e9fdac;">self</span><span>.value.</span><span style="color:#e9fdac;">astype</span><span>(</span><span style="font-style:italic;color:#fbdfb5;">f</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">datetime64[ns]</span><span style="color:#ffffff;">&#39;</span><span>)).</span><span style="color:#e9fdac;">rsplit</span><span>(</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">.</span><span style="color:#ffffff;">&#39;</span><span>, </span><span style="color:#fdb082;">1</span><span>)[</span><span style="color:#fdb082;">1</span><span>]
+</span><span>
+</span><span>          </span><span style="color:#ff5e5e;">else</span><span>:
+</span><span>            </span><span style="color:#ff5e5e;">raise </span><span style="color:#fbe3bf;">NotImplementedError</span><span>(part_type)
+</span><span>
+</span><span>          
+</span><span>          </span><span style="color:#ff5e5e;">if </span><span>replace_part </span><span style="color:#ff5e5e;">is </span><span>part_type:
+</span><span>            </span><span style="color:#ff5e5e;">if </span><span>part_type </span><span style="color:#ff5e5e;">is </span><span>TimestampPart.Nanosecond:
+</span><span>              zero_diff </span><span style="color:#ff5e5e;">= </span><span style="color:#fdb082;">9 </span><span style="color:#ff5e5e;">- </span><span style="color:#6699cc;">len</span><span>(</span><span style="color:#fbe3bf;">str</span><span>(replace_value))
+</span><span>              result.</span><span style="color:#e9fdac;">append</span><span>(</span><span style="font-style:italic;color:#fbdfb5;">f</span><span style="color:#ffffff;">&#39;</span><span>{</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">0</span><span style="color:#ffffff;">&quot; </span><span style="color:#ff5e5e;">* </span><span>zero_diff}{replace_value}</span><span style="color:#ffffff;">&#39;</span><span>)
+</span><span>
+</span><span>            </span><span style="color:#ff5e5e;">elif </span><span>replace_value </span><span style="color:#ff5e5e;">&lt; </span><span style="color:#fdb082;">10</span><span>:
+</span><span>              result.</span><span style="color:#e9fdac;">append</span><span>(</span><span style="font-style:italic;color:#fbdfb5;">f</span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">0</span><span>{replace_value}</span><span style="color:#ffffff;">&#39;</span><span>)
+</span><span>
+</span><span>            </span><span style="color:#ff5e5e;">else</span><span>:
+</span><span>              result.</span><span style="color:#e9fdac;">append</span><span>(</span><span style="color:#fbe3bf;">str</span><span>(replace_value))
+</span><span>          </span><span style="color:#ff5e5e;">else</span><span>:
+</span><span>            result.</span><span style="color:#e9fdac;">append</span><span>(value)
+</span><span>
+</span><span>          skip_one </span><span style="color:#ff5e5e;">= </span><span style="color:#ff8942;">True
+</span><span>      </span><span style="color:#ff5e5e;">else</span><span>:
+</span><span>        result.</span><span style="color:#e9fdac;">append</span><span>(char)
+</span><span>
+</span><span>    </span><span style="color:#ff5e5e;">return </span><span style="color:#e9fdac;">self</span><span>.</span><span style="color:#e9fdac;">__class__</span><span>(np.</span><span style="color:#e9fdac;">datetime64</span><span>(</span><span style="color:#ffffff;">&#39;&#39;</span><span>.</span><span style="color:#e9fdac;">join</span><span>(result)))
+</span></code></pre>
+<p>As you can see, there is a lot going on. Most of the logic is used for datetime alterations and not serialization. We'll run the rendering benchmark with the same series of timestamps, but down to nanosecond support and without a timezone.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span>timestamps </span><span style="color:#ff5e5e;">= </span><span>[</span><span style="color:#e9fdac;">Timestamp</span><span>(np.</span><span style="color:#e9fdac;">datetime64</span><span>(</span><span style="color:#e9fdac;">datetime</span><span>(</span><span style="font-style:italic;color:#fc9354;">year</span><span style="color:#ff5e5e;">=</span><span style="color:#fdb082;">1800</span><span>, </span><span style="font-style:italic;color:#fc9354;">month</span><span style="color:#ff5e5e;">=</span><span style="color:#fdb082;">1</span><span>, </span><span style="font-style:italic;color:#fc9354;">day</span><span style="color:#ff5e5e;">=</span><span style="color:#fdb082;">1</span><span>) </span><span style="color:#ff5e5e;">+ </span><span style="color:#e9fdac;">timedelta</span><span>(</span><span style="font-style:italic;color:#fc9354;">seconds</span><span style="color:#ff5e5e;">=</span><span>idx), </span><span style="color:#ffffff;">&#39;</span><span style="color:#fbe3bf;">ns</span><span style="color:#ffffff;">&#39;</span><span>)) </span><span style="color:#ff5e5e;">for </span><span>idx </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">0</span><span>, </span><span style="color:#fdb082;">2000000</span><span>)]
+</span><span>
+</span><span>results </span><span style="color:#ff5e5e;">= </span><span>[]
+</span><span style="color:#ff5e5e;">for </span><span>idx </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">0</span><span>, </span><span style="color:#fdb082;">10</span><span>):
+</span><span>  start </span><span style="color:#ff5e5e;">= </span><span>datetime.</span><span style="color:#e9fdac;">now</span><span>(timezone.utc)
+</span><span>  timestamps_rendered </span><span style="color:#ff5e5e;">= </span><span>[]
+</span><span>  </span><span style="color:#ff5e5e;">for </span><span>timestamp </span><span style="color:#ff5e5e;">in </span><span>timestamps:
+</span><span>    timestamps_rendered.</span><span style="color:#e9fdac;">append</span><span>(timestamp.</span><span style="color:#e9fdac;">format</span><span>())
+</span><span>  stop </span><span style="color:#ff5e5e;">= </span><span>datetime.</span><span style="color:#e9fdac;">now</span><span>(timezone.utc)
+</span><span>  duration </span><span style="color:#ff5e5e;">= </span><span>stop </span><span style="color:#ff5e5e;">- </span><span>start
+</span><span>  results.</span><span style="color:#e9fdac;">append</span><span>(duration)
+</span><span>
+</span><span style="color:#ff5e5e;">&gt;&gt;&gt; </span><span>[r.seconds </span><span style="color:#ff5e5e;">for </span><span>r </span><span style="color:#ff5e5e;">in </span><span>results]
+</span><span>[</span><span style="color:#fdb082;">0</span><span>, </span><span style="color:#fdb082;">0</span><span>, </span><span style="color:#fdb082;">0</span><span>, </span><span style="color:#fdb082;">0</span><span>, </span><span style="color:#fdb082;">0</span><span>, </span><span style="color:#fdb082;">0</span><span>, </span><span style="color:#fdb082;">0</span><span>, </span><span style="color:#fdb082;">0</span><span>, </span><span style="color:#fdb082;">0</span><span>, </span><span style="color:#fdb082;">0</span><span>]
+</span></code></pre>
+<p>The results show sub-second serialization; lets find the <em>mean</em>.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#6699cc;">sum</span><span>([r.microseconds </span><span style="color:#ff5e5e;">for </span><span>r </span><span style="color:#ff5e5e;">in </span><span>results]) </span><span style="color:#ff5e5e;">/ </span><span style="color:#fdb082;">10
+</span><span style="color:#fdb082;">371</span><span>,</span><span style="color:#fdb082;">548.3
+</span></code></pre>
+<p><code>371548.3</code> microseconds on average, which comes to about <code>37.1548</code> milliseconds on average for each benchmark. Considerably faster than the <code>datetime</code> module. Which is to be expected, <code>numpy</code> is accelerated using c-code, and the API is in python to make data processing much more manageable. In fact it has been suggested to me in the past, that the for/loop might be whats slowing down this code and not the serialization routine <code>numpy</code> is performing changing the datetime from <code>datetime64</code> to a string.</p>
+<p>Let's go ahead and run a benchmark for loading the datetime string.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span>results </span><span style="color:#ff5e5e;">= </span><span>[]
+</span><span style="color:#ff5e5e;">for </span><span>idx </span><span style="color:#ff5e5e;">in </span><span style="color:#6699cc;">range</span><span>(</span><span style="color:#fdb082;">0</span><span>, </span><span style="color:#fdb082;">10</span><span>):
+</span><span>  start </span><span style="color:#ff5e5e;">= </span><span>datetime.</span><span style="color:#e9fdac;">now</span><span>(timezone.utc)
+</span><span>  </span><span style="color:#ff5e5e;">for </span><span>timestamp </span><span style="color:#ff5e5e;">in </span><span>timestamps_rendered:
+</span><span>    </span><span style="color:#e9fdac;">_ </span><span style="color:#ff5e5e;">= </span><span>Timestamp.</span><span style="color:#e9fdac;">Parse</span><span>(timestamp)
+</span><span>  stop </span><span style="color:#ff5e5e;">= </span><span>datetime.</span><span style="color:#e9fdac;">now</span><span>(timezone.utc)
+</span><span>  duration </span><span style="color:#ff5e5e;">= </span><span>stop </span><span style="color:#ff5e5e;">- </span><span>start
+</span><span>  results.</span><span style="color:#e9fdac;">append</span><span>(duration)
+</span><span>
+</span><span style="color:#ff5e5e;">&gt;&gt;&gt; </span><span>[r.seconds </span><span style="color:#ff5e5e;">for </span><span>r </span><span style="color:#ff5e5e;">in </span><span>results]
+</span><span>[</span><span style="color:#fdb082;">0</span><span>, </span><span style="color:#fdb082;">0</span><span>, </span><span style="color:#fdb082;">0</span><span>, </span><span style="color:#fdb082;">0</span><span>, </span><span style="color:#fdb082;">0</span><span>, </span><span style="color:#fdb082;">0</span><span>, </span><span style="color:#fdb082;">0</span><span>, </span><span style="color:#fdb082;">0</span><span>, </span><span style="color:#fdb082;">0</span><span>, </span><span style="color:#fdb082;">0</span><span>]
+</span></code></pre>
+<p>Loading the datetime string shows similar sub-second results. Let's again, find the <em>mean</em>.</p>
+<pre data-lang="python" style="background-color:#191919;color:#f8f8f2;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#ff5e5e;">&gt;&gt;&gt; </span><span style="color:#6699cc;">sum</span><span>([r.microseconds </span><span style="color:#ff5e5e;">for </span><span>r </span><span style="color:#ff5e5e;">in </span><span>results]) </span><span style="color:#ff5e5e;">/ </span><span style="color:#fdb082;">10
+</span><span style="color:#fdb082;">774</span><span>,</span><span style="color:#fdb082;">868.9
+</span></code></pre>
+<p>Definitely a performance hit here when loading the datetime string into <code>np.datetime64</code>. However, it is still a significant performance increase when its compared to Python's <code>datetime</code> module.</p>
+<p>Moving into Rust, one of the expectations is our code will run at faster speeds. We also have to consider not all Python is the same. Some Python packages ship with c-code to improve performance. For example, take a look at <a rel="noopener" target="_blank" href="https://github.com/MagicStack/httptools">httptools</a>, <a rel="noopener" target="_blank" href="https://github.com/MagicStack/asyncpg">asyncpg</a>, and <a rel="noopener" target="_blank" href="https://github.com/MagicStack/uvloop">uvloop</a>. All developed by <a rel="noopener" target="_blank" href="http://magic.io/">MagicStack</a>. Yeah, I'm kind of a fan of the software. With that said, Rust can still be <a rel="noopener" target="_blank" href="https://www.reddit.com/r/rust/comments/1fkl97n/my_python_code_is_faster_than_my_rust_code_what/">written in a way to run slower than Python</a>.</p>
+<h2 id="chrono">Chrono</h2>
+<p><a rel="noopener" target="_blank" href="https://docs.rs/chrono/latest/chrono/">Chrono</a> was the first <a rel="noopener" target="_blank" href="https://crates.io/">crate</a> I used to perform datetime alterations in Rust. As a result I have an affinity for <code>chrono</code> more so than some of the other choices. When I design software in Rust, its primarily for machine-to-machine comms and less for Server/Client-Browser comms. With that said, I have rolled a couple Web Stacks and the builtin serialization implementing <a rel="noopener" target="_blank" href="https://serde.rs">serde</a> is used extensively throughout my code.</p>
+<pre data-lang="rust" style="background-color:#191919;color:#f8f8f2;" class="language-rust "><code class="language-rust" data-lang="rust"><span>#[</span><span style="color:#e9fdac;">derive</span><span>(Debug, Clone, serde::Deserialize, serde::Serialize)]
+</span><span style="font-style:italic;color:#fbdfb5;">struct </span><span>DatetimeString(chrono::DateTime&lt;chrono::Utc&gt;);
+</span><span>
+</span><span style="color:#ff5e5e;">pub </span><span style="font-style:italic;color:#fbdfb5;">static </span><span style="color:#fdb082;">TS_FORMAT</span><span>: </span><span style="color:#ff5e5e;">&amp;</span><span style="font-style:italic;color:#fbdfb5;">str </span><span style="color:#ff5e5e;">= </span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">%Y-%m-%dT%H:%M:%S%.9f%z</span><span style="color:#ffffff;">&quot;</span><span>;
+</span><span>
+</span><span style="font-style:italic;color:#fbdfb5;">fn </span><span style="color:#8cdaff;">only_chrono</span><span>() {
+</span><span>  </span><span style="font-style:italic;color:#fbdfb5;">let </span><span style="color:#ff5e5e;">mut</span><span> timestamps </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">Vec</span><span>::new();
+</span><span>  </span><span style="color:#ff5e5e;">for _ in </span><span style="color:#fdb082;">0</span><span style="color:#ff5e5e;">..</span><span style="color:#fdb082;">2_000_000 </span><span>{
+</span><span>    timestamps.</span><span style="color:#6699cc;">push</span><span>(chrono::Utc::now());
+</span><span>  }
+</span><span>  </span><span style="font-style:italic;color:#fbdfb5;">let </span><span style="color:#ff5e5e;">mut</span><span> results </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">Vec</span><span>::new();
+</span><span>  </span><span style="font-style:italic;color:#fbdfb5;">let </span><span style="color:#ff5e5e;">mut</span><span> rendered_timestamps </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">Vec</span><span>::new();
+</span><span>  </span><span style="color:#ff5e5e;">for _ in </span><span style="color:#fdb082;">0</span><span style="color:#ff5e5e;">..</span><span style="color:#fdb082;">10 </span><span>{
+</span><span>    rendered_timestamps.</span><span style="color:#6699cc;">clear</span><span>();
+</span><span>    println!(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">Iteration </span><span style="color:#fdb082;">{:?}</span><span style="color:#ffffff;">&quot;</span><span>, chrono::Utc::now());
+</span><span>    </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> start </span><span style="color:#ff5e5e;">= </span><span>chrono::Utc::now();
+</span><span>    </span><span style="color:#ff5e5e;">for</span><span> timestamp </span><span style="color:#ff5e5e;">in</span><span> timestamps.</span><span style="color:#6699cc;">clone</span><span>() {
+</span><span>      </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> result </span><span style="color:#ff5e5e;">=</span><span> timestamp.</span><span style="color:#6699cc;">format</span><span>(</span><span style="color:#fdb082;">TS_FORMAT</span><span>).</span><span style="color:#6699cc;">to_string</span><span>();
+</span><span>      rendered_timestamps.</span><span style="color:#6699cc;">push</span><span>(result);
+</span><span>    }
+</span><span>    </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> stop </span><span style="color:#ff5e5e;">= </span><span>chrono::Utc::now();
+</span><span>    </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> duration </span><span style="color:#ff5e5e;">=</span><span> stop </span><span style="color:#ff5e5e;">-</span><span> start;
+</span><span>    results.</span><span style="color:#6699cc;">push</span><span>(duration);
+</span><span>  }
+</span><span>  
+</span><span>  println!(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">Serialization Duration: </span><span style="color:#fdb082;">{:?}</span><span style="color:#ffffff;">&quot;</span><span>, results);
+</span><span>
+</span><span>  </span><span style="font-style:italic;color:#fbdfb5;">let </span><span style="color:#ff5e5e;">mut</span><span> results </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">Vec</span><span>::new();
+</span><span>  </span><span style="color:#ff5e5e;">for _ in </span><span style="color:#fdb082;">0</span><span style="color:#ff5e5e;">..</span><span style="color:#fdb082;">10 </span><span>{
+</span><span>    println!(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">Iteration </span><span style="color:#fdb082;">{:?}</span><span style="color:#ffffff;">&quot;</span><span>, chrono::Utc::now());
+</span><span>    </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> start </span><span style="color:#ff5e5e;">= </span><span>chrono::Utc::now();
+</span><span>    </span><span style="color:#ff5e5e;">for</span><span> timestamp </span><span style="color:#ff5e5e;">in</span><span> rendered_timestamps.</span><span style="color:#6699cc;">clone</span><span>() {
+</span><span>      </span><span style="font-style:italic;color:#fbdfb5;">let </span><span style="color:#ff5e5e;">_ = </span><span>chrono::DateTime::parse_from_str(timestamp.</span><span style="color:#6699cc;">as_str</span><span>(), </span><span style="color:#fdb082;">TS_FORMAT</span><span>).</span><span style="color:#6699cc;">expect</span><span>(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">Failed</span><span style="color:#ffffff;">&quot;</span><span>);
+</span><span>    }
+</span><span>    </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> stop </span><span style="color:#ff5e5e;">= </span><span>chrono::Utc::now();
+</span><span>    </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> duration </span><span style="color:#ff5e5e;">=</span><span> stop </span><span style="color:#ff5e5e;">-</span><span> start;
+</span><span>    results.</span><span style="color:#6699cc;">push</span><span>(duration);
+</span><span>  }
+</span><span>
+</span><span>  println!(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">Deserialization Duration: </span><span style="color:#fdb082;">{:?}</span><span style="color:#ffffff;">&quot;</span><span>, results);
+</span><span>
+</span><span>}
+</span><span style="font-style:italic;color:#fbdfb5;">fn </span><span style="color:#8cdaff;">with_serde_and_chrono</span><span>() {
+</span><span>  </span><span style="font-style:italic;color:#fbdfb5;">let </span><span style="color:#ff5e5e;">mut</span><span> timestamps </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">Vec</span><span>::new();
+</span><span>  </span><span style="color:#ff5e5e;">for _ in </span><span style="color:#fdb082;">0</span><span style="color:#ff5e5e;">..</span><span style="color:#fdb082;">2_000_000 </span><span>{
+</span><span>    timestamps.</span><span style="color:#6699cc;">push</span><span>(DatetimeString(chrono::Utc::now()));
+</span><span>  }
+</span><span>
+</span><span>  </span><span style="font-style:italic;color:#fbdfb5;">let </span><span style="color:#ff5e5e;">mut</span><span> results </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">Vec</span><span>::new();
+</span><span>  </span><span style="font-style:italic;color:#fbdfb5;">let </span><span style="color:#ff5e5e;">mut</span><span> rendered_timestamps </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">Vec</span><span>::new();
+</span><span>  </span><span style="color:#ff5e5e;">for _ in </span><span style="color:#fdb082;">0</span><span style="color:#ff5e5e;">..</span><span style="color:#fdb082;">10 </span><span>{
+</span><span>    rendered_timestamps.</span><span style="color:#6699cc;">clear</span><span>();
+</span><span>    println!(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">Iteration </span><span style="color:#fdb082;">{:?}</span><span style="color:#ffffff;">&quot;</span><span>, chrono::Utc::now());
+</span><span>    </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> start </span><span style="color:#ff5e5e;">= </span><span>chrono::Utc::now();
+</span><span>    </span><span style="color:#ff5e5e;">for</span><span> timestamp </span><span style="color:#ff5e5e;">in</span><span> timestamps.</span><span style="color:#6699cc;">clone</span><span>() {
+</span><span>      </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> result </span><span style="color:#ff5e5e;">= </span><span>serde_json::to_string(</span><span style="color:#ff5e5e;">&amp;</span><span>timestamp).</span><span style="color:#6699cc;">expect</span><span>(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">Failed</span><span style="color:#ffffff;">&quot;</span><span>);
+</span><span>      rendered_timestamps.</span><span style="color:#6699cc;">push</span><span>(result);
+</span><span>    }
+</span><span>    </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> stop </span><span style="color:#ff5e5e;">= </span><span>chrono::Utc::now();
+</span><span>    </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> duration </span><span style="color:#ff5e5e;">=</span><span> stop </span><span style="color:#ff5e5e;">-</span><span> start;
+</span><span>    results.</span><span style="color:#6699cc;">push</span><span>(duration);
+</span><span>  }
+</span><span>  
+</span><span>  println!(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">Serialization Duration: </span><span style="color:#fdb082;">{:?}</span><span style="color:#ffffff;">&quot;</span><span>, results);
+</span><span>
+</span><span>  </span><span style="font-style:italic;color:#fbdfb5;">let </span><span style="color:#ff5e5e;">mut</span><span> results </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">Vec</span><span>::new();
+</span><span>  </span><span style="color:#ff5e5e;">for _ in </span><span style="color:#fdb082;">0</span><span style="color:#ff5e5e;">..</span><span style="color:#fdb082;">10 </span><span>{
+</span><span>    println!(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">Iteration </span><span style="color:#fdb082;">{:?}</span><span style="color:#ffffff;">&quot;</span><span>, chrono::Utc::now());
+</span><span>    </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> start </span><span style="color:#ff5e5e;">= </span><span>chrono::Utc::now();
+</span><span>    </span><span style="color:#ff5e5e;">for</span><span> timestamp </span><span style="color:#ff5e5e;">in</span><span> rendered_timestamps.</span><span style="color:#6699cc;">clone</span><span>() {
+</span><span>      </span><span style="font-style:italic;color:#fbdfb5;">let </span><span style="color:#ff5e5e;">_</span><span>: DatetimeString </span><span style="color:#ff5e5e;">= </span><span>serde_json::from_str(</span><span style="color:#ff5e5e;">&amp;</span><span>timestamp.</span><span style="color:#6699cc;">as_str</span><span>()).</span><span style="color:#6699cc;">expect</span><span>(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">Failed</span><span style="color:#ffffff;">&quot;</span><span>);
+</span><span>    }
+</span><span>    </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> stop </span><span style="color:#ff5e5e;">= </span><span>chrono::Utc::now();
+</span><span>    </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> duration </span><span style="color:#ff5e5e;">=</span><span> stop </span><span style="color:#ff5e5e;">-</span><span> start;
+</span><span>    results.</span><span style="color:#6699cc;">push</span><span>(duration);
+</span><span>  }
+</span><span>
+</span><span>  println!(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">Deserialization Duration: </span><span style="color:#fdb082;">{:?}</span><span style="color:#ffffff;">&quot;</span><span>, results);
+</span><span>}
+</span></code></pre>
+<p>For each iteration of 2 million timestamps, which generates considerably faster than Python's <code>datetime</code> module. <code>DateTime&lt;UTC&gt;</code> is formatted into a datetime string with nano second precision. I presume the timezone alterations will account for some slowdown, but I won't test for that because if the software can support timezones, those should be included in the benchmark so that the maximum amount of information indicates the correct coordinate it time, regardless of where you are on Earth.</p>
+<p>The Deserialization will take <code>TS_FORMAT</code> and rebuild the datetime strings into <a rel="noopener" target="_blank" href="https://doc.rust-lang.org/reference/types.html">Rust types</a> of <code>DateTime&lt;UTC&gt;</code>.</p>
+<pre data-lang="rust" style="background-color:#191919;color:#f8f8f2;" class="language-rust "><code class="language-rust" data-lang="rust"><span>Serialization Duration: [
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">8</span><span>, nanos: </span><span style="color:#fdb082;">548368000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">8</span><span>, nanos: </span><span style="color:#fdb082;">529499000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">8</span><span>, nanos: </span><span style="color:#fdb082;">547975000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">8</span><span>, nanos: </span><span style="color:#fdb082;">532770000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">8</span><span>, nanos: </span><span style="color:#fdb082;">534317000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">8</span><span>, nanos: </span><span style="color:#fdb082;">576425000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">8</span><span>, nanos: </span><span style="color:#fdb082;">519606000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">8</span><span>, nanos: </span><span style="color:#fdb082;">546453000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">8</span><span>, nanos: </span><span style="color:#fdb082;">535094000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">8</span><span>, nanos: </span><span style="color:#fdb082;">622479000 </span><span>}]
+</span><span>Deserialization Duration: [
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">11</span><span>, nanos: </span><span style="color:#fdb082;">785758000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">11</span><span>, nanos: </span><span style="color:#fdb082;">749219000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">11</span><span>, nanos: </span><span style="color:#fdb082;">946002000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">11</span><span>, nanos: </span><span style="color:#fdb082;">846905000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">11</span><span>, nanos: </span><span style="color:#fdb082;">558516000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">11</span><span>, nanos: </span><span style="color:#fdb082;">828807000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">11</span><span>, nanos: </span><span style="color:#fdb082;">566514000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">11</span><span>, nanos: </span><span style="color:#fdb082;">669675000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">11</span><span>, nanos: </span><span style="color:#fdb082;">751291000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">11</span><span>, nanos: </span><span style="color:#fdb082;">431745000 </span><span>}]
+</span></code></pre>
+<p>I was staggered by the results. <code>chrono</code> is running multiple orders of magnitude slower than Python's <code>datetime</code> module and Numpy's <code>datetime64</code> module.</p>
+<p>A second pair of Serialization / Deserialization benchmarks to see if there is a performance difference using <code>serde</code>.</p>
+<pre data-lang="rust" style="background-color:#191919;color:#f8f8f2;" class="language-rust "><code class="language-rust" data-lang="rust"><span>Serialization Duration: [
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">6</span><span>, nanos: </span><span style="color:#fdb082;">741766000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">6</span><span>, nanos: </span><span style="color:#fdb082;">739703000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">6</span><span>, nanos: </span><span style="color:#fdb082;">752363000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">6</span><span>, nanos: </span><span style="color:#fdb082;">757359000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">6</span><span>, nanos: </span><span style="color:#fdb082;">783687000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">6</span><span>, nanos: </span><span style="color:#fdb082;">790181000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">6</span><span>, nanos: </span><span style="color:#fdb082;">739028000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">6</span><span>, nanos: </span><span style="color:#fdb082;">740279000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">6</span><span>, nanos: </span><span style="color:#fdb082;">735011000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">6</span><span>, nanos: </span><span style="color:#fdb082;">733734000 </span><span>}]
+</span><span>Deserialization Duration: [
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">7</span><span>, nanos: </span><span style="color:#fdb082;">839185000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">7</span><span>, nanos: </span><span style="color:#fdb082;">825194000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">7</span><span>, nanos: </span><span style="color:#fdb082;">813160000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">7</span><span>, nanos: </span><span style="color:#fdb082;">817082000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">7</span><span>, nanos: </span><span style="color:#fdb082;">823954000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">7</span><span>, nanos: </span><span style="color:#fdb082;">814741000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">7</span><span>, nanos: </span><span style="color:#fdb082;">817677000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">7</span><span>, nanos: </span><span style="color:#fdb082;">857673000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">7</span><span>, nanos: </span><span style="color:#fdb082;">819424000 </span><span>},
+</span><span>  TimeDelta { secs: </span><span style="color:#fdb082;">7</span><span>, nanos: </span><span style="color:#fdb082;">818405000 </span><span>}]
+</span></code></pre>
+<p>An obvious performance increase using <code>serde</code>. I didn't expect these results, and I hope someone more familiar with the software can point out what why <code>serde</code> can serialize and deserialize <code>DateTime&lt;UTC&gt;</code> quicker than using <code>.format</code>.</p>
+<h2 id="time">Time</h2>
+<p>I haven't used <code>time</code> much. and it seems to be used reliably with a number of dependencies I've started pulling from. Therefore it has been pushed into my radar and I'd like to determine if the software is more performant than <code>chrono</code>.</p>
+<p>The benchmark will be setup similar to Chrono benchmarks. We'll test formatting <code>OffsetDateTime</code> into a datetime string and back. Then I'll implement <code>serde</code> and see if there is a performance gain or loss.</p>
+<pre data-lang="rust" style="background-color:#191919;color:#f8f8f2;" class="language-rust "><code class="language-rust" data-lang="rust"><span>#[</span><span style="color:#e9fdac;">derive</span><span>(Debug, Clone, serde::Deserialize, serde::Serialize)]
+</span><span style="font-style:italic;color:#fbdfb5;">struct </span><span>TimeDateTimeString(#[serde(with = &quot;time::serde::rfc3339&quot;)] time::OffsetDateTime);
+</span><span>
+</span><span style="font-style:italic;color:#fbdfb5;">fn </span><span style="color:#8cdaff;">only_time</span><span>() {
+</span><span>  </span><span style="font-style:italic;color:#fbdfb5;">let </span><span style="color:#ff5e5e;">mut</span><span> timestamps </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">Vec</span><span>::new();
+</span><span>  </span><span style="color:#ff5e5e;">for _ in </span><span style="color:#fdb082;">0</span><span style="color:#ff5e5e;">..</span><span style="color:#fdb082;">2_000_000 </span><span>{
+</span><span>    timestamps.</span><span style="color:#6699cc;">push</span><span>(time::OffsetDateTime::now_utc());
+</span><span>  }
+</span><span>  </span><span style="font-style:italic;color:#fbdfb5;">let </span><span style="color:#ff5e5e;">mut</span><span> results </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">Vec</span><span>::new();
+</span><span>  </span><span style="font-style:italic;color:#fbdfb5;">let </span><span style="color:#ff5e5e;">mut</span><span> rendered_timestamps </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">Vec</span><span>::new();
+</span><span>  </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> ts_format </span><span style="color:#ff5e5e;">= </span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">[year]-[month]-[day]T[hour repr:24 padding:none]:[minute]:[second].[subsecond digits:9][offset_hour sign:mandatory]</span><span style="color:#ffffff;">&quot;</span><span>;
+</span><span>  </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> ts_format </span><span style="color:#ff5e5e;">= </span><span>format_description::parse(ts_format).</span><span style="color:#6699cc;">expect</span><span>(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">Unable to set formatter</span><span style="color:#ffffff;">&quot;</span><span>);
+</span><span>  </span><span style="color:#ff5e5e;">for _ in </span><span style="color:#fdb082;">0</span><span style="color:#ff5e5e;">..</span><span style="color:#fdb082;">10 </span><span>{
+</span><span>    rendered_timestamps.</span><span style="color:#6699cc;">clear</span><span>();
+</span><span>    println!(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">Iteration </span><span style="color:#fdb082;">{:?}</span><span style="color:#ffffff;">&quot;</span><span>, time::OffsetDateTime::now_utc());
+</span><span>    </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> start </span><span style="color:#ff5e5e;">= </span><span>time::OffsetDateTime::now_utc();
+</span><span>    </span><span style="color:#ff5e5e;">for</span><span> timestamp </span><span style="color:#ff5e5e;">in</span><span> timestamps.</span><span style="color:#6699cc;">clone</span><span>() {
+</span><span>      rendered_timestamps.</span><span style="color:#6699cc;">push</span><span>(timestamp.</span><span style="color:#6699cc;">format</span><span>(</span><span style="color:#ff5e5e;">&amp;</span><span>ts_format).</span><span style="color:#6699cc;">unwrap</span><span>());
+</span><span>    }
+</span><span>    </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> stop </span><span style="color:#ff5e5e;">= </span><span>time::OffsetDateTime::now_utc();
+</span><span>    </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> duration </span><span style="color:#ff5e5e;">=</span><span> stop </span><span style="color:#ff5e5e;">-</span><span> start;
+</span><span>    results.</span><span style="color:#6699cc;">push</span><span>(duration);
+</span><span>  }
+</span><span>  println!(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">Serialization Results: </span><span style="color:#fdb082;">{:?}</span><span style="color:#ffffff;">&quot;</span><span>, results);
+</span><span>
+</span><span>  </span><span style="font-style:italic;color:#fbdfb5;">let </span><span style="color:#ff5e5e;">mut</span><span> results </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">Vec</span><span>::new();
+</span><span>  </span><span style="color:#ff5e5e;">for _ in </span><span style="color:#fdb082;">0</span><span style="color:#ff5e5e;">..</span><span style="color:#fdb082;">10 </span><span>{
+</span><span>    println!(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">Iteration: </span><span style="color:#fdb082;">{:?}</span><span style="color:#ffffff;">&quot;</span><span>, time::OffsetDateTime::now_utc());
+</span><span>    </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> start </span><span style="color:#ff5e5e;">= </span><span>time::OffsetDateTime::now_utc();
+</span><span>    </span><span style="color:#ff5e5e;">for</span><span> timestamp </span><span style="color:#ff5e5e;">in</span><span> rendered_timestamps.</span><span style="color:#6699cc;">clone</span><span>() {
+</span><span>      </span><span style="font-style:italic;color:#fbdfb5;">let </span><span style="color:#ff5e5e;">_ = </span><span>time::OffsetDateTime::parse(</span><span style="color:#ff5e5e;">&amp;</span><span>timestamp, </span><span style="color:#ff5e5e;">&amp;</span><span>ts_format).</span><span style="color:#6699cc;">expect</span><span>(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">Failed</span><span style="color:#ffffff;">&quot;</span><span>);
+</span><span>    }
+</span><span>    </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> stop </span><span style="color:#ff5e5e;">= </span><span>time::OffsetDateTime::now_utc();
+</span><span>    </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> duration </span><span style="color:#ff5e5e;">=</span><span> stop </span><span style="color:#ff5e5e;">-</span><span> start;
+</span><span>    results.</span><span style="color:#6699cc;">push</span><span>(duration);
+</span><span>  }
+</span><span>
+</span><span>  println!(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">Deserialization Duration: </span><span style="color:#fdb082;">{:?}</span><span style="color:#ffffff;">&quot;</span><span>, results);
+</span><span>}
+</span><span style="font-style:italic;color:#fbdfb5;">fn </span><span style="color:#8cdaff;">with_serde_and_time</span><span>() {
+</span><span>  </span><span style="font-style:italic;color:#fbdfb5;">let </span><span style="color:#ff5e5e;">mut</span><span> timestamps </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">Vec</span><span>::new();
+</span><span>  </span><span style="color:#ff5e5e;">for _ in </span><span style="color:#fdb082;">0</span><span style="color:#ff5e5e;">..</span><span style="color:#fdb082;">2_000_000 </span><span>{
+</span><span>    timestamps.</span><span style="color:#6699cc;">push</span><span>(TimeDateTimeString(time::OffsetDateTime::now_utc()));
+</span><span>  }
+</span><span>
+</span><span>  </span><span style="font-style:italic;color:#fbdfb5;">let </span><span style="color:#ff5e5e;">mut</span><span> results </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">Vec</span><span>::new();
+</span><span>  </span><span style="font-style:italic;color:#fbdfb5;">let </span><span style="color:#ff5e5e;">mut</span><span> rendered_timestamps </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">Vec</span><span>::new();
+</span><span>  </span><span style="color:#ff5e5e;">for _ in </span><span style="color:#fdb082;">0</span><span style="color:#ff5e5e;">..</span><span style="color:#fdb082;">10 </span><span>{
+</span><span>    rendered_timestamps.</span><span style="color:#6699cc;">clear</span><span>();
+</span><span>    println!(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">Iteration </span><span style="color:#fdb082;">{:?}</span><span style="color:#ffffff;">&quot;</span><span>, time::OffsetDateTime::now_utc());
+</span><span>    </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> start </span><span style="color:#ff5e5e;">= </span><span>time::OffsetDateTime::now_utc();
+</span><span>    </span><span style="color:#ff5e5e;">for</span><span> timestamp </span><span style="color:#ff5e5e;">in</span><span> timestamps.</span><span style="color:#6699cc;">clone</span><span>() {
+</span><span>      </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> result </span><span style="color:#ff5e5e;">= </span><span>serde_json::to_string(</span><span style="color:#ff5e5e;">&amp;</span><span>timestamp).</span><span style="color:#6699cc;">expect</span><span>(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">Failed</span><span style="color:#ffffff;">&quot;</span><span>);
+</span><span>      rendered_timestamps.</span><span style="color:#6699cc;">push</span><span>(result);
+</span><span>    }
+</span><span>    </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> stop </span><span style="color:#ff5e5e;">= </span><span>time::OffsetDateTime::now_utc();
+</span><span>    </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> duration </span><span style="color:#ff5e5e;">=</span><span> stop </span><span style="color:#ff5e5e;">-</span><span> start;
+</span><span>    results.</span><span style="color:#6699cc;">push</span><span>(duration);
+</span><span>  }
+</span><span>  
+</span><span>  println!(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">Serialization Duration: </span><span style="color:#fdb082;">{:?}</span><span style="color:#ffffff;">&quot;</span><span>, results);
+</span><span>
+</span><span>  </span><span style="font-style:italic;color:#fbdfb5;">let </span><span style="color:#ff5e5e;">mut</span><span> results </span><span style="color:#ff5e5e;">= </span><span style="color:#fbe3bf;">Vec</span><span>::new();
+</span><span>  </span><span style="color:#ff5e5e;">for _ in </span><span style="color:#fdb082;">0</span><span style="color:#ff5e5e;">..</span><span style="color:#fdb082;">10 </span><span>{
+</span><span>    println!(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">Iteration </span><span style="color:#fdb082;">{:?}</span><span style="color:#ffffff;">&quot;</span><span>, time::OffsetDateTime::now_utc());
+</span><span>    </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> start </span><span style="color:#ff5e5e;">= </span><span>time::OffsetDateTime::now_utc();
+</span><span>    </span><span style="color:#ff5e5e;">for</span><span> timestamp </span><span style="color:#ff5e5e;">in</span><span> rendered_timestamps.</span><span style="color:#6699cc;">clone</span><span>() {
+</span><span>      </span><span style="font-style:italic;color:#fbdfb5;">let </span><span style="color:#ff5e5e;">_</span><span>: DatetimeString </span><span style="color:#ff5e5e;">= </span><span>serde_json::from_str(</span><span style="color:#ff5e5e;">&amp;</span><span>timestamp.</span><span style="color:#6699cc;">as_str</span><span>()).</span><span style="color:#6699cc;">expect</span><span>(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">Failed</span><span style="color:#ffffff;">&quot;</span><span>);
+</span><span>    }
+</span><span>    </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> stop </span><span style="color:#ff5e5e;">= </span><span>time::OffsetDateTime::now_utc();
+</span><span>    </span><span style="font-style:italic;color:#fbdfb5;">let</span><span> duration </span><span style="color:#ff5e5e;">=</span><span> stop </span><span style="color:#ff5e5e;">-</span><span> start;
+</span><span>    results.</span><span style="color:#6699cc;">push</span><span>(duration);
+</span><span>  }
+</span><span>
+</span><span>  println!(</span><span style="color:#ffffff;">&quot;</span><span style="color:#fbe3bf;">Deserialization Duration: </span><span style="color:#fdb082;">{:?}</span><span style="color:#ffffff;">&quot;</span><span>, results);
+</span><span>}
+</span></code></pre>
+<p><code>time::OffsetDateTime</code> API took me some time to get used to, but it seems to be more idiomatic than <code>chrono</code>, <code>datetime</code>, and <code>datetime64</code>. Which I think is great, but at the same time it makes it hard to find the correct syntax for say, the <code>ts_format</code> variable. I have specified that I'd like to have nanosecond precision, but I have no idea how to set that level of precision using <code>OffsetDateTime::now_utc()</code></p>
+<pre data-lang="rust" style="background-color:#191919;color:#f8f8f2;" class="language-rust "><code class="language-rust" data-lang="rust"><span>Serialization Results: [
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">4</span><span>, nanoseconds: </span><span style="color:#fdb082;">939048000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">4</span><span>, nanoseconds: </span><span style="color:#fdb082;">945770000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">4</span><span>, nanoseconds: </span><span style="color:#fdb082;">956920000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">4</span><span>, nanoseconds: </span><span style="color:#fdb082;">945419000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">4</span><span>, nanoseconds: </span><span style="color:#fdb082;">949541000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">4</span><span>, nanoseconds: </span><span style="color:#fdb082;">947545000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">4</span><span>, nanoseconds: </span><span style="color:#fdb082;">951264000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">4</span><span>, nanoseconds: </span><span style="color:#fdb082;">975607000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">4</span><span>, nanoseconds: </span><span style="color:#fdb082;">949841000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">4</span><span>, nanoseconds: </span><span style="color:#fdb082;">941445000 </span><span>}]
+</span><span>Deserialization Results: [
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">7</span><span>, nanoseconds: </span><span style="color:#fdb082;">333048000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">7</span><span>, nanoseconds: </span><span style="color:#fdb082;">339670000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">7</span><span>, nanoseconds: </span><span style="color:#fdb082;">331340000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">7</span><span>, nanoseconds: </span><span style="color:#fdb082;">323940000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">7</span><span>, nanoseconds: </span><span style="color:#fdb082;">321096000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">7</span><span>, nanoseconds: </span><span style="color:#fdb082;">327553000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">7</span><span>, nanoseconds: </span><span style="color:#fdb082;">349085000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">7</span><span>, nanoseconds: </span><span style="color:#fdb082;">314581000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">7</span><span>, nanoseconds: </span><span style="color:#fdb082;">338267000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">7</span><span>, nanoseconds: </span><span style="color:#fdb082;">324325000 </span><span>}]
+</span></code></pre>
+<p>Way better results than <code>chrono</code> datetime string formatting. Fairly close to Python's <code>datetime</code> module's ability to serialize <code>datetime</code> objects. An obvious performance improvement, but still on par with <code>datetime</code> and behind <code>datetime64</code></p>
+<p>A second pair of Serialization / Deserialization benchmarks to see if there is a performance difference using <code>serde</code>.</p>
+<pre data-lang="rust" style="background-color:#191919;color:#f8f8f2;" class="language-rust "><code class="language-rust" data-lang="rust"><span>Serialization Duration: [
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">5</span><span>, nanoseconds: </span><span style="color:#fdb082;">285355000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">5</span><span>, nanoseconds: </span><span style="color:#fdb082;">363159000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">5</span><span>, nanoseconds: </span><span style="color:#fdb082;">300327000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">5</span><span>, nanoseconds: </span><span style="color:#fdb082;">277747000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">5</span><span>, nanoseconds: </span><span style="color:#fdb082;">275644000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">5</span><span>, nanoseconds: </span><span style="color:#fdb082;">279714000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">5</span><span>, nanoseconds: </span><span style="color:#fdb082;">273839000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">5</span><span>, nanoseconds: </span><span style="color:#fdb082;">317712000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">5</span><span>, nanoseconds: </span><span style="color:#fdb082;">297983000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">5</span><span>, nanoseconds: </span><span style="color:#fdb082;">285739000 </span><span>}]
+</span><span>Deserialization Duration: [
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">7</span><span>, nanoseconds: </span><span style="color:#fdb082;">849486000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">7</span><span>, nanoseconds: </span><span style="color:#fdb082;">826524000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">7</span><span>, nanoseconds: </span><span style="color:#fdb082;">824564000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">7</span><span>, nanoseconds: </span><span style="color:#fdb082;">850677000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">7</span><span>, nanoseconds: </span><span style="color:#fdb082;">822075000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">7</span><span>, nanoseconds: </span><span style="color:#fdb082;">831446000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">7</span><span>, nanoseconds: </span><span style="color:#fdb082;">827239000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">7</span><span>, nanoseconds: </span><span style="color:#fdb082;">826451000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">7</span><span>, nanoseconds: </span><span style="color:#fdb082;">832332000 </span><span>},
+</span><span>  Duration { seconds: </span><span style="color:#fdb082;">7</span><span>, nanoseconds: </span><span style="color:#fdb082;">906543000 </span><span>}]
+</span></code></pre>
+<p>Only a performance hit with serialization information and a very minor performance hit when deserialization. Very impressive.</p>
+<h2 id="comparative-results">Comparative Results</h2>
+<table><thead><tr><th>Module / Software</th><th>Average Serialization Duration</th><th>Average Deserialization Duration</th></tr></thead><tbody>
+<tr><td>Python's <code>datetime</code></td><td>3 seconds</td><td>10 seconds</td></tr>
+<tr><td>Numpy's <code>datetime64</code></td><td>371,548 ms</td><td>774,868.9 ms</td></tr>
+<tr><td>Chrono</td><td>8 seconds</td><td>11 seconds</td></tr>
+<tr><td>Chrono &amp; Serde</td><td>6 seconds</td><td>7 seconds</td></tr>
+<tr><td>Time</td><td>4 seconds</td><td>7 seconds</td></tr>
+<tr><td>Time &amp; Serde</td><td>5 seconds</td><td>7 seconds</td></tr>
+</tbody></table>
+<p>The comparative results have me wondering if there is a correlation between the <code>datetime64</code> and <code>time</code> results. Obviously, if you're going to load large amounts of data. Numpy's <code>datetime64</code> datetime strings are the way to go for now. I wonder how well <code>datetime64</code> would perform in a <a rel="noopener" target="_blank" href="https://spark.apache.org/">Spark</a> runtime.</p>
+
+            </p>
+          </section>
+        </article>
+        <div class="column is-12 show-on-mobile">
+          <aside class="menu">
+            
+<p class="menu-label">Search</p>
+<ul class="menu-list">
+  <li>
+    <div class="field">
+      <div class="control has-icons-left has-icons-right">
+        <input id="aside-search-input" class="input" type="text" placeholder="Search Articles" value="">
+        <span class="icon is-small is-left">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </span>
+        <span class="icon is-small is-right">
+          <i class="fas fa-close"></i>
+        </span>
+      </div>
+    </div>
+  </li>
+</ul>
+
+            
+<p class="menu-label">Article Filters</p>
+<ul class="menu-list">
+
+
+  <li>
+    <a href="&#x2F;articles&#x2F;">Performance Analysis</a>
+  </li>
+
+</ul>
+
+          </aside>
+        </div>
+      </div>
+    </section>
+    
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VZP9H4GE0Y"></script>
+<script type="text/javascript" src="https://jbcurtin.io/elasticlunr.min.js" defer></script>
+<script type="text/javascript" src="https://jbcurtin.io/search_index.en.js" defer></script>
+<script type="text/javascript" src="https://jbcurtin.io/js.cookie-3.0.5.min.js" integrity="sha256-WCzAhd2P6gRJF9Hv3oOOd+hFJi/QJbv+Azn4CGB8gfY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://jbcurtin.io/MathJax-3.2.2.js" defer></script>
+<script type="text/javascript" src="https://jbcurtin.io/chart/tree_map.js" defer></script>
+<script type="text/javascript" src="https://jbcurtin.io/main.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js" integrity="sha256-6EJwvQzVvfYP78JtAMKjkcsugfTSanqe4WGFpUdzo88=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js" integrity="sha256-OMcKHnypGrQOLZ5uYBKYUacX7Rx9Ssu91Bv5UDeRz2g=" crossorigin="anonymous"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+</script>
+<script>
+  function genIden(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }
+  let gauid = Cookies.get('gauid');
+  if (gauid == undefined) {
+    gauid = genIden(8);
+    Cookies.set('gauid', gauid);
+  }
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-VZP9H4GE0Y', {
+    user_id: gauid
+  });
+</script>
+
+    <script type="text/javascript">
+/// Debounce
+function debounce(func, wait) {
+  var timeout;
+  return function () {
+    var context = this;
+    var args = arguments;
+    clearTimeout(timeout);
+    timeout = setTimeout(function () {
+      timeout = null;
+      func.apply(context, args);
+    }, wait);
+  };
+}
+function initAsideSearch() {
+  const $aside_search_input = document.getElementById('aside-search-input');
+  if($aside_search_input === null) {
+    return;
+  }
+  $aside_search_input.addEventListener("keyup", debounce(async function($event) {
+    if ($event.keyCode === 13 || $event.keyCode === 32) {
+      var term = $aside_search_input.value.trim();
+      if ($event.keyCode === 32) {
+        term = term + " ";
+      }
+      const url_parts = [window.location.protocol, '//', window.location.host];
+      if ("en" != "en") {
+        url_parts.push('/en');
+      }
+      url_parts.push('/search/')
+      const search_url = new URL(url_parts.join(''));
+      search_url.searchParams.set('q', term);
+      window.location.href = search_url;
+    }
+  }, 150));
+}
+if (document.readyState === "complete" || (document.readyState !== "loading" && !document.documentElement.doScroll)) {
+  initAsideSearch();
+} else {
+  document.addEventListener("DOMContentLoaded", initAsideSearch);
+} 
+</script>
+
+    <script type="text/javascript">
+  $.fn.SubscribeField = function() {
+    const COOKIE_NAME = 'subscribe-email';
+    const elm = $(this);
+    const regBttnElm = $("#subscribe-button");
+    const noteElm = elm.find(".note");
+    noteElm.hide();
+    const setInvalid = function() {
+      const newspaper_container = elm.find('.fa-newspaper').parent();
+      newspaper_container.addClass('has-text-danger');
+      // Right Icon
+      const right_icon_container = elm.find('.icon.is-right');
+      right_icon_container.addClass('has-text-danger');
+      const right_icon = right_icon_container.find('i.fa-check');
+      right_icon.removeClass('fa-check');
+      right_icon.addClass('fa-close');
+    }
+    const setValid = function() {
+      const newspaper_container = elm.find('.fa-newspaper').parent();
+      newspaper_container.removeClass('has-text-danger');
+      // Right Icon
+      const right_icon_container = elm.find('.icon.is-right');
+      right_icon_container.removeClass('has-text-danger');
+      const right_icon = right_icon_container.find('i.fa-close');
+      right_icon.removeClass('fa-close');
+      right_icon.addClass('fa-check');
+    }
+    const setConfirmState = function(email) {
+      const msg = `is been subscribed`;
+      regBttnElm.find('button').text('Subscribed');
+      regBttnElm.find('button').attr('disabled', 'disabled');
+      elm.find('input[name=subscribe-email]').attr('disabled', 'disabled');
+      elm.find('input[name=subscribe-email]').val(email);
+      elm.find('.fa-newspaper').addClass('has-text-info');
+      elm.find('.fa-check').parent().hide();
+      // elm.find('.fa-check').parent().html('<span> Saved </span>');
+      Cookies.set(COOKIE_NAME, email, { expires: 365, domain: window.location.hostname, SameSite: 'Strict', Secure: true });
+    }
+    const validateEmail = (email) => {
+      return email.match(
+        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+    }
+    const handleKeyEvent = function($event) {
+      const email = elm.find('input[name=subscribe-email]').val();
+      if (validateEmail(email) == null) {
+        setInvalid();
+      } else {
+        setValid();
+        if ($event.originalEvent.keyCode == 13) {
+          submitEmail();
+        }
+      }
+    }
+    // Handle Submission to Backend - ajax
+    const submitEmail = function() {
+      const email = elm.find('input[name=subscribe-email]').val();
+      if (validateEmail(email) == null) {
+        setInvalid();
+        return;
+      }
+      const buildUrl = function (path) {
+        if (window.location.hostname == 'localhost') {
+          return `http://localhost:8200${path}`;
+        } else if (window.location.hostname == 'jbcurtin.io') {
+          return `https://newsletter.mlops-and-cloud-db.com${path}`;
+        } else {
+          console.error("Unable to build path");
+        }
+      }
+      const handleSubmission = function(data) {
+        setConfirmState(email);
+      }
+      const handleSubmissionError = function($event) {
+        if ($event.responseText == "Success") {
+          handleSubmission($event);
+          return;
+        }
+        setInvalid();
+      }
+      $.ajax({
+        type: 'POST',
+        url: buildUrl('/nl/register'),
+        data: `{ "email": "${email}" }`,
+        success: handleSubmission,
+        error: handleSubmissionError,
+        contentType: "application/json",
+        dataType: "json"
+      });
+    }
+    // Attach Events
+    setValid();
+    // Detect Cookies
+    if (Cookies.get(COOKIE_NAME) != undefined) {
+      const email = Cookies.get(COOKIE_NAME);
+      setConfirmState(email);
+    } else {
+      elm.find('input[name=subscribe-email]').on('keyup', handleKeyEvent);
+      regBttnElm.on('click', function($event) {
+        submitEmail();
+        $event.preventDefault();
+      });
+    }
+  }
+  $(document).ready(() => {
+    console.log('activate')
+    $("#subscribe-field").SubscribeField();
+  })
+</script>
+
+    <script type="text/javascript">
+      gtag('set', 'content_group', '/articles');
+      gtag('event', 'select_content', {
+        'content_type': 'article',
+        'content_id': '/articles/datetime-benchmarks/'
+      });
+    </script>
+  </body>
+</html>
