@@ -41,6 +41,9 @@
         <loc>https://jbcurtin.io/ja/philosophy/</loc>
     </url>
     <url>
+        <loc>https://jbcurtin.io/ja/poetry/</loc>
+    </url>
+    <url>
         <loc>https://jbcurtin.io/ja/search/</loc>
     </url>
     <url>
@@ -104,6 +107,13 @@
     <url>
         <loc>https://jbcurtin.io/philosophy/whales/</loc>
         <lastmod>2025-11-22</lastmod>
+    </url>
+    <url>
+        <loc>https://jbcurtin.io/poetry/</loc>
+    </url>
+    <url>
+        <loc>https://jbcurtin.io/poetry/neurodivergent-hug-of-hurt/</loc>
+        <lastmod>2025-03-05</lastmod>
     </url>
     <url>
         <loc>https://jbcurtin.io/search/</loc>
