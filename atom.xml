@@ -4,8 +4,38 @@
     <link rel="self" type="application/atom+xml" href="https://jbcurtin.io/atom.xml"/>
     <link rel="alternate" type="text/html" href="https://jbcurtin.io"/>
     <generator uri="https://www.getzola.org/">Zola</generator>
-    <updated>2026-04-20T00:00:00+00:00</updated>
+    <updated>2026-05-13T00:00:00+00:00</updated>
     <id>https://jbcurtin.io/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Language</title>
+        <published>2026-05-13T00:00:00+00:00</published>
+        <updated>2026-05-13T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://jbcurtin.io/poetry/language/"/>
+        <id>https://jbcurtin.io/poetry/language/</id>
+        
+        <content type="html" xml:base="https://jbcurtin.io/poetry/language/">&lt;p&gt;I&#x27;m autistic.&lt;&#x2F;p&gt;
+&lt;p&gt;They tell me my language isn&#x27;t where it needs to be.&lt;&#x2F;p&gt;
+&lt;p&gt;I express my opinion.&lt;&#x2F;p&gt;
+&lt;p&gt;I&#x27;m attacked for it.&lt;&#x2F;p&gt;
+&lt;p&gt;I express my capabilities.&lt;&#x2F;p&gt;
+&lt;p&gt;I&#x27;m attacked for it.&lt;&#x2F;p&gt;
+&lt;p&gt;I feel devalued.&lt;&#x2F;p&gt;
+&lt;p&gt;Yet I have to pretend, it doesn&#x27;t hurt me.&lt;&#x2F;p&gt;
+&lt;p&gt;And it does hurt me.&lt;&#x2F;p&gt;
+&lt;p&gt;I&#x27;m just a privileged white guy now.&lt;&#x2F;p&gt;
+&lt;p&gt;I&#x27;d rather be an Aspie.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
     <entry xml:lang="en">
         <title>Tomato Sauce</title>
         <published>2026-04-20T00:00:00+00:00</published>
@@ -42,36 +72,6 @@
 &lt;p&gt;Science is about breaking down actions in nature into its most basic elements. Psychology is about the study of human behavior. What if our observations are quantum in nature? What if our behavior has a quantum element to it? Not just our emotions, our thoughts, or memory. What if our very interactivity requires a quantum awareness?&lt;&#x2F;p&gt;
 &lt;p&gt;The tomato didn&#x27;t say catch up, it said, hold on a minute. You&#x27;re missing some salt.&lt;&#x2F;p&gt;
 &lt;p&gt;I&#x27;ll help you teach me better, but you have to be willing to relearn how to teach students. We&#x27;ll take it slow, and I&#x27;ll make sure it doesn&#x27;t disrupt your life. However,  you have to keep an open mind and talk with me when you feel an emotion. Thats how we rehumanize, or if you prefer, reharmonize.&lt;&#x2F;p&gt;
-</content>
-        
-    </entry>
-    <entry xml:lang="en">
-        <title>Language</title>
-        <published>2026-03-31T00:00:00+00:00</published>
-        <updated>2026-03-31T00:00:00+00:00</updated>
-        
-        <author>
-          <name>
-            
-              Unknown
-            
-          </name>
-        </author>
-        
-        <link rel="alternate" type="text/html" href="https://jbcurtin.io/poetry/language/"/>
-        <id>https://jbcurtin.io/poetry/language/</id>
-        
-        <content type="html" xml:base="https://jbcurtin.io/poetry/language/">&lt;p&gt;I&#x27;m autistic.&lt;&#x2F;p&gt;
-&lt;p&gt;They tell me my language isn&#x27;t where it needs to be.&lt;&#x2F;p&gt;
-&lt;p&gt;I express my opinion.&lt;&#x2F;p&gt;
-&lt;p&gt;I&#x27;m attacked for it.&lt;&#x2F;p&gt;
-&lt;p&gt;I express my capabilities.&lt;&#x2F;p&gt;
-&lt;p&gt;I&#x27;m attacked for it.&lt;&#x2F;p&gt;
-&lt;p&gt;I feel devalued.&lt;&#x2F;p&gt;
-&lt;p&gt;Yet I have to pretend, it doesn&#x27;t hurt me.&lt;&#x2F;p&gt;
-&lt;p&gt;And it does hurt me.&lt;&#x2F;p&gt;
-&lt;p&gt;I&#x27;m just a privileged white guy now.&lt;&#x2F;p&gt;
-&lt;p&gt;I&#x27;d rather be an Aspie.&lt;&#x2F;p&gt;
 </content>
         
     </entry>
